@@ -2,33 +2,108 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<title>Double Knockout Badminton</title>
+<title>Double Knockout Badminton – Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f5f5;color:#333;}
-h2,h3{text-align:center}
-.container{display:flex;flex-direction:column;align-items:center}
-.bracket{display:grid;grid-template-columns:1fr 1fr;gap:15px;width:95%;max-width:1200px}
-.bracketColumn{background:#fff;padding:10px;border-radius:10px}
-.match{display:flex;align-items:center;gap:5px;margin:6px 0;padding:6px;border:1px solid #ccc;border-radius:6px}
+body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f5f5;color:#333;overflow:hidden}
+h2,h3{text-align:center;margin:5px}
+
+.container{padding:10px}
+.controls{text-align:center;margin-bottom:10px}
+
+.bracketWrapper{
+  width:100%;
+  height:80vh;
+  overflow:hidden;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  background:#eaeef3;
+  position:relative;
+  cursor:grab;
+}
+.bracketWrapper:active{cursor:grabbing}
+
+.bracket{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  width:1400px;
+  transform-origin:0 0;
+}
+
+.col{
+  background:linear-gradient(180deg,#fff,#f1f4f8);
+  border-radius:16px;
+  padding:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.match{
+  background:#fff;
+  border-radius:8px;
+  padding:6px;
+  margin:8px 0;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  box-shadow:0 4px 10px rgba(0,0,0,.12);
+  transition:.2s;
+}
+.match:hover{transform:translateY(-2px)}
+
 .match span{flex:1;text-align:center;font-weight:600}
-input{width:40px;text-align:center;font-weight:700}
-@media(max-width:768px){.bracket{grid-template-columns:1fr}}
+
+.score{
+  width:40px;
+  border:none;
+  border-bottom:2px solid #aaa;
+  text-align:center;
+  font-weight:700;
+}
+.score:focus{outline:none;border-color:#1565c0}
+
+button{
+  border:none;
+  border-radius:6px;
+  padding:4px 8px;
+  cursor:pointer;
+  background:#42a5f5;
+  color:#fff;
+}
+button:hover{background:#1e88e5}
+
+.resetBtn{
+  background:#ef5350;
+  font-size:.75rem;
+}
+.resetBtn:hover{background:#c62828}
+
+@media(max-width:900px){
+  .bracket{grid-template-columns:1fr;width:700px}
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
-<h2>🏸 Double Knockout Badminton</h2>
+<h2>🏸 Double Knockout Badminton PRO 🏸</h2>
 
-<input id="teamCount" type="number" min="3" max="16" value="8">
-<button onclick="startTournament()">Jana Bracket</button>
+<div class="controls">
+  Team:
+  <input id="teamCount" type="number" value="8" min="3" max="16">
+  <button onclick="start()">🚀 Jana</button>
+</div>
 
-<div class="bracket" id="bracket"></div>
+<div class="bracketWrapper" id="wrapper">
+  <div class="bracket" id="bracket"></div>
+</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyD_TFKKA1QPtNtp_U2BRyVEQodBVWjMLqs",
@@ -37,95 +112,114 @@ firebase.initializeApp({
 const db=firebase.database();
 
 let matches=[];
+let scale=1,dx=0,dy=0,isDrag=false,sx,sy;
 
-// ========= START =========
-function startTournament(){
-  const n=+teamCount.value;
-  if(n<3) return alert("Min 3 team");
+/* ===== Zoom & Drag ===== */
+const wrapper=document.getElementById("wrapper");
+const bracket=document.getElementById("bracket");
 
+wrapper.onwheel=e=>{
+  e.preventDefault();
+  scale+=e.deltaY*-0.001;
+  scale=Math.min(Math.max(.6,scale),1.5);
+  updateTransform();
+};
+wrapper.onmousedown=e=>{
+  isDrag=true;sx=e.clientX-dx;sy=e.clientY-dy;
+};
+window.onmouseup=()=>isDrag=false;
+window.onmousemove=e=>{
+  if(!isDrag)return;
+  dx=e.clientX-sx;dy=e.clientY-sy;
+  updateTransform();
+};
+function updateTransform(){
+  bracket.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`;
+}
+
+/* ===== Tournament ===== */
+function genTeams(n){
+  return Array.from({length:n},(_,i)=>"Team "+(i+1));
+}
+
+function start(){
   db.ref("matches").remove();
-
-  let teams=[];
-  for(let i=1;i<=n;i++) teams.push("Team "+i);
+  const n=+teamCount.value;
+  let teams=genTeams(n);
   if(teams.length%2) teams.push("BYE");
 
   for(let i=0;i<teams.length;i+=2){
     db.ref("matches").push({
-      bracket:"WB",
-      a:teams[i],
-      b:teams[i+1],
-      sa:"",
-      sb:"",
-      winner:"",
-      loser:""
+      bracket:"WB",round:1,
+      a:teams[i],b:teams[i+1],
+      sa:"",sb:"",winner:"",loser:""
     });
   }
 }
 
-// ========= RENDER =========
 function render(){
   bracket.innerHTML="";
   const wb=document.createElement("div");
+  wb.className="col"; wb.innerHTML="<h3>Winner Bracket</h3>";
   const lb=document.createElement("div");
-  wb.className=lb.className="bracketColumn";
-  wb.innerHTML="<h3>Winner Bracket</h3>";
-  lb.innerHTML="<h3>Loser Bracket</h3>";
+  lb.className="col"; lb.innerHTML="<h3>Loser Bracket</h3>";
 
   matches.forEach(m=>{
-    const el=document.createElement("div");
-    el.className="match";
-    el.innerHTML=`
+    const d=document.createElement("div");
+    d.className="match";
+    d.innerHTML=`
       <span>${m.a}</span>
-      <input value="${m.sa}" onchange="score('${m.id}','sa',this.value)">
+      <input class="score" value="${m.sa}" 
+        onchange="score('${m.id}','sa',this.value)">
       <span>🆚</span>
-      <input value="${m.sb}" onchange="score('${m.id}','sb',this.value)">
+      <input class="score" value="${m.sb}"
+        onchange="score('${m.id}','sb',this.value)">
       <span>${m.b}</span>
+      <button class="resetBtn" onclick="resetMatch('${m.id}')">⟲</button>
     `;
-    (m.bracket==="WB"?wb:lb).appendChild(el);
+    (m.bracket==="WB"?wb:lb).appendChild(d);
   });
-
   bracket.append(wb,lb);
 }
 
-// ========= SCORE =========
-function score(id,field,val){
+function score(id,f,v){
   const m=matches.find(x=>x.id===id);
-  if(!m) return;
+  if(!m)return;
 
-  const sa=field==="sa"?val:m.sa;
-  const sb=field==="sb"?val:m.sb;
+  let sa=f==="sa"?v:m.sa;
+  let sb=f==="sb"?v:m.sb;
+  let winner=m.winner,loser=m.loser;
 
-  let winner="", loser="";
   if(sa!=="" && sb!=="" && !m.winner){
-    if(+sa>+sb){winner=m.a; loser=m.b}
-    if(+sb>+sa){winner=m.b; loser=m.a}
+    if(+sa>+sb){winner=m.a;loser=m.b}
+    if(+sb>+sa){winner=m.b;loser=m.a}
   }
 
-  db.ref("matches/"+id).update({
-    [field]:val,
-    winner,
-    loser
-  });
+  db.ref("matches/"+id).update({[f]:v,winner,loser});
 
   if(winner && m.bracket==="WB" && loser!=="BYE"){
     db.ref("matches").push({
       bracket:"LB",
-      a:loser,
-      b:"",
-      sa:"",
-      sb:"",
-      winner:"",
-      loser:""
+      round:m.round,
+      a:loser,b:"",
+      sa:"",sb:"",winner:"",loser:""
     });
   }
 }
 
-// ========= FIREBASE LISTENER (SAFE) =========
-db.ref("matches").on("value",snap=>{
-  if(!snap.exists()) return;
-  matches=Object.entries(snap.val()).map(([id,v])=>({...v,id}));
+function resetMatch(id){
+  db.ref("matches/"+id).update({
+    sa:"",sb:"",
+    winner:"",loser:""
+  });
+}
+
+db.ref("matches").on("value",s=>{
+  matches=[];
+  s.forEach(c=>{matches.push({...c.val(),id:c.key})});
   render();
 });
 </script>
+
 </body>
 </html>
