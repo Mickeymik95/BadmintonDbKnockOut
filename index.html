@@ -2,14 +2,14 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<title>Double Knockout Badminton</title>
+<title>Double Knockout Badminton – Lengkap</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f5f5;color:#333;}
 h2,h3{text-align:center;margin:5px;}
 .container{display:flex;flex-direction:column;align-items:center;margin:10px;}
 .inputGroup{margin:15px;}
-.bracket{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:95%;max-width:1200px;}
+.bracket{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:95%;max-width:1400px;}
 .bracketColumn{background:#fff;padding:10px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .bracketColumn h3{margin-top:0;text-align:center;color:#1565C0;}
 .match{display:flex;justify-content:space-between;align-items:center;margin:5px 0;padding:8px;border-radius:6px;border:1px solid #ccc;background:#f9f9f9;flex-wrap:wrap;transition:all 0.3s;}
@@ -60,23 +60,17 @@ function generateTeams(n){
   return t;
 }
 
-// ===== Generate Winner Bracket =====
-function generateWinnerBracket(teams){
+// ===== Generate Bracket =====
+function generateInitialWB(teams){
   let list=[...teams];
   if(list.length%2) list.push({name:"BYE",loss:0});
   let matches=[];
   for(let i=0;i<list.length;i+=2){
-    let ref=db.ref('matches').push();
+    const ref=db.ref('matches').push();
     let match={
-      id:ref.key,
-      bracket:'WB',
-      round:1,
-      a:list[i].name,
-      b:list[i+1].name,
-      sa:'',
-      sb:'',
-      winner:'',
-      loser:''
+      id:ref.key, bracket:'WB', round:1,
+      a:list[i].name, b:list[i+1].name,
+      sa:'', sb:'', winner:'', loser:''
     };
     ref.set(match);
     matches.push(match);
@@ -93,8 +87,10 @@ function renderBracket(){
 
   tournament.matches.forEach(m=>{
     const matchEl=document.createElement('div'); matchEl.className='match';
-    const saClass=(m.sa==='')?'zero':(+m.sa>+m.sb?'positive':(+m.sa<+m.sb?'negative':'zero'));
-    const sbClass=(m.sb==='')?'zero':(+m.sb>+m.sa?'positive':(+m.sb<+m.sa?'negative':'zero'));
+    const saVal = m.sa === '' ? 0 : +m.sa;
+    const sbVal = m.sb === '' ? 0 : +m.sb;
+    const saClass=(saVal>sbVal?'positive':(saVal<sbVal?'negative':'zero'));
+    const sbClass=(sbVal>saVal?'positive':(sbVal<saVal?'negative':'zero'));
     matchEl.innerHTML=`<span>${m.a}</span>
       <input type="number" class="score ${saClass}" value="${m.sa}" onchange="updateScore('${m.id}','sa',this.value)">
       <span>🆚</span>
@@ -107,9 +103,63 @@ function renderBracket(){
   container.appendChild(lbCol);
 }
 
+// ===== Determine Winner =====
+function determineWinner(match){
+  const sa = +match.sa || 0;
+  const sb = +match.sb || 0;
+  if(match.a==="BYE" && match.b!=="BYE"){match.winner=match.b; match.loser=match.a;}
+  else if(match.b==="BYE" && match.a!=="BYE"){match.winner=match.a; match.loser=match.b;}
+  else if(sa>sb){match.winner=match.a; match.loser=match.b;}
+  else if(sb>sa){match.winner=match.b; match.loser=match.a;}
+  else return; // tie
+  db.ref('matches/'+match.id).update({winner:match.winner,loser:match.loser});
+  advanceBracket(match);
+}
+
+// ===== Advance Winner/Loser =====
+function advanceBracket(match){
+  if(match.bracket==='WB'){
+    if(match.loser!=="BYE") addToLB(match.loser);
+    addNextWB(match.winner);
+  } else if(match.bracket==='LB'){
+    addNextLB(match.winner);
+  }
+}
+
+// ===== Add Loser to LB =====
+function addToLB(teamName){
+  const lbMatch={
+    id:db.ref('matches').push().key,
+    bracket:'LB', round:1,
+    a:teamName, b:'',
+    sa:'', sb:'', winner:'', loser:''
+  };
+  db.ref('matches/'+lbMatch.id).set(lbMatch);
+}
+
+// ===== Add Next WB Match =====
+function addNextWB(teamName){
+  // cari last round WB
+  const wbMatches=tournament.matches.filter(m=>m.bracket==='WB');
+  let round=Math.max(...wbMatches.map(m=>m.round));
+  const newMatch={id:db.ref('matches').push().key, bracket:'WB', round:round+1, a:teamName, b:'', sa:'', sb:'', winner:'', loser:''};
+  // padankan dengan match lain round sama bila ada
+  const sameRound=wbMatches.filter(m=>m.round===round+1 && !m.b);
+  if(sameRound.length) newMatch.b=sameRound[0].a; db.ref('matches/'+newMatch.id).set(newMatch);
+}
+
+// ===== Add Next LB Match =====
+function addNextLB(teamName){
+  const lbMatches=tournament.matches.filter(m=>m.bracket==='LB');
+  let round=Math.max(...lbMatches.map(m=>m.round));
+  const newMatch={id:db.ref('matches').push().key, bracket:'LB', round:round+1, a:teamName, b:'', sa:'', sb:'', winner:'', loser:''};
+  const sameRound=lbMatches.filter(m=>m.round===round+1 && !m.b);
+  if(sameRound.length) newMatch.b=sameRound[0].a; db.ref('matches/'+newMatch.id).set(newMatch);
+}
+
 // ===== Update Score =====
 function updateScore(matchId,field,value){
-  const matchRef=db.ref('matches/' + matchId);
+  const matchRef=db.ref('matches/'+matchId);
   matchRef.update({[field]:value});
 }
 
@@ -118,20 +168,21 @@ function startTournament(){
   const n=parseInt(document.getElementById('teamCount').value);
   if(n<3){alert('Minimum 3 team'); return;}
   tournament.teams=generateTeams(n);
-  tournament.matches=[]; // clear old matches
-  db.ref('matches').remove(); // clear Firebase old matches
-  tournament.matches=generateWinnerBracket(tournament.teams);
+  tournament.matches=[]; db.ref('matches').remove();
+  tournament.matches=generateInitialWB(tournament.teams);
   renderBracket();
 }
 
-// ===== Load From Firebase =====
+// ===== Load Firebase =====
 db.ref('matches').on('value',snap=>{
   if(snap.exists()){
     tournament.matches=Object.values(snap.val());
+    tournament.matches.forEach(m=>{
+      if(m.sa!=='' && m.sb!=='') determineWinner(m);
+    });
     renderBracket();
   }
 });
 </script>
-
 </body>
 </html>
