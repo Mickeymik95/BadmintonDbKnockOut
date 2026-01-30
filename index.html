@@ -2,269 +2,155 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<title>Double Knockout Badminton – Ultimate PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badminton Double Elimination LIVE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-:root{
-  --card:#fff;
-  --bg:#eef2f6;
-  --line:#c0c8d6;
-  --primary:#1e88e5;
-  --winner:#2e7d32;
-  --loser:#c62828;
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-
 body{
+  margin:0;
   font-family:'Segoe UI',sans-serif;
-  background:var(--bg);
-  color:#222;
-  overflow:hidden;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  min-height:100vh;
 }
-
 header{
+  margin:20px;
+  padding:20px;
+  background:rgba(255,255,255,.25);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
   text-align:center;
-  padding:12px;
-  font-weight:700;
-  font-size:1.4rem;
 }
-
-.controls{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  padding:8px;
+input,button{
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
 }
-
-.viewport{
-  height:78vh;
-  overflow:hidden;
-  background:#e6ebf2;
-  touch-action:none;
+button{
+  background:linear-gradient(135deg,#43cea2,#185a9d);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
-
 .bracket{
   display:flex;
-  gap:20px;
-  padding:16px;
-  transform-origin:0 0;
-  position:relative;
+  gap:25px;
+  padding:20px;
+  overflow-x:auto;
 }
-
-.col{
-  min-width:280px;
-  position:relative;
+.match{
+  background:#fff;
+  padding:14px;
+  border-radius:16px;
+  min-width:260px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  transition:.3s;
 }
-
-.col h3{
-  text-align:center;
+.match:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.team{
+  background:#f1f1f1;
+  padding:8px;
+  border-radius:10px;
   margin:6px 0;
 }
-
-.match{
-  background:var(--card);
-  border-radius:10px;
-  padding:6px;
-  margin:12px 0;
-  display:grid;
-  grid-template-columns:1fr 40px 1fr;
-  gap:6px;
-  align-items:center;
-  border:1px solid var(--line);
-  position:relative;
-}
-
-.team{
-  text-align:center;
-  font-weight:600;
-}
-
+.win{background:#2ecc71;color:#fff;font-weight:bold}
+.lose{background:#e74c3c;color:#fff}
 .score{
-  width:40px;
-  border:none;
-  border-bottom:2px solid var(--line);
+  display:flex;
+  gap:6px;
+  margin:8px 0;
+}
+.score input{
+  width:70px;
   text-align:center;
-  font-weight:700;
-  background:none;
-}
-.score:focus{
-  outline:none;
-  border-color:var(--primary);
-}
-
-.reset{
-  grid-column:1/-1;
-  font-size:12px;
-  background:#f44336;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  padding:4px;
-}
-
-/* winner highlight */
-.winner{
-  color:var(--winner);
-  font-weight:700;
-  text-shadow:0 0 4px rgba(46,125,50,.4);
-}
-
-/* connector line */
-.match::after{
-  content:"";
-  position:absolute;
-  right:-12px;
-  top:50%;
-  width:12px;
-  height:2px;
-  background:var(--line);
-}
-.match::before{
-  content:"";
-  position:absolute;
-  right:-12px;
-  top:50%;
-  width:2px;
-  height:50%;
-  background:var(--line);
-}
-.col:last-child .match::before,
-.col:last-child .match::after{display:none}
-
-@media(max-width:700px){
-  .bracket{flex-direction:column}
 }
 </style>
-</head>
-<body>
 
-<header>🏸 Double Knockout Badminton Ultimate PRO 🏸</header>
-
-<div class="controls">
-  <input id="teamCount" type="number" value="8" min="3" max="16">
-  <button onclick="startTournament()">Jana</button>
-  <button onclick="exportPDF()">Export PDF</button>
-</div>
-
-<div class="viewport" id="vp">
-  <div class="bracket" id="bracket"></div>
-</div>
-
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+<header>
+  <h2>🏸 Badminton LIVE Bracket</h2>
+  <input id="teamCount" type="number" min="2" placeholder="Jumlah Pasukan">
+  <button onclick="generate()">Jana Bracket</button>
+</header>
+
+<div class="bracket" id="bracket"></div>
 
 <script>
-firebase.initializeApp({
-  apiKey:"AIzaSyD_TFKKA1QPtNtp_U2BRyVEQodBVWjMLqs",
-  databaseURL:"https://badmintondbknout-default-rtdb.asia-southeast1.firebasedatabase.app"
-});
-
-const db=firebase.database();
-let matches=[];
-let scale=1,x=0,y=0;
-let raf=false;
-
-/* ===== Smooth Pan/Zoom ===== */
-const vp=document.getElementById("vp");
-const bracket=document.getElementById("bracket");
-function apply(){bracket.style.transform=`translate(${x}px,${y}px) scale(${scale})`; raf=false;}
-
-vp.addEventListener("wheel",e=>{
-  e.preventDefault();
-  scale+=e.deltaY*-0.001;
-  scale=Math.max(.85,Math.min(1.2,scale));
-  if(!raf){raf=true;requestAnimationFrame(apply);}
-},{passive:false});
-
-let sx,sy,drag=false;
-vp.onpointerdown=e=>{drag=true;sx=e.clientX-x;sy=e.clientY-y;}
-vp.onpointerup=()=>drag=false;
-vp.onpointermove=e=>{
-  if(!drag)return;
-  x=e.clientX-sx;
-  y=e.clientY-sy;
-  if(!raf){raf=true;requestAnimationFrame(apply);}
+// 🔥 FIREBASE CONFIG AWAK (SIAP)
+const firebaseConfig = {
+  apiKey: "AIzaSyD_TFKKA1QPtNtp_U2BRyVEQodBVWjMLqs",
+  authDomain: "badmintondbknout.firebaseapp.com",
+  databaseURL: "https://badmintondbknout-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "badmintondbknout",
+  storageBucket: "badmintondbknout.firebasestorage.app",
+  messagingSenderId: "810227668279",
+  appId: "1:810227668279:web:ea68f760342f893a3776b2"
 };
 
-/* ===== Tournament ===== */
-function startTournament(){
-  db.ref("matches").remove();
-  const n=+teamCount.value;
-  let teams=Array.from({length:n},(_,i)=>"Team "+(i+1));
-  if(teams.length%2) teams.push("BYE");
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
+// Jana bracket
+function generate(){
+  const n=parseInt(teamCount.value);
+  if(!n||n<2) return alert("Minimum 2 pasukan");
+
+  let size=1; while(size<n) size*=2;
+  let teams=[];
+  for(let i=1;i<=n;i++) teams.push("Pasukan "+i);
+  while(teams.length<size) teams.push("BYE");
+
+  db.ref("live").set({teams,results:{}});
+}
+
+// Render LIVE
+db.ref("live").on("value",snap=>{
+  if(!snap.exists()) return;
+  const data=snap.val();
+  render(data.teams,data.results||{});
+});
+
+function render(teams,results){
+  bracket.innerHTML="";
   for(let i=0;i<teams.length;i+=2){
-    db.ref("matches").push({
-      bracket:"WB",round:1,
-      a:teams[i],b:teams[i+1],
-      sa:"",sb:"",winner:"",loser:""
-    });
+    const r=results[i]||{};
+    const m=document.createElement("div");
+    m.className="match";
+    m.innerHTML=`
+      <div class="team ${r.win===i?'win':r.lose===i?'lose':''}" id="t${i}">${teams[i]}</div>
+      <div class="team ${r.win===i+1?'win':r.lose===i+1?'lose':''}" id="t${i+1}">${teams[i+1]}</div>
+      <div class="score">
+        <input id="s${i}" placeholder="21" value="${r.s1||''}">
+        <input id="s${i+1}" placeholder="13" value="${r.s2||''}">
+      </div>
+      <button onclick="save(${i})">✔ Sahkan</button>
+    `;
+    bracket.appendChild(m);
   }
 }
 
-/* ===== Render Bracket ===== */
-function render(){
-  bracket.innerHTML="";
-  ["WB","LB"].forEach(type=>{
-    const col=document.createElement("div");
-    col.className="col";
-    col.innerHTML=`<h3>${type==="WB"?"Winner":"Loser"} Bracket</h3>`;
-    matches.filter(m=>m.bracket===type).forEach(m=>{
-      const d=document.createElement("div");
-      d.className="match";
-      if(m.winner) d.querySelector?.classList.add("winner");
-      d.innerHTML=`
-        <div class="team ${m.winner===m.a?"winner":""}">${m.a}</div>
-        <input class="score" value="${m.sa}" onchange="updateScore('${m.id}','sa',this.value)">
-        <div class="team ${m.winner===m.b?"winner":""}">${m.b}</div>
-        <input class="score" value="${m.sb}" onchange="updateScore('${m.id}','sb',this.value)">
-        <button class="reset" onclick="resetMatch('${m.id}')">Reset Match</button>
-      `;
-      col.appendChild(d);
-    });
-    bracket.appendChild(col);
+function save(i){
+  const s1=parseInt(document.getElementById("s"+i).value);
+  const s2=parseInt(document.getElementById("s"+(i+1)).value);
+  if(isNaN(s1)||isNaN(s2)) return alert("Score tak sah");
+
+  const win=s1>s2?i:i+1;
+  const lose=s1>s2?i+1:i;
+
+  db.ref("live/results/"+i).set({
+    s1,s2,win,lose
   });
 }
-
-/* ===== Score Update & Auto LB Flow ===== */
-function updateScore(id,field,value){
-  const m=matches.find(x=>x.id===id);
-  if(!m) return;
-  let sa=field==="sa"?value:m.sa;
-  let sb=field==="sb"?value:m.sb;
-  let w="",l="";
-  if(sa!==""&&sb!==""){
-    if(+sa>+sb){w=m.a;l=m.b}
-    if(+sb>+sa){w=m.b;l=m.a}
-  }
-  db.ref("matches/"+id).update({[field]:value,winner:w,loser:l});
-  if(w && m.bracket==="WB" && l!=="BYE"){
-    db.ref("matches").push({bracket:"LB",round:m.round,a:l,b:"",sa:"",sb:"",winner:"",loser:""});
-  }
-}
-
-/* ===== Reset single match ===== */
-function resetMatch(id){
-  db.ref("matches/"+id).update({sa:"",sb:"",winner:"",loser:""});
-}
-
-/* ===== Export PDF ===== */
-function exportPDF(){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({orientation:"landscape"});
-  doc.html(bracket,{callback: function(pdf){
-    pdf.save("Bracket.pdf");
-  },x:5,y:5,width:280});
-}
-
-/* ===== Firebase realtime ===== */
-db.ref("matches").on("value",snap=>{
-  matches=[];
-  snap.forEach(c=>matches.push({...c.val(),id:c.key}));
-  render();
-});
 </script>
 
 </body>
