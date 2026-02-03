@@ -12,28 +12,14 @@
 
     body { font-family:'Segoe UI', sans-serif; background:var(--bg); color:#fff; padding:20px; margin:0; }
 
-    /* PEMBUNGKUS UTAMA UNTUK CENTERING */
-    .main-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Memastikan header, senarai, dan bracket sejajar tengah */
-        width: 100%;
-    }
+    .main-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
-    /* HEADER - LEBAR MENGIKUT KANDUNGAN BRACKET */
+    /* HEADER AUTO-CENTER */
     .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(255, 255, 255, 0.03);
-        padding: 25px 40px;
-        border-radius: 25px;
-        border-bottom: 2px solid var(--garis);
-        margin-bottom: 30px;
-        width: 100%;
-        max-width: fit-content; /* Lebar ikut bracket di bawah */
-        box-sizing: border-box;
-        gap: 50px;
+        display: flex; align-items: center; justify-content: space-between;
+        background: rgba(255, 255, 255, 0.03); padding: 25px 40px;
+        border-radius: 25px; border-bottom: 2px solid var(--garis); margin-bottom: 30px;
+        width: 100%; max-width: fit-content; box-sizing: border-box; gap: 50px;
     }
 
     .logo-box img { height: 100px; border-radius: 12px; filter: drop-shadow(0 0 10px var(--utama)); }
@@ -50,50 +36,41 @@
         letter-spacing: 8px; margin-top: 5px; display: block;
     }
 
-    .admin-login-wrapper {
-        background: linear-gradient(45deg, #6a11cb, #2575fc); padding: 12px 20px;
-        border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
+    .admin-login-wrapper { background: linear-gradient(45deg, #6a11cb, #2575fc); padding: 12px 20px; border-radius: 12px; }
     .btn-buka-admin { background: #fff; color: #6a11cb; border: none; padding: 8px 15px; border-radius: 6px; font-weight: 900; cursor: pointer; }
 
-    /* SENARAI PASUKAN - MAX PANJANG IKUT BRACKET */
+    /* SENARAI PASUKAN HORIZONTAL */
     .senarai-peserta-awam {
         background: var(--kad); padding: 15px 25px; border-radius: 15px;
         margin-bottom: 40px; border: 1px solid var(--garis);
-        width: 100%;
-        max-width: fit-content; /* Hadkan lebar ikut bracket */
-        overflow: hidden;
+        width: 100%; max-width: fit-content; overflow: hidden;
     }
-    .grid-peserta {
-        display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px;
-        scrollbar-width: thin; scrollbar-color: var(--utama) #000;
-    }
-    .kad-peserta-ringkas {
-        flex: 0 0 auto; background: #000; padding: 8px 15px;
-        border-radius: 8px; border: 1px solid #333; font-size: 0.85rem;
-    }
+    .grid-peserta { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px; }
+    .kad-peserta-ringkas { flex: 0 0 auto; background: #000; padding: 8px 15px; border-radius: 8px; border: 1px solid #333; font-size: 0.85rem; }
 
-    /* TOURNAMENT BRACKET */
-    .tournament-layout { display: flex; width: fit-content; }
-    .bracket-group { display: flex; flex-direction: column; gap: 50px; }
+    /* BRACKET LAYOUT */
+    .tournament-layout { display: flex; width: fit-content; gap: 40px; }
+    .bracket-group { display: flex; flex-direction: column; gap: 40px; }
     .laluan-row { display: flex; gap: 40px; padding: 25px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid #222; }
     
     .pusingan { display: flex; flex-direction: column; gap: 30px; min-width: 260px; justify-content: space-around; }
-    .tajuk-pusingan { font-size: 0.75rem; font-weight: bold; text-align: center; padding: 10px; text-transform: uppercase; border-radius: 8px; border: 1px solid #444; background: #222; margin-bottom: 10px; }
+    .tajuk-pusingan { font-size: 0.75rem; font-weight: bold; text-align: center; padding: 8px; text-transform: uppercase; border-radius: 8px; border: 1px solid #444; background: #222; }
 
-    .kotak-perlawanan { background:var(--kad); border:1px solid var(--garis); border-radius:12px; overflow:hidden; position: relative; padding-top: 30px; width: 260px; }
+    .kotak-perlawanan { background:var(--kad); border:1px solid var(--garis); border-radius:12px; overflow:hidden; position: relative; padding-top: 30px; width: 260px; margin-bottom: 10px; }
     .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: var(--biru-nombor); font-size: 9px; font-weight: 900; padding: 5px; text-align: center; border-bottom: 1px solid var(--garis); }
 
-    .slot-pasukan { display:flex; gap: 10px; align-items:center; padding:10px; border-bottom: 1px solid #222; height: 45px; }
+    .slot-pasukan { display:flex; gap: 10px; align-items:center; padding:10px; border-bottom: 1px solid #222; height: 45px; transition: 0.3s; }
     .avatar-wrapper { width: 35px; height: 35px; border-radius: 50%; overflow: hidden; background: #222; border: 1px solid #333; }
     .avatar { width: 100%; height: 100%; object-fit: cover; }
-    .nama-display { flex:1; font-size:0.85rem; font-weight: 600; }
+    .nama-display { flex:1; font-size:0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
+    /* SKOR & WARNA (DIKEKALKAN) */
     .skor { width:35px; height: 30px; text-align:center; background:#000; border:1px solid #444; color:#fff; border-radius:5px; font-weight:bold; }
-    .slot-menang { background: rgba(46, 204, 113, 0.12) !important; }
+    .slot-menang { background: rgba(46, 204, 113, 0.15) !important; }
     .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
+    .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none; }
 
-    .gf-container { display: flex; align-items: center; padding-left: 50px; border-left: 3px dashed var(--garis); margin-left: 30px; }
+    .gf-container { display: flex; align-items: center; padding-left: 50px; border-left: 3px dashed var(--garis); margin-left: 10px; }
     .grand-final { border: 3px solid var(--emas) !important; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); transform: scale(1.05); }
 
     /* ADMIN PANEL */
@@ -104,22 +81,16 @@
 
 <div class="main-wrapper">
     <div class="header-container" id="headerRef">
-        <div class="logo-box">
-            <img src="logo.jpeg" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=BWF'">
-        </div>
+        <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/100'"></div>
         <div class="tajuk-box">
             <h1>BWF BADMINTON FAMILY TOUR</h1>
             <span class="siri-tag">SIRI II</span>
         </div>
-        <div class="admin-box">
-            <div class="admin-login-wrapper">
-                <button class="btn-buka-admin" onclick="toggleAdmin()">Admin Login</button>
-            </div>
-        </div>
+        <div class="admin-box"><div class="admin-login-wrapper"><button class="btn-buka-admin" onclick="toggleAdmin()">Admin Login</button></div></div>
     </div>
 
     <div class="senarai-peserta-awam" id="listRef">
-        <h4 style="margin:0 0 10px 0; color:var(--emas); font-size: 0.7rem; letter-spacing: 2px;">PASUKAN BERDAFTAR (SKROL KANAN)</h4>
+        <h4 style="margin:0 0 10px 0; color:var(--emas); font-size: 0.75rem;">PASUKAN BERDAFTAR</h4>
         <div id="gridPesertaAwam" class="grid-peserta"></div>
     </div>
 
@@ -128,7 +99,6 @@
             <div id="barisW" class="laluan-row"></div>
             <div id="barisL" class="laluan-row"></div>
         </div>
-        
         <div class="gf-container">
             <div class="pusingan">
                 <div style="background:var(--emas); color:#000; font-weight:900; text-align:center; padding:10px; border-radius:8px; margin-bottom:15px;">🏆 GRAND FINAL</div>
@@ -140,22 +110,20 @@
 
 <div id="panelAdmin">
     <span style="float:right; cursor:pointer;" onclick="toggleAdmin()">✖</span>
-    <h2 style="color:var(--utama); margin:0;">Admin Panel</h2>
-    <hr style="border:0.5px solid #333; margin: 15px 0;">
+    <h2 style="color:var(--utama); margin:0;">Admin Control</h2>
+    <hr style="border:0.5px solid #333; margin:15px 0;">
     <div id="authSection">
-        <input type="password" id="adminPass" style="width:100%; padding:10px; background:#111; color:#fff; border:1px solid #444; border-radius:5px;" placeholder="Password...">
-        <button onclick="login()" style="width:100%; margin-top:10px; padding:10px; background:var(--utama); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Login</button>
+        <input type="password" id="adminPass" style="width:100%; padding:10px; background:#111; color:#fff; border:1px solid #444;" placeholder="Password">
+        <button onclick="login()" style="width:100%; margin-top:10px; padding:10px; background:var(--utama); border:none; cursor:pointer;">Buka</button>
     </div>
     <div id="adminControls" style="display:none;">
-        <label>Jumlah Pasukan:</label>
-        <input type="number" id="bilPasukan" value="6" min="2" style="width:60px; background:#000; color:#fff; border:1px solid #444; padding:5px; margin-bottom:15px;">
-        <button onclick="jana()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Jana Bracket</button>
+        <input type="number" id="bilPasukan" value="6" style="width:60px;">
+        <button onclick="jana()" style="padding:10px; background:var(--utama); border:none; cursor:pointer;">Jana Baru</button>
         <div id="containerNamaAdmin" style="margin-top:20px;"></div>
     </div>
 </div>
 
 <script>
-// SEMUA FUNGSI ASAL DIKEKALKAN 100%
 let config = { n: 0, p2: 0, seeds: [] };
 let infoPasukan = {};
 let matchCounter = 1;
@@ -170,84 +138,7 @@ function login() {
     if(document.getElementById('adminPass').value === ADMIN_PASSWORD) {
         document.getElementById('authSection').style.display = 'none';
         document.getElementById('adminControls').style.display = 'block';
-    } else { alert("Salah Password!"); }
-}
-
-function jana() {
-    config.n = parseInt(document.getElementById('bilPasukan').value);
-    config.p2 = Math.pow(2, Math.ceil(Math.log2(config.n)));
-    config.seeds = getSeededOrder(config.p2);
-    infoPasukan = {};
-    document.getElementById('containerNamaAdmin').innerHTML = '';
-    document.getElementById('gridPesertaAwam').innerHTML = '';
-
-    for(let i=0; i<config.n; i++) {
-        document.getElementById('containerNamaAdmin').innerHTML += `
-            <div style="background:#000; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">
-                <label style="color:var(--emas); font-size:11px;">PASUKAN ${i+1}</label>
-                <input type="text" style="width:90%; background:#111; color:#fff; border:1px solid #444; padding:5px; margin-top:5px;" placeholder="Nama..." oninput="update(${i}, 'nama', this.value)">
-                <input type="text" style="width:90%; background:#111; color:#fff; border:1px solid #444; padding:5px; margin-top:5px;" placeholder="Link Foto..." oninput="update(${i}, 'foto', this.value)">
-            </div>`;
-        document.getElementById('gridPesertaAwam').innerHTML += `
-            <div class="kad-peserta-ringkas">
-                <span style="color:var(--utama)">${i+1}.</span> <span id="nama_awam_${i}">Pasukan ${i+1}</span>
-            </div>`;
-        infoPasukan[i] = { nama: `Pasukan ${i+1}`, foto: "" };
-    }
-    render();
-    adjustWidths(); // Selaraskan lebar header & senarai
-}
-
-function render() {
-    document.getElementById('barisW').innerHTML = '';
-    document.getElementById('barisL').innerHTML = '';
-    document.getElementById('gfBox').innerHTML = '';
-    matchCounter = 1;
-    const pLen = Math.log2(config.p2);
-    for(let p=0; p<pLen; p++) {
-        let col = document.createElement('div');
-        col.className = 'pusingan';
-        col.innerHTML = `<div class="tajuk-pusingan">Winner Rd ${p+1}</div>`;
-        for(let m=0; m < Math.pow(2, pLen-p-1); m++) col.appendChild(buatKotak('W', p, m));
-        document.getElementById('barisW').appendChild(col);
-    }
-    let lTotal = (pLen - 1) * 2;
-    for(let p=0; p<lTotal; p++) {
-        let col = document.createElement('div');
-        col.className = 'pusingan';
-        col.innerHTML = `<div class="tajuk-pusingan">Loser Rd ${p+1}</div>`;
-        let mCount = Math.pow(2, Math.floor((lTotal - p - 1) / 2));
-        for(let m=0; m < mCount; m++) col.appendChild(buatKotak('L', p, m));
-        document.getElementById('barisL').appendChild(col);
-    }
-    document.getElementById('gfBox').appendChild(buatKotak('GF', 0, 0, true));
-    scanByes();
-}
-
-function buatKotak(j, p, m, gf=false) {
-    const id = `${j}_${p}_${m}`;
-    let div = document.createElement('div');
-    div.className = 'kotak-perlawanan' + (gf ? ' grand-final' : '');
-    div.id = id;
-    let n1 = "Menunggu...", n2 = "Menunggu...", id1 = "none", id2 = "none";
-    if (j === 'W' && p === 0) {
-        let s1 = config.seeds[m * 2], s2 = config.seeds[m * 2 + 1];
-        if (s1 < config.n) { n1 = `Pasukan ${s1 + 1}`; id1 = s1; } else { n1 = "BYE"; }
-        if (s2 < config.n) { n2 = `Pasukan ${s2 + 1}`; id2 = s2; } else { n2 = "BYE"; }
-    }
-    div.innerHTML = `
-        <div class="match-no">PERLAWANAN ${matchCounter++}</div>
-        <div class="slot-pasukan" id="${id}_s1" data-pid="${id1}">
-            <div class="avatar-wrapper"><img class="avatar" id="${id}_img1" src=""></div>
-            <span id="${id}_p1" class="nama-display">${n1}</span>
-            <input type="number" class="skor" id="${id}_sc1" oninput="kira('${id}')">
-        </div>
-        <div class="slot-pasukan" id="${id}_s2" data-pid="${id2}">
-            <div class="avatar-wrapper"><img class="avatar" id="${id}_img2" src=""></div>
-            <span id="${id}_p2" class="nama-display">${n2}</span>
-            <input type="number" class="skor" id="${id}_sc2" oninput="kira('${id}')">
-        </div>`;
-    return div;
+    } else { alert("Salah!"); }
 }
 
 function update(index, jenis, nilai) {
@@ -267,17 +158,23 @@ function kira(id) {
     if (sc1.value === '' || sc2.value === '') return;
     let v1 = parseInt(sc1.value), v2 = parseInt(sc2.value);
     if (v1 === v2) return;
+
     let sl1 = document.getElementById(id+'_s1'), sl2 = document.getElementById(id+'_s2');
     let n1 = document.getElementById(id+'_p1'), n2 = document.getElementById(id+'_p2');
     let im1 = document.getElementById(id+'_img1'), im2 = document.getElementById(id+'_img2');
-    sl1.classList.toggle('slot-menang', v1 > v2); sl2.classList.toggle('slot-menang', v2 > v1);
-    sc1.className = v1 > v2 ? 'skor skor-menang' : 'skor';
-    sc2.className = v2 > v1 ? 'skor skor-menang' : 'skor';
-    
+
+    // WARNA SKOR & SLOT
+    sl1.classList.toggle('slot-menang', v1 > v2);
+    sl2.classList.toggle('slot-menang', v2 > v1);
+    sc1.className = v1 > v2 ? 'skor skor-menang' : 'skor skor-kalah';
+    sc2.className = v2 > v1 ? 'skor skor-menang' : 'skor skor-kalah';
+
     let mN = v1 > v2 ? n1.innerText : n2.innerText, mF = v1 > v2 ? im1.src : im2.src, mID = v1 > v2 ? sl1.getAttribute('data-pid') : sl2.getAttribute('data-pid');
     let kN = v1 > v2 ? n2.innerText : n1.innerText, kF = v1 > v2 ? im2.src : im1.src, kID = v1 > v2 ? sl2.getAttribute('data-pid') : sl1.getAttribute('data-pid');
-    
+
     let [j, p, m] = id.split('_').map(x => isNaN(x) ? x : parseInt(x));
+    
+    // LOGIK PERGERAKAN DOUBLE ELIMINATION
     if (j === 'W') {
         passToNext('W', p+1, Math.floor(m/2), (m%2)+1, mN, mF, mID);
         let tP = (p === 0) ? 0 : p * 2 - 1, totalM = (config.p2/2), flipM = (m < totalM/2) ? (m+totalM/2) : (m-totalM/2);
@@ -302,22 +199,69 @@ function passToNext(j, p, m, s, nama, foto, pid) {
     }
 }
 
+function jana() {
+    config.n = parseInt(document.getElementById('bilPasukan').value);
+    config.p2 = Math.pow(2, Math.ceil(Math.log2(config.n)));
+    config.seeds = getSeededOrder(config.p2);
+    infoPasukan = {};
+    document.getElementById('containerNamaAdmin').innerHTML = '';
+    document.getElementById('gridPesertaAwam').innerHTML = '';
+    for(let i=0; i<config.n; i++) {
+        document.getElementById('containerNamaAdmin').innerHTML += `<div style="margin-bottom:10px; border:1px solid #333; padding:5px;"><label>P${i+1}</label><input type="text" oninput="update(${i}, 'nama', this.value)"><input type="text" oninput="update(${i}, 'foto', this.value)"></div>`;
+        document.getElementById('gridPesertaAwam').innerHTML += `<div class="kad-peserta-ringkas">${i+1}. <span id="nama_awam_${i}">Pasukan ${i+1}</span></div>`;
+        infoPasukan[i] = { nama: `Pasukan ${i+1}`, foto: "" };
+    }
+    render();
+    setTimeout(() => {
+        const bw = document.getElementById('bracketRef').offsetWidth;
+        document.getElementById('headerRef').style.width = bw + 'px';
+        document.getElementById('listRef').style.width = bw + 'px';
+    }, 100);
+}
+
+function render() {
+    document.getElementById('barisW').innerHTML = ''; document.getElementById('barisL').innerHTML = ''; document.getElementById('gfBox').innerHTML = '';
+    matchCounter = 1;
+    const pLen = Math.log2(config.p2);
+    for(let p=0; p<pLen; p++) {
+        let col = document.createElement('div'); col.className = 'pusingan';
+        col.innerHTML = `<div class="tajuk-pusingan">W. Rd ${p+1}</div>`;
+        for(let m=0; m < Math.pow(2, pLen-p-1); m++) col.appendChild(buatKotak('W', p, m));
+        document.getElementById('barisW').appendChild(col);
+    }
+    let lTotal = (pLen - 1) * 2;
+    for(let p=0; p<lTotal; p++) {
+        let col = document.createElement('div'); col.className = 'pusingan';
+        col.innerHTML = `<div class="tajuk-pusingan">L. Rd ${p+1}</div>`;
+        let mCount = Math.pow(2, Math.floor((lTotal - p - 1) / 2));
+        for(let m=0; m < mCount; m++) col.appendChild(buatKotak('L', p, m));
+        document.getElementById('barisL').appendChild(col);
+    }
+    document.getElementById('gfBox').appendChild(buatKotak('GF', 0, 0, true));
+    scanByes();
+}
+
+function buatKotak(j, p, m, gf=false) {
+    const id = `${j}_${p}_${m}`;
+    let div = document.createElement('div'); div.className = 'kotak-perlawanan' + (gf ? ' grand-final' : ''); div.id = id;
+    let n1 = "Menunggu...", n2 = "Menunggu...", id1 = "none", id2 = "none";
+    if (j === 'W' && p === 0) {
+        let s1 = config.seeds[m * 2], s2 = config.seeds[m * 2 + 1];
+        if (s1 < config.n) { n1 = `Pasukan ${s1 + 1}`; id1 = s1; } else { n1 = "BYE"; }
+        if (s2 < config.n) { n2 = `Pasukan ${s2 + 1}`; id2 = s2; } else { n2 = "BYE"; }
+    }
+    div.innerHTML = `<div class="match-no">PERLAWANAN ${matchCounter++}</div>
+        <div class="slot-pasukan" id="${id}_s1" data-pid="${id1}"><div class="avatar-wrapper"><img class="avatar" id="${id}_img1"></div><span id="${id}_p1" class="nama-display">${n1}</span><input type="number" class="skor" id="${id}_sc1" oninput="kira('${id}')"></div>
+        <div class="slot-pasukan" id="${id}_s2" data-pid="${id2}"><div class="avatar-wrapper"><img class="avatar" id="${id}_img2"></div><span id="${id}_p2" class="nama-display">${n2}</span><input type="number" class="skor" id="${id}_sc2" oninput="kira('${id}')"></div>`;
+    return div;
+}
+
 function scanByes() {
     document.querySelectorAll('.kotak-perlawanan').forEach(box => {
         let p1 = document.getElementById(box.id+'_p1'), p2 = document.getElementById(box.id+'_p2');
-        let sc1 = document.getElementById(box.id+'_sc1'), sc2 = document.getElementById(box.id+'_sc2');
-        if (p1 && p1.innerText === "BYE" && sc2.value === "") { sc1.value = 0; sc2.value = 1; kira(box.id); }
-        if (p2 && p2.innerText === "BYE" && sc1.value === "") { sc1.value = 1; sc2.value = 0; kira(box.id); }
+        if (p1 && p1.innerText === "BYE") { document.getElementById(box.id+'_sc1').value = 0; document.getElementById(box.id+'_sc2').value = 1; kira(box.id); }
+        if (p2 && p2.innerText === "BYE") { document.getElementById(box.id+'_sc1').value = 1; document.getElementById(box.id+'_sc2').value = 0; kira(box.id); }
     });
-}
-
-function adjustWidths() {
-    // Fungsi untuk memaksa header & senarai ikut lebar bracket secara dinamik
-    const bracketWidth = document.getElementById('bracketRef').offsetWidth;
-    if (bracketWidth > 100) {
-        document.getElementById('headerRef').style.width = bracketWidth + "px";
-        document.getElementById('listRef').style.width = bracketWidth + "px";
-    }
 }
 
 function getSeededOrder(n) {
@@ -329,9 +273,6 @@ function getSeededOrder(n) {
     }
     return o;
 }
-
-// Jalankan selarasan lebar bila window diubah saiz
-window.addEventListener('resize', adjustWidths);
 jana();
 </script>
 </body>
