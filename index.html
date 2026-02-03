@@ -18,56 +18,60 @@
         /* HEADER */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
-            background: rgba(255, 255, 255, 0.03); padding: 25px;
+            background: rgba(255, 255, 255, 0.03); padding: 30px;
             border-radius: 35px; border-bottom: 2px solid var(--garis); margin-bottom: 40px;
             width: 100%; box-sizing: border-box;
         }
 
-        .header-top { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 25px; }
-        .logo-box img { height: 100px; width: 100px; border-radius: 15px; filter: drop-shadow(0 0 15px var(--utama)); object-fit: cover; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 35px; gap: 20px; }
+        
+        /* LOGO & BUTANG ADMIN SAMA SAIZ */
+        .logo-box img { height: 115px; width: 115px; border-radius: 20px; filter: drop-shadow(0 0 15px var(--utama)); object-fit: cover; }
+        
+        .btn-admin-besar { 
+            height: 115px; width: 115px; border-radius: 20px; border: 3px solid var(--utama); 
+            background: rgba(0, 210, 255, 0.1); color: var(--utama); cursor: pointer; 
+            font-weight: 900; font-size: 0.85rem; text-transform: uppercase; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            line-height: 1.2; padding: 10px;
+        }
+        .btn-admin-besar:hover { background: var(--utama); color: #000; box-shadow: 0 0 30px var(--utama); }
 
         .tajuk-box { text-align: center; flex: 2; }
-        .tajuk-box h1 { font-size: 2.2rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-        .siri-tag { font-size: 1.5rem; color: var(--emas); letter-spacing: 8px; font-weight: 900; display: block; margin: 5px 0; }
+        .tajuk-box h1 { font-size: 2.6rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .siri-tag { font-size: 1.8rem; color: var(--emas); letter-spacing: 8px; font-weight: 900; display: block; margin: 5px 0; }
 
-        .btn-admin-besar { 
-            height: 55px; padding: 0 25px; border-radius: 12px; border: 3px solid var(--utama); 
-            background: rgba(0, 210, 255, 0.1); color: var(--utama); cursor: pointer; 
-            font-weight: 900; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s;
-        }
-
-        /* ADMIN CARDS - TINGGI DIKURANGKAN & CENTER VERTICAL */
-        .admin-header-grid { display: flex; justify-content: center; width: 100%; gap: 10px; flex-wrap: wrap; }
+        /* ADMIN CARDS - CENTER VERTIKAL */
+        .admin-header-grid { display: flex; justify-content: center; width: 100%; gap: 12px; flex-wrap: wrap; }
         .admin-ws-card { 
-            width: 170px; height: 100px; /* Tinggi dikurangkan */
-            background: rgba(37, 211, 102, 0.05); border: 2px solid var(--ws-hijau); border-radius: 12px; 
-            text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; /* Center vertical */
-            text-align: center; gap: 5px; transition: 0.4s; padding: 5px;
+            width: 190px; height: 110px; 
+            background: rgba(37, 211, 102, 0.05); border: 2px solid var(--ws-hijau); border-radius: 15px; 
+            text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; gap: 6px; transition: 0.4s; padding: 10px;
         }
-        .admin-ws-card:hover { background: rgba(37, 211, 102, 0.15); transform: translateY(-3px); border-color: var(--emas); }
-        .ws-logo-icon { width: 24px; height: 24px; }
-        .ws-name { color: #fff; font-weight: 800; font-size: 0.9rem; }
-        .ws-role { color: var(--emas); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; }
+        .admin-ws-card:hover { background: rgba(37, 211, 102, 0.15); transform: translateY(-5px); border-color: var(--emas); }
+        .ws-logo-icon { width: 28px; height: 28px; }
+        .ws-name { color: #fff; font-weight: 800; font-size: 1rem; margin: 0; }
+        .ws-role { color: var(--emas); font-size: 0.7rem; text-transform: uppercase; font-weight: bold; margin: 0; }
 
         /* BRACKETS */
         .tournament-layout { display: flex; flex-direction: column; gap: 50px; align-items: center; }
-        .laluan-row { display: flex; gap: 30px; padding: 40px; border-radius: 25px; border: 1px solid #222; position: relative; }
+        .laluan-row { display: flex; gap: 30px; padding: 45px; border-radius: 25px; border: 1px solid #222; position: relative; }
         .baris-menang { background: var(--bg-menang); border-color: var(--utama); }
         .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
-        .label-bracket { position: absolute; top: -15px; left: 30px; background: var(--bg); padding: 0 15px; font-weight: 900; font-size: 0.9rem; border-radius: 10px; }
+        .label-bracket { position: absolute; top: -15px; left: 30px; background: var(--bg); padding: 0 15px; font-weight: 900; font-size: 1rem; border-radius: 10px; }
         .label-menang { color: var(--utama); border: 1px solid var(--utama); }
         .label-kalah { color: var(--kalah); border: 1px solid var(--kalah); }
 
         .pusingan { display: flex; flex-direction: column; gap: 20px; min-width: 240px; justify-content: space-around; }
-        .tajuk-pusingan { font-size: 0.7rem; font-weight: 900; text-align: center; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 6px; margin-bottom: 10px; }
+        .tajuk-pusingan { font-size: 0.75rem; font-weight: 900; text-align: center; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 6px; margin-bottom: 10px; }
         
         .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 25px; width: 240px; }
         .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: var(--biru-nombor); font-size: 8px; padding: 4px; text-align: center; font-weight: bold; }
         
-        /* LOGO PASUKAN DALAM CARTA */
         .p-logo { width: 22px; height: 22px; border-radius: 4px; object-fit: cover; background: #333; }
-        .slot-pasukan { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #222; height: 40px; }
-        .nama-display { flex: 1; font-size: 0.75rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .slot-pasukan { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #222; height: 42px; }
+        .nama-display { flex: 1; font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .skor { width: 35px; height: 28px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; outline: none; }
 
         .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
@@ -78,8 +82,8 @@
         .grand-final { border: 3px solid var(--emas) !important; background: rgba(255, 215, 0, 0.05) !important; transform: scale(1.1); }
 
         /* ADMIN PANEL */
-        #panelAdmin { display: none; position: fixed; top: 10px; right: 10px; width: 320px; max-height: 90vh; background: var(--kad); border: 2px solid var(--utama); border-radius: 20px; z-index: 9999; padding: 20px; overflow-y: auto; box-shadow: 0 0 50px #000; }
-        .admin-row-input { display: flex; gap: 5px; margin-bottom: 10px; }
+        #panelAdmin { display: none; position: fixed; top: 10px; right: 10px; width: 340px; max-height: 90vh; background: var(--kad); border: 2px solid var(--utama); border-radius: 20px; z-index: 9999; padding: 25px; overflow-y: auto; box-shadow: 0 0 50px #000; }
+        .admin-row-input { display: flex; gap: 8px; margin-bottom: 12px; }
     </style>
 </head>
 <body>
@@ -87,7 +91,7 @@
 <div class="main-wrapper">
     <div class="header-container">
         <div class="header-top">
-            <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/100'"></div>
+            <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/115'"></div>
             <div class="tajuk-box">
                 <h1>BWF BADMINTON FAMILY TOUR</h1>
                 <span class="siri-tag">SIRI II</span>
@@ -98,23 +102,23 @@
         <div class="admin-header-grid">
             <a href="https://wa.me/60149236577" target="_blank" class="admin-ws-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="ws-logo-icon">
-                <span class="ws-name">Ammik</span>
-                <span class="ws-role">Teknikal & Carta</span>
+                <p class="ws-name">Ammik</p>
+                <p class="ws-role">Teknikal & Carta</p>
             </a>
             <a href="https://wa.me/601111639636" target="_blank" class="admin-ws-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="ws-logo-icon">
-                <span class="ws-name">Anggan</span>
-                <span class="ws-role">Penaung & Penganjur</span>
+                <p class="ws-name">Anggan</p>
+                <p class="ws-role">Penaung & Penganjur</p>
             </a>
             <a href="https://wa.me/601139058698" target="_blank" class="admin-ws-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="ws-logo-icon">
-                <span class="ws-name">Banding</span>
-                <span class="ws-role">Timbalan Penganjur</span>
+                <p class="ws-name">Banding</p>
+                <p class="ws-role">Timbalan Penganjur</p>
             </a>
             <a href="https://wa.me/60128228860" target="_blank" class="admin-ws-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="ws-logo-icon">
-                <span class="ws-name">Azis</span>
-                <span class="ws-role">Pengerusi & Perasmi</span>
+                <p class="ws-name">Azis</p>
+                <p class="ws-role">Pengerusi & Perasmi</p>
             </a>
         </div>
     </div>
@@ -132,42 +136,32 @@
 <div id="panelAdmin">
     <span style="float:right; cursor:pointer; font-size:24px;" onclick="toggleAdmin()">×</span>
     <h3 style="color:var(--utama); margin-top:0;">Pengurus Kejohanan</h3>
-    <input type="password" id="passInput" placeholder="Kata Laluan" style="width:100%; padding:10px; margin-bottom:10px; background:#000; border:1px solid #444; color:#fff; box-sizing:border-box;">
+    <input type="password" id="passInput" placeholder="Kata Laluan" style="width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid #444; color:#fff; box-sizing:border-box; border-radius:8px;">
     <button onclick="checkAuth()" style="width:100%; padding:12px; background:var(--utama); font-weight:bold; color:#000; border:none; cursor:pointer; border-radius:8px;">LOG MASUK</button>
-    
     <div id="controlBox" style="display:none; margin-top:20px;">
         <label style="font-size:12px; color:var(--emas);">JUMLAH PASUKAN:</label>
-        <input type="number" id="inputN" value="14" style="width:100%; padding:10px; background:#000; color:#fff; border:1px solid #444; margin-bottom:10px;">
+        <input type="number" id="inputN" value="14" style="width:100%; padding:10px; background:#000; color:#fff; border:1px solid #444; margin-bottom:15px; border-radius:5px;">
         <button onclick="manualJana()" style="width:100%; padding:12px; background:var(--menang); font-weight:bold; color:#000; border:none; cursor:pointer; border-radius:8px;">JANA CARTA BARU</button>
-        
-        <p style="font-size:11px; color:#888; margin-top:20px;">KEMASKINI NAMA & LOGO:</p>
+        <p style="font-size:11px; color:#888; margin-top:25px; border-top:1px solid #333; padding-top:10px;">KEMASKINI NAMA & LOGO (URL):</p>
         <div id="adminTeamInputs"></div>
     </div>
 </div>
 
 <script>
-    let nPasukan = 14;
-    let p2 = 16;
-    let seeds = [];
-    let matchCounter = 1;
-    let teamData = {}; // Simpan nama dan logo
+    let nPasukan = 14; let p2 = 16; let seeds = []; let matchCounter = 1; let teamData = {}; 
 
     function toggleAdmin() { let p = document.getElementById('panelAdmin'); p.style.display = (p.style.display === 'block') ? 'none' : 'block'; }
     function checkAuth() { if(document.getElementById('passInput').value === "admin123") { document.getElementById('controlBox').style.display='block'; } }
-
-    function manualJana() { nPasukan = parseInt(document.getElementById('inputN').value); jana(); }
 
     function updateTeam(idx, type, val) {
         if(!teamData[idx]) teamData[idx] = { nama: `Pasukan ${idx+1}`, logo: '' };
         if(type === 'nama') teamData[idx].nama = val || `Pasukan ${idx+1}`;
         if(type === 'logo') teamData[idx].logo = val;
-
-        // Update semua slot yang berkaitan
         document.querySelectorAll(`[data-pid="${idx}"]`).forEach(slot => {
-            let mid = slot.id.split('_s')[0];
-            let sNum = slot.id.split('_s')[1];
-            document.getElementById(`${mid}_p${sNum}`).innerText = teamData[idx].nama;
-            document.getElementById(`${mid}_img${sNum}`).src = teamData[idx].logo || 'https://via.placeholder.com/22';
+            let mid = slot.id.split('_s')[0], sNum = slot.id.split('_s')[1];
+            let pName = document.getElementById(`${mid}_p${sNum}`), pImg = document.getElementById(`${mid}_img${sNum}`);
+            if(pName) pName.innerText = teamData[idx].nama;
+            if(pImg) pImg.src = teamData[idx].logo || 'https://via.placeholder.com/22';
         });
     }
 
@@ -176,15 +170,12 @@
         if(s1.value === "" || s2.value === "") return;
         let v1 = parseInt(s1.value), v2 = parseInt(s2.value);
         if(v1 === v2) return;
-
         s1.className = (v1 > v2) ? 'skor skor-menang' : 'skor skor-kalah';
         s2.className = (v2 > v1) ? 'skor skor-menang' : 'skor skor-kalah';
-        
         let p_m = (v1 > v2) ? document.getElementById(idMatch + '_p1').innerText : document.getElementById(idMatch + '_p2').innerText;
         let id_m = (v1 > v2) ? document.getElementById(idMatch + '_s1').getAttribute('data-pid') : document.getElementById(idMatch + '_s2').getAttribute('data-pid');
         let p_k = (v1 > v2) ? document.getElementById(idMatch + '_p2').innerText : document.getElementById(idMatch + '_p1').innerText;
         let id_k = (v1 > v2) ? document.getElementById(idMatch + '_s2').getAttribute('data-pid') : document.getElementById(idMatch + '_s1').getAttribute('data-pid');
-
         let parts = idMatch.split('_'), j = parts[0], p = parseInt(parts[1]), m = parseInt(parts[2]);
         if(j === 'W') {
             hantar('W', p + 1, Math.floor(m / 2), (m % 2) + 1, p_m, id_m);
@@ -199,9 +190,8 @@
     function hantar(jenis, p, m, s, nama, pid) {
         let el = document.getElementById(`${jenis}_${p}_${m}_p${s}`);
         if(el) { 
-            el.innerText = nama; 
-            document.getElementById(`${jenis}_${p}_${m}_s${s}`).setAttribute('data-pid', pid);
-            let logo = teamData[pid] ? teamData[pid].logo : '';
+            el.innerText = nama; document.getElementById(`${jenis}_${p}_${m}_s${s}`).setAttribute('data-pid', pid);
+            let logo = (teamData[pid] && teamData[pid].logo) ? teamData[pid].logo : '';
             document.getElementById(`${jenis}_${p}_${m}_img${s}`).src = logo || 'https://via.placeholder.com/22';
         } else if(document.getElementById(`GF_0_0_p${jenis==='W'?1:2}`)) {
             document.getElementById(`GF_0_0_p${jenis==='W'?1:2}`).innerText = nama;
@@ -210,16 +200,11 @@
     }
 
     function jana() {
-        p2 = Math.pow(2, Math.ceil(Math.log2(nPasukan)));
-        seeds = getSeeds(p2); matchCounter = 1;
+        p2 = Math.pow(2, Math.ceil(Math.log2(nPasukan))); seeds = getSeeds(p2); matchCounter = 1;
         document.getElementById('adminTeamInputs').innerHTML = "";
         for(let i=0; i<nPasukan; i++) {
             teamData[i] = { nama: `Pasukan ${i+1}`, logo: '' };
-            document.getElementById('adminTeamInputs').innerHTML += `
-                <div class="admin-row-input">
-                    <input type="text" placeholder="Nama T${i+1}" oninput="updateTeam(${i}, 'nama', this.value)" style="flex:1; padding:5px; background:#111; color:#fff; border:1px solid #444;">
-                    <input type="text" placeholder="URL Logo" oninput="updateTeam(${i}, 'logo', this.value)" style="flex:1; padding:5px; background:#111; color:#fff; border:1px solid #444;">
-                </div>`;
+            document.getElementById('adminTeamInputs').innerHTML += `<div class="admin-row-input"><input type="text" placeholder="Nama T${i+1}" oninput="updateTeam(${i}, 'nama', this.value)" style="flex:1.2; padding:8px; background:#111; color:#fff; border:1px solid #444; border-radius:4px;"><input type="text" placeholder="URL Logo" oninput="updateTeam(${i}, 'logo', this.value)" style="flex:1.8; padding:8px; background:#111; color:#fff; border:1px solid #444; border-radius:4px;"></div>`;
         }
         render();
     }
@@ -256,17 +241,7 @@
             p1 = (s1 < nPasukan) ? `Pasukan ${s1+1}` : "BYE"; id1 = (s1 < nPasukan) ? s1 : "none";
             p2 = (s2 < nPasukan) ? `Pasukan ${s2+1}` : "BYE"; id2 = (s2 < nPasukan) ? s2 : "none";
         }
-        div.innerHTML = `<div class="match-no">PERLAWANAN ${matchCounter++}</div>
-            <div class="slot-pasukan" id="${mId}_s1" data-pid="${id1}">
-                <img src="https://via.placeholder.com/22" class="p-logo" id="${mId}_img1">
-                <span class="nama-display" id="${mId}_p1">${p1}</span>
-                <input type="number" class="skor" id="${mId}_sc1" oninput="kira('${mId}')">
-            </div>
-            <div class="slot-pasukan" id="${mId}_s2" data-pid="${id2}">
-                <img src="https://via.placeholder.com/22" class="p-logo" id="${mId}_img2">
-                <span class="nama-display" id="${mId}_p2">${p2}</span>
-                <input type="number" class="skor" id="${mId}_sc2" oninput="kira('${mId}')">
-            </div>`;
+        div.innerHTML = `<div class="match-no">PERLAWANAN ${matchCounter++}</div><div class="slot-pasukan" id="${mId}_s1" data-pid="${id1}"><img src="https://via.placeholder.com/22" class="p-logo" id="${mId}_img1"><span class="nama-display" id="${mId}_p1">${p1}</span><input type="number" class="skor" id="${mId}_sc1" oninput="kira('${mId}')"></div><div class="slot-pasukan" id="${mId}_s2" data-pid="${id2}"><img src="https://via.placeholder.com/22" class="p-logo" id="${mId}_img2"><span class="nama-display" id="${mId}_p2">${p2}</span><input type="number" class="skor" id="${mId}_sc2" oninput="kira('${mId}')"></div>`;
         return div;
     }
 
