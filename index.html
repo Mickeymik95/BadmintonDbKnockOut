@@ -34,7 +34,7 @@
         .tajuk-box h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; }
         .siri-tag { font-size: 1.4rem; color: var(--emas); letter-spacing: 10px; font-weight: 900; display: block; margin-top: 5px; text-align: center; }
 
-        /* WHATSAPP ADMIN GRID */
+        /* WHATSAPP ADMIN */
         .admin-header-grid { display: flex; justify-content: center; width: 100%; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
         .admin-ws-card { 
             width: 170px; height: 80px; 
@@ -42,7 +42,6 @@
             text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: 0.3s; padding: 5px;
         }
-        .admin-ws-card:hover { background: rgba(37, 211, 102, 0.15); transform: translateY(-3px); }
         .ws-logo-icon { width: 20px; height: 20px; margin-bottom: 4px; }
         .ws-name { color: #fff; font-weight: 800; font-size: 0.85rem; margin: 0; }
         .ws-role { color: var(--emas); font-size: 0.6rem; text-transform: uppercase; font-weight: bold; margin: 0; }
@@ -53,7 +52,7 @@
         .kad-pasukan { background: #111; border: 1px solid #222; border-radius: 10px; padding: 8px 15px; display: flex; align-items: center; gap: 12px; }
         .no-p { background: var(--biru-nombor); color: #000; font-weight: 900; font-size: 10px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* TOURNAMENT LAYOUT */
+        /* TOURNAMENT */
         .tournament-layout { display: flex; flex-direction: column; gap: 50px; padding: 20px; width: max-content; }
         .laluan-row { display: flex; gap: 40px; padding: 60px 40px; border-radius: 40px; border: 2px solid #222; position: relative; min-width: 100%; justify-content: center; }
         .baris-menang { background: var(--bg-menang); border-color: var(--utama); }
@@ -187,17 +186,19 @@
         let tid = `${jenis}_${p}_${m}_s${s}`;
         let slot = document.getElementById(tid);
         if(slot) {
-            document.getElementById(`${jenis}_${p}_${m}_p${s}`).innerText = nama;
+            let pElem = document.getElementById(`${jenis}_${p}_${m}_p${s}`);
+            let iElem = document.getElementById(`${jenis}_${p}_${m}_img${s}`);
+            if(pElem) pElem.innerText = nama;
             slot.setAttribute('data-pid', pid);
-            document.getElementById(`${jenis}_${p}_${m}_img${s}`).src = teamData[pid]?.logo || 'https://via.placeholder.com/24';
+            if(iElem) iElem.src = teamData[pid]?.logo || 'https://via.placeholder.com/24';
         } else if(jenis==='W' || (jenis==='L' && p===(Math.log2(p2)-1)*2)) {
             let gfS = (jenis==='W')?1:2;
             let gfP = document.getElementById(`GF_0_0_p${gfS}`);
-            if(gfP) {
-                gfP.innerText = nama;
-                document.getElementById(`GF_0_0_s${gfS}`).setAttribute('data-pid', pid);
-                document.getElementById(`GF_0_0_img${gfS}`).src = teamData[pid]?.logo || 'https://via.placeholder.com/24';
-            }
+            let gfI = document.getElementById(`GF_0_0_img${gfS}`);
+            let gfSl = document.getElementById(`GF_0_0_s${gfS}`);
+            if(gfP) gfP.innerText = nama;
+            if(gfSl) gfSl.setAttribute('data-pid', pid);
+            if(gfI) gfI.src = teamData[pid]?.logo || 'https://via.placeholder.com/24';
         }
     }
 
@@ -277,4 +278,14 @@
             let p2Elem = document.getElementById(mid+'_p2');
             if(p1Elem && p2Elem) {
                 let p1 = p1Elem.innerText, p2 = p2Elem.innerText;
-                if(p1==="BYE") { document.getElementById
+                if(p1==="BYE") { document.getElementById(mid+'_sc1').value=0; document.getElementById(mid+'_sc2').value=1; kira(mid); }
+                if(p2==="BYE") { document.getElementById(mid+'_sc1').value=1; document.getElementById(mid+'_sc2').value=0; kira(mid); }
+            }
+        });
+    }
+
+    function getSeeds(n) { let s=[0,1]; while(s.length<n) { let ns=[]; for(let i=0; i<s.length; i++) { ns.push(s[i]); ns.push(2*s.length-1-s[i]); } s=ns; } return s; }
+    window.onload = jana;
+</script>
+</body>
+</html>
