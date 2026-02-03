@@ -390,4 +390,50 @@
         let tid = `${jenis}_${p}_${m}_s${s}`;
         let slot = document.getElementById(tid);
         if(slot) {
-            document.getElementB
+                                    document.getElementById(`${jenis}_${p}_${m}_p${s}`).innerText = nama;
+            document.getElementById(`${jenis}_${p}_${m}_img${s}`).src = (pid !== 'none' && teamData[pid]?.logo) ? teamData[pid].logo : 'https://via.placeholder.com/24';
+            slot.setAttribute('data-pid', pid);
+            
+            // Auto-update jika pusingan seterusnya juga melibatkan BYE
+            autoBye();
+        }
+    }
+
+    function autoBye() {
+        document.querySelectorAll('.kotak-perlawanan').forEach(match => {
+            let mId = match.id;
+            let p1 = document.getElementById(mId + '_p1').innerText;
+            let p2 = document.getElementById(mId + '_p2').innerText;
+            let sc1 = document.getElementById(mId + '_sc1');
+            let sc2 = document.getElementById(mId + '_sc2');
+
+            if (sc1.value === "" && sc2.value === "") {
+                if (p1 === "BYE") {
+                    sc1.value = 0; sc2.value = 21;
+                    kira(mId);
+                } else if (p2 === "BYE") {
+                    sc1.value = 21; sc2.value = 0;
+                    kira(mId);
+                }
+            }
+        });
+    }
+
+    function getSeeds(n) {
+        let seeds = [0, 1];
+        for (let i = 2; i < n; i <<= 1) {
+            let nextSeeds = [];
+            for (let j = 0; j < seeds.length; j++) {
+                nextSeeds.push(seeds[j]);
+                nextSeeds.push(i * 2 - 1 - seeds[j]);
+            }
+            seeds = nextSeeds;
+        }
+        return seeds;
+    }
+
+    window.onload = loadData;
+</script>
+
+</body>
+</html>
