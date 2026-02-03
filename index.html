@@ -9,71 +9,64 @@
     
     .header-kejohanan { text-align: center; margin-bottom: 20px; }
     .header-kejohanan h1 { font-size: 2.2rem; margin: 0; color: var(--utama); text-transform: uppercase; text-shadow: 0 0 10px rgba(0,210,255,0.3); }
-    .header-kejohanan p { color: var(--emas); font-weight: bold; margin-top: 5px; }
 
     .kawalan-utama { 
         background:var(--kad); padding:20px; border-radius:12px; 
-        max-width: 900px; margin: 0 auto 30px auto; border:1px solid #333; 
+        max-width: 1000px; margin: 0 auto 30px auto; border:1px solid #333; 
     }
-    .input-group { display: flex; gap: 10px; align-items: center; justify-content: center; margin-bottom: 20px; }
     
     .senarai-nama { 
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-        gap: 8px; padding-top: 15px; border-top: 1px solid #333; 
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+        gap: 10px; padding-top: 15px; border-top: 1px solid #333; 
     }
-    .input-pasukan { 
-        background: #000; border: 1px solid #444; color: #fff; 
-        padding: 6px 10px; border-radius: 4px; font-size: 0.8rem;
-    }
-    .input-pasukan:focus { border-color: var(--biru-nombor); outline: none; }
+    
+    .input-kad { background: #000; padding: 8px; border-radius: 6px; border: 1px solid #444; }
+    .input-kad label { font-size: 0.7rem; color: var(--emas); display: block; margin-bottom: 4px; }
+    .input-pasukan { width: 90%; background: #111; border: 1px solid #333; color: #fff; padding: 4px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 5px; }
 
     .tournament-layout { display: flex; flex-direction: column; gap: 40px; align-items: flex-start; max-width: fit-content; margin: 0 auto; }
     .laluan-row { display: flex; gap: 30px; align-items: stretch; }
-    .pusingan { display: flex; flex-direction: column; gap: 20px; min-width: 200px; justify-content: space-around; }
+    .pusingan { display: flex; flex-direction: column; gap: 20px; min-width: 220px; justify-content: space-around; }
     .tajuk-pusingan { font-size:.7rem; color:var(--utama); font-weight:bold; border-bottom:2px solid #333; text-align:center; padding-bottom:5px; margin-bottom:10px; text-transform:uppercase; }
     
-    .kotak-perlawanan { background:var(--kad); border:1px solid #333; border-radius:8px; overflow:hidden; position: relative; padding-top: 15px; }
+    .kotak-perlawanan { background:var(--kad); border:1px solid #333; border-radius:8px; overflow:hidden; position: relative; padding-top: 18px; }
     
-    /* NOMBOR PERLAWANAN - BIRU TERANG */
     .match-no { 
         position: absolute; top: 0; left: 0; 
-        background: rgba(0, 229, 255, 0.15); /* Glow latar belakang */
-        color: var(--biru-nombor); 
+        background: rgba(0, 229, 255, 0.1); color: var(--biru-nombor); 
         font-size: 10px; font-weight: 800; padding: 2px 10px; 
-        border-bottom-right-radius: 8px;
-        border-right: 1px solid var(--biru-nombor);
-        border-bottom: 1px solid var(--biru-nombor);
-        text-shadow: 0 0 5px var(--biru-nombor);
+        border-bottom-right-radius: 8px; border-right: 1px solid var(--biru-nombor); border-bottom: 1px solid var(--biru-nombor);
     }
 
-    .slot-pasukan { display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #222; height: 35px; }
-    .slot-bye { background: #141418; color: #444; font-style: italic; }
-    .nama-display { flex:1; background:transparent; color:#fff; font-size:0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slot-pasukan { display:flex; gap: 8px; align-items:center; padding:8px; border-bottom:1px solid #222; height: 40px; }
     
+    /* GAYA GAMBAR PASUKAN */
+    .avatar { 
+        width: 30px; height: 30px; border-radius: 50%; 
+        background: #333; object-fit: cover; border: 1px solid #444;
+        flex-shrink: 0;
+    }
+    .avatar[src=""] { visibility: hidden; }
+
+    .nama-display { flex:1; font-size:0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .skor { width:30px; text-align:center; background:#000; border:1px solid #444; color:#fff; border-radius:4px; font-weight:bold; }
     .skor.sembunyi { display: none; }
-    
-    .grand-final-area { display: flex; align-items: center; padding-left: 30px; border-left: 2px dashed #333; }
-    .grand-final { border: 2px solid var(--emas) !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); width: 240px; }
     .skor-menang { background:var(--menang) !important; color:#000 !important; }
-    .teks-menang { color: var(--menang); font-weight: bold; }
-
     button { background:var(--utama); color:#000; font-weight:bold; cursor:pointer; border-radius:6px; padding:8px 15px; border:none; }
-    button:hover { background: #fff; }
 </style>
 </head>
 <body>
 
 <div class="header-kejohanan">
     <h1>BWF BADMINTON KELUARGA²</h1>
-    <p>SUPER SERIES 10</p>
+    <p style="color:var(--emas); text-align:center;">SUPER SERIES 10</p>
 </div>
 
 <div class="kawalan-utama">
-    <div class="input-group">
+    <div style="text-align:center; margin-bottom:15px;">
         <label>Bilangan Pasukan:</label>
         <input type="number" id="bilPasukan" value="6" min="2" style="width:60px; background:#000; color:#fff; border:1px solid #444; padding:5px;">
-        <button onclick="jana()">Jana Jadual & Ruang Nama</button>
+        <button onclick="jana()">Jana Jadual & Ruang Profil</button>
     </div>
     <div id="containerNama" class="senarai-nama"></div>
 </div>
@@ -85,7 +78,7 @@
             <div style="height: 60px;"></div> 
             <div id="barisL" class="laluan-row"></div>
         </div>
-        <div class="grand-final-area">
+        <div style="display: flex; align-items: center; padding-left: 30px; border-left: 2px dashed #333;">
             <div class="pusingan">
                 <div class="tajuk-pusingan">KEMUNCAK</div>
                 <div id="gfBox"></div>
@@ -96,7 +89,7 @@
 
 <script>
 let config = { n: 0, p2: 0, seeds: [] };
-let nama_sebelumnya = {};
+let dataPasukan = {}; // Simpan nama & gambar
 let matchCounter = 1;
 
 function getSeededOrder(n) {
@@ -116,13 +109,19 @@ function jana() {
     config.n = parseInt(document.getElementById('bilPasukan').value);
     config.p2 = Math.pow(2, Math.ceil(Math.log2(config.n)));
     config.seeds = getSeededOrder(config.p2);
-    nama_sebelumnya = {};
+    dataPasukan = {};
     matchCounter = 1;
     
     const containerNama = document.getElementById('containerNama');
     containerNama.innerHTML = '';
     for(let i=0; i<config.n; i++) {
-        containerNama.innerHTML += `<input type="text" class="input-pasukan" placeholder="Nama Pasukan ${i+1}" oninput="kemaskiniNama(${i}, this.value)">`;
+        containerNama.innerHTML += `
+            <div class="input-kad">
+                <label>PASUKAN ${i+1}</label>
+                <input type="text" class="input-pasukan" placeholder="Nama..." oninput="updateProfil(${i}, 'nama', this.value)">
+                <input type="text" class="input-pasukan" placeholder="URL Gambar..." oninput="updateProfil(${i}, 'foto', this.value)">
+            </div>`;
+        dataPasukan[i] = { nama: `Pasukan ${i+1}`, foto: "" };
     }
 
     document.getElementById('barisW').innerHTML = '';
@@ -130,7 +129,6 @@ function jana() {
     document.getElementById('gfBox').innerHTML = '';
 
     const pLen = Math.log2(config.p2);
-
     for(let p=0; p<pLen; p++) {
         let col = document.createElement('div');
         col.className = 'pusingan';
@@ -148,21 +146,21 @@ function jana() {
         for(let m=0; m < mCount; m++) col.appendChild(buatKotak('L', p, m));
         document.getElementById('barisL').appendChild(col);
     }
-    
-    document.getElementById('gfBox').appendChild(buatKotak('GF', 0, 0, true));
+    document.getElementById('gfBox').appendChild(buatKotak('GF', 0, 0));
     scanAllByes();
 }
 
-function buatKotak(j, p, m, gf=false) {
+function buatKotak(j, p, m) {
     const id = `${j}_${p}_${m}`;
     let div = document.createElement('div');
-    div.className = 'kotak-perlawanan' + (gf ? ' grand-final' : '');
+    div.className = 'kotak-perlawanan';
     div.id = id;
 
     let n1 = "Menunggu...", n2 = "Menunggu...";
+    let s1 = "", s2 = "";
     if (j === 'W' && p === 0) {
-        let s1 = config.seeds[m * 2];
-        let s2 = config.seeds[m * 2 + 1];
+        s1 = config.seeds[m * 2];
+        s2 = config.seeds[m * 2 + 1];
         n1 = (s1 < config.n) ? `Pasukan ${s1 + 1}` : "BYE";
         n2 = (s2 < config.n) ? `Pasukan ${s2 + 1}` : "BYE";
     }
@@ -170,95 +168,90 @@ function buatKotak(j, p, m, gf=false) {
     div.innerHTML = `
         <div class="match-no">M${matchCounter++}</div>
         <div class="slot-pasukan" id="${id}_s1">
-            <span id="${id}_p1" class="nama-display">${n1}</span>
+            <img class="avatar" id="${id}_img1" src="">
+            <span id="${id}_p1" class="nama-display" data-last="${n1}">${n1}</span>
             <input type="number" class="skor" oninput="kemaskini('${id}')">
         </div>
         <div class="slot-pasukan" id="${id}_s2">
-            <span id="${id}_p2" class="nama-display">${n2}</span>
+            <img class="avatar" id="${id}_img2" src="">
+            <span id="${id}_p2" class="nama-display" data-last="${n2}">${n2}</span>
             <input type="number" class="skor" oninput="kemaskini('${id}')">
-        </div>
-    `;
+        </div>`;
     return div;
 }
 
-function kemaskiniNama(index, nama) {
+function updateProfil(index, jenis, nilai) {
     const asal = `Pasukan ${index + 1}`;
-    const targetNama = nama === "" ? asal : nama;
-    const cari = nama_sebelumnya[index] || asal;
+    const rujukan = dataPasukan[index][jenis] || asal;
+    dataPasukan[index][jenis] = nilai;
 
-    // Ganti nama di seluruh pusingan
-    document.querySelectorAll('.nama-display').forEach(el => {
-        if (el.innerText === cari) {
-            el.innerText = targetNama;
-        }
+    document.querySelectorAll('.kotak-perlawanan').forEach(box => {
+        ['p1','p2'].forEach(p => {
+            let elNama = document.getElementById(box.id + '_' + p);
+            let elImg = document.getElementById(box.id + '_img' + p.substring(1));
+            
+            if (elNama.innerText === rujukan || elNama.innerText === asal) {
+                if (jenis === 'nama') elNama.innerText = nilai || asal;
+                if (jenis === 'foto') elImg.src = nilai;
+            }
+        });
     });
-    
-    nama_sebelumnya[index] = targetNama;
-    scanAllByes(); // Jalankan scan bye jika nama yang baru diisi dapat auto-win
+    scanAllByes();
 }
 
 function scanAllByes() {
-    let allMatches = document.querySelectorAll('.kotak-perlawanan');
-    allMatches.forEach(match => {
-        let id = match.id;
-        let p1 = document.getElementById(id+'_p1').innerText;
-        let p2 = document.getElementById(id+'_p2').innerText;
-        let s1 = document.getElementById(id+'_s1');
-        let s2 = document.getElementById(id+'_s2');
-        let in1 = s1.querySelector('.skor');
-        let in2 = s2.querySelector('.skor');
+    document.querySelectorAll('.kotak-perlawanan').forEach(match => {
+        let p1 = document.getElementById(match.id+'_p1').innerText;
+        let p2 = document.getElementById(match.id+'_p2').innerText;
+        let in1 = match.querySelector('.skor:first-of-type');
+        let in2 = match.querySelector('.skor:last-of-type');
 
-        if (p1 === "BYE" || p1 === "BYE (Auto)") {
-            s1.classList.add('slot-bye'); in1.classList.add('sembunyi');
-            if (p2 !== "Menunggu..." && p2 !== "BYE" && in2.value === "") {
-                in1.value = 0; in2.value = 1; kemaskini(id);
-            }
-        } else { s1.classList.remove('slot-bye'); in1.classList.remove('sembunyi'); }
+        if (p1.includes("BYE")) {
+            match.children[1].classList.add('slot-bye'); in1.classList.add('sembunyi');
+            if (p2 !== "Menunggu..." && !p2.includes("BYE") && in2.value === "") { in1.value = 0; in2.value = 1; kemaskini(match.id); }
+        } else { match.children[1].classList.remove('slot-bye'); in1.classList.remove('sembunyi'); }
 
-        if (p2 === "BYE" || p2 === "BYE (Auto)") {
-            s2.classList.add('slot-bye'); in2.classList.add('sembunyi');
-            if (p1 !== "Menunggu..." && p1 !== "BYE" && in1.value === "") {
-                in1.value = 1; in2.value = 0; kemaskini(id);
-            }
-        } else { s2.classList.remove('slot-bye'); in2.classList.remove('sembunyi'); }
+        if (p2.includes("BYE")) {
+            match.children[2].classList.add('slot-bye'); in2.classList.add('sembunyi');
+            if (p1 !== "Menunggu..." && !p1.includes("BYE") && in1.value === "") { in1.value = 1; in2.value = 0; kemaskini(match.id); }
+        } else { match.children[2].classList.remove('slot-bye'); in2.classList.remove('sembunyi'); }
     });
 }
 
 function kemaskini(id) {
-    let box = document.getElementById(id);
-    let s = box.querySelectorAll('.skor');
+    let s = document.getElementById(id).querySelectorAll('.skor');
     if (s[0].value === '' || s[1].value === '') return;
     let v1 = parseInt(s[0].value), v2 = parseInt(s[1].value);
     if (v1 === v2) return;
 
     let n1 = document.getElementById(id + '_p1'), n2 = document.getElementById(id + '_p2');
+    let img1 = document.getElementById(id + '_img1'), img2 = document.getElementById(id + '_img2');
+    
     let menang = v1 > v2 ? n1.innerText : n2.innerText;
+    let fotoMenang = v1 > v2 ? img1.src : img2.src;
     let kalah = v1 > v2 ? n2.innerText : n1.innerText;
-
-    n1.classList.toggle('teks-menang', v1 > v2);
-    n2.classList.toggle('teks-menang', v2 > v1);
-    s[0].classList.toggle('skor-menang', v1 > v2);
-    s[1].classList.toggle('skor-menang', v2 > v1);
+    let fotoKalah = v1 > v2 ? img2.src : img1.src;
 
     let [j, p, m] = id.split('_').map(x => isNaN(x) ? x : parseInt(x));
-
     if (j === 'W') {
         let nextW = document.getElementById(`W_${p+1}_${Math.floor(m/2)}_p${(m%2)+1}`);
-        if (nextW) nextW.innerText = menang; else document.getElementById('GF_0_0_p1').innerText = menang;
+        let nextWImg = document.getElementById(`W_${p+1}_${Math.floor(m/2)}_img${(m%2)+1}`);
+        if (nextW) { nextW.innerText = menang; nextWImg.src = fotoMenang; }
         
         let targetP = (p === 0) ? 0 : p * 2 - 1;
-        let targetM = m, targetSlot = (p === 0) ? 0 : "p2";
-        if (p === 0) {
-            let totalM = (config.p2 / 2);
-            let flipM = (m < totalM/2) ? (m + totalM/2) : (m - totalM/2);
-            targetM = Math.floor(flipM / 2); targetSlot = `p${(flipM % 2) + 1}`;
-        }
-        let target = document.getElementById(`L_${targetP}_${targetM}_${targetSlot}`);
-        if (target) target.innerText = (kalah === "BYE") ? "BYE (Auto)" : kalah;
+        let totalM = (config.p2 / 2);
+        let flipM = (m < totalM/2) ? (m + totalM/2) : (m - totalM/2);
+        let targetM = (p === 0) ? Math.floor(flipM / 2) : m;
+        let targetSlot = (p === 0) ? `p${(flipM % 2) + 1}` : `p2`;
+        
+        let lName = document.getElementById(`L_${targetP}_${targetM}_${targetSlot}`);
+        let lImg = document.getElementById(`L_${targetP}_${targetM}_img${targetSlot.substring(1)}`);
+        if (lName) { lName.innerText = (kalah.includes("BYE")) ? "BYE (Auto)" : kalah; lImg.src = (kalah.includes("BYE")) ? "" : fotoKalah; }
     } else if (j === 'L') {
         let np = p + 1, nm = (p % 2 === 0) ? m : Math.floor(m/2), ns = (p % 2 === 0) ? 'p1' : `p${(m%2)+1}`;
         let nextL = document.getElementById(`L_${np}_${nm}_${ns}`);
-        if (nextL) nextL.innerText = menang; else document.getElementById('GF_0_0_p2').innerText = menang;
+        let nextLImg = document.getElementById(`L_${np}_${nm}_img${ns.substring(1)}`);
+        if (nextL) { nextL.innerText = menang; nextLImg.src = fotoMenang; }
     }
     scanAllByes(); 
 }
