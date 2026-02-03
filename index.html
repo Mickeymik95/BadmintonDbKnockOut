@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<title>Double Elimination - Cross-Over Pro</title>
+<title>Double Elimination - Fixed Cross-Over</title>
 <style>
 :root{
     --menang:#2ecc71;--kalah:#e74c3c;--utama:#00d2ff;
@@ -94,7 +94,7 @@ function jana() {
     const n = parseInt(document.getElementById('bilPasukan').value);
     const pLen = Math.ceil(Math.log2(n));
 
-    // Winners
+    // Winners Bracket Construction
     for(let p=0; p<pLen; p++) {
         let col = document.createElement('div');
         col.className = 'pusingan';
@@ -104,7 +104,7 @@ function jana() {
         barisW.appendChild(col);
     }
 
-    // Losers
+    // Losers Bracket Construction
     let lTotal = (pLen - 1) * 2;
     for(let p=0; p<lTotal; p++) {
         let col = document.createElement('div');
@@ -127,11 +127,11 @@ function kotak(j, p, m, gf=false) {
     div.innerHTML = `
         <div class="id-perlawanan">${gf ? '👑 GRAND FINAL' : id.replace('_',' ')}</div>
         <div class="slot-pasukan">
-            ${isW1 ? `<input type="text" id="${id}_p1" placeholder="Pasukan">` : `<span id="${id}_p1" class="nama-display">Menunggu...</span>`}
+            ${isW1 ? `<input type="text" id="${id}_p1" placeholder="Nama Pasukan">` : `<span id="${id}_p1" class="nama-display">Menunggu...</span>`}
             <input type="number" class="skor" oninput="kemaskini('${id}')">
         </div>
         <div class="slot-pasukan">
-            ${isW1 ? `<input type="text" id="${id}_p2" placeholder="Pasukan">` : `<span id="${id}_p2" class="nama-display">Menunggu...</span>`}
+            ${isW1 ? `<input type="text" id="${id}_p2" placeholder="Nama Pasukan">` : `<span id="${id}_p2" class="nama-display">Menunggu...</span>`}
             <input type="number" class="skor" oninput="kemaskini('${id}')">
         </div>
     `;
@@ -155,33 +155,56 @@ function kemaskini(id) {
     s[0].className = v1 > v2 ? 'skor skor-menang' : 'skor';
     s[1].className = v2 > v1 ? 'skor skor-menang' : 'skor';
 
-    let [j, p, m] = id.split('_').map(v => isNaN(v) ? v : parseInt(v));
+    let parts = id.split('_');
+    let j = parts[0], p = parseInt(parts[1]), m = parseInt(parts[2]);
 
     if (j === 'W') {
-        // Pemenang ke depan
+        // PEMENANG: Ke Winners Round seterusnya atau Grand Final
         let nextW = document.getElementById(`W_${p+1}_${Math.floor(m/2)}_p${(m%2)+1}`);
-        if (nextW) nextW.innerText = menang; else document.getElementById('GF_0_0_p1').innerText = menang;
+        if (nextW) nextW.innerText = menang; 
+        else document.getElementById('GF_0_0_p1').innerText = menang;
 
-        // KESAN SILANG (Rematch Avoidance)
-        // Kita silangkan kalah dari W pusingan pertama ke pusingan Losers
-        let matchesInRound = Math.pow(2, Math.ceil(Math.log2(document.getElementById('bilPasukan').value)) - p - 1);
-        let flippedM = (m < matchesInRound / 2) ? (m + matchesInRound / 2) : (m - matchesInRound / 2);
+        // KALAH: Ke Losers Bracket dengan Penyilangan (Cross-over)
+        let totalMatchesInRound = Math.pow(2, Math.ceil(Math.log2(document.getElementById('bilPasukan').value)) - p - 1);
         
-        let targetL = document.getElementById(`L_${p*2}_${flippedM}_p1`);
-        if (targetL) targetL.innerText = kalah;
+        // Logik Cross-over: pusingan pertama (p=0), kita silangkan m
+        let targetM = m;
+        if (p === 0) {
+            targetM = (m < totalMatchesInRound / 2) ? (m + totalMatchesInRound / 2) : (m - totalMatchesInRound / 2);
+        }
+
+        // Cari slot di Losers Bracket
+        // W R1 jatuh ke L R1, W R2 jatuh ke L R3, dsb.
+        let targetLRound = p * 2;
+        let targetSlot = (p === 0) ? (m % 2 === 0 ? 'p1' : 'p2') : 'p1';
+        
+        // Khusus untuk p=0, kita guna flipped targetM yang dikira tadi
+        let finalM = (p === 0) ? Math.floor(targetM / 2) : m;
+        let finalSlot = (p === 0) ? `p${(targetM % 2) + 1}` : `p1`;
+
+        let targetLElem = document.getElementById(`L_${targetLRound}_${finalM}_${finalSlot}`);
+        if (targetLElem) targetLElem.innerText = kalah;
     } 
     else if (j === 'L') {
         let np = p + 1;
-        let nm = (p % 2 === 0) ? m : Math.floor(m/2);
-        let ns = (p % 2 === 0) ? 'p2' : `p${(m%2)+1}`;
+        let nm, ns;
+        if (p % 2 === 0) { // Pusingan di mana orang dari Winners masuk
+            nm = m; ns = 'p2';
+        } else { // Pusingan pemenang Loser lawan pemenang Loser
+            nm = Math.floor(m/2); ns = `p${(m%2)+1}`;
+        }
         let nextL = document.getElementById(`L_${np}_${nm}_${ns}`);
-        if (nextL) nextL.innerText = menang; else document.getElementById('GF_0_0_p2').innerText = menang;
+        if (nextL) nextL.innerText = menang; 
+        else document.getElementById('GF_0_0_p2').innerText = menang;
     }
 }
 
 function autoFill() {
     const inputs = document.querySelectorAll('input[id^="W_0_"]');
-    inputs.forEach((inp, i) => inp.value = "Pasukan " + (i + 1));
+    const names = ["Naga V1", "Harimau Malaya", "Elang Putih", "Garuda", "Sang Kancil", "Seladang", "Tupai", "Landak"];
+    inputs.forEach((inp, i) => {
+        inp.value = names[i] || "Pasukan " + (i + 1);
+    });
 }
 
 jana();
