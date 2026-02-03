@@ -9,22 +9,36 @@
         --emas: #ffd700; --bg: #0b0b0d; --kad: #1a1a1f; 
         --biru-nombor: #00e5ff; --garis: #333;
     }
-    
+
     body { font-family:'Segoe UI', sans-serif; background:var(--bg); color:#fff; padding:20px; margin:0; }
-    
+
+    /* BUTANG LOGIN ATAS KIRI */
+    .admin-login-btn { position: fixed; top: 15px; left: 15px; z-index: 1001; background: #222; color: var(--utama); border: 1px solid var(--utama); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; }
+    .admin-login-btn:hover { background: var(--utama); color: #000; }
+
+    /* PANEL ADMIN TERAPUNG */
+    #panelAdmin { display: none; position: fixed; top: 60px; left: 15px; width: 320px; height: 80vh; background: var(--kad); border: 2px solid var(--utama); border-radius: 15px; z-index: 1000; padding: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.8); overflow-y: auto; }
+    .close-admin { float: right; cursor: pointer; color: var(--kalah); font-weight: bold; }
+
     .header-kejohanan { text-align: center; margin-bottom: 30px; }
     .header-kejohanan h1 { font-size: 2.5rem; margin: 0; color: var(--utama); text-transform: uppercase; text-shadow: 0 0 15px rgba(0,210,255,0.4); }
     .header-kejohanan p { color: var(--emas); font-weight: bold; letter-spacing: 3px; margin-top: 5px; }
 
-    .kawalan-utama { background:var(--kad); padding:20px; border-radius:15px; max-width: 1100px; margin: 0 auto 40px auto; border:1px solid var(--garis); }
-    .senarai-nama { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-    .input-kad { background: #000; padding: 12px; border-radius: 8px; border: 1px solid #444; }
-    .input-pasukan { width: 92%; background: #111; border: 1px solid #333; color: #fff; padding: 6px; border-radius: 4px; margin-top: 6px; font-size: 0.8rem; }
+    /* PAPARAN PESERTA (RINGKAS) */
+    .senarai-peserta-awam { background: var(--kad); padding: 15px; border-radius: 10px; max-width: 800px; margin: 0 auto 30px auto; border: 1px solid var(--garis); text-align: center; }
+    .grid-peserta { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
+    .kad-peserta-ringkas { background: #000; padding: 8px; border-radius: 5px; border: 1px solid #333; font-size: 0.9rem; }
+    .no-peserta { color: var(--utama); font-weight: bold; margin-right: 5px; }
 
+    /* INPUT ADMIN */
+    .input-kad { background: #000; padding: 10px; border-radius: 8px; border: 1px solid #444; margin-bottom: 10px; }
+    .input-pasukan { width: 90%; background: #111; border: 1px solid #333; color: #fff; padding: 6px; border-radius: 4px; margin-top: 6px; font-size: 0.8rem; }
+
+    /* BRACKET */
     .tournament-layout { display: flex; flex-direction: column; gap: 50px; margin: 0 auto; width: fit-content; }
     .laluan-row { display: flex; gap: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 15px; }
     .pusingan { display: flex; flex-direction: column; gap: 30px; min-width: 260px; justify-content: space-around; }
-    
+
     .tajuk-pusingan { font-size: 0.8rem; font-weight: bold; text-align: center; padding: 10px; text-transform: uppercase; border-radius: 5px; margin-bottom: 15px; border: 1px solid #444; }
     .barisW .tajuk-pusingan { color: var(--utama); border-color: var(--utama); background: rgba(0, 210, 255, 0.05); }
     .barisL .tajuk-pusingan { color: #ff6b6b; border-color: #e74c3c; background: rgba(231, 76, 60, 0.05); }
@@ -42,29 +56,46 @@
     .slot-menang { background: rgba(46, 204, 113, 0.15) !important; }
     .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
     .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none; }
-    .teks-menang { color: var(--menang) !important; }
 
     .gf-container { display: flex; align-items: center; padding-left: 50px; border-left: 3px dashed var(--garis); margin-left: 30px; }
     .grand-final { border: 3px solid var(--emas) !important; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); transform: scale(1.05); }
-    
-    button { background:var(--utama); color:#000; font-weight:bold; cursor:pointer; border-radius:6px; padding:12px 25px; border:none; text-transform: uppercase; }
-    button:hover { background: #fff; }
+
+    button { background:var(--utama); color:#000; font-weight:bold; cursor:pointer; border-radius:6px; padding:10px 15px; border:none; text-transform: uppercase; margin-top: 5px; }
 </style>
 </head>
 <body>
+
+<button class="admin-login-btn" onclick="toggleAdmin()">ADMIN LOGIN</button>
+
+<div id="panelAdmin">
+    <span class="close-admin" onclick="toggleAdmin()">TUTUP [X]</span>
+    <h3 style="color:var(--utama); margin-top:0;">PENGURUSAN ADMIN</h3>
+    <hr style="border:0.5px solid #333;">
+    
+    <div id="authSection">
+        <label>Password:</label><br>
+        <input type="password" id="adminPass" class="input-pasukan" placeholder="Masukkan password...">
+        <button onclick="login()">LOGIN</button>
+    </div>
+
+    <div id="adminControls" style="display:none;">
+        <label>JUMLAH PASUKAN:</label>
+        <input type="number" id="bilPasukan" value="6" min="2" style="width:60px; background:#000; color:#fff; border:1px solid #444; padding:5px; border-radius:4px;">
+        <button onclick="jana()">JANA BARU</button>
+        <hr style="border:0.5px solid #333; margin:15px 0;">
+        <div id="containerNamaAdmin"></div>
+    </div>
+</div>
 
 <div class="header-kejohanan">
     <h1>BWF BADMINTON KELUARGA²</h1>
     <p>SUPER SERIES 10</p>
 </div>
 
-<div class="kawalan-utama">
-    <div style="text-align:center; margin-bottom:20px;">
-        <label>JUMLAH PASUKAN:</label>
-        <input type="number" id="bilPasukan" value="6" min="2" style="width:70px; background:#000; color:#fff; border:1px solid #444; padding:8px; border-radius:5px;">
-        <button onclick="jana()">JANA JADUAL BARU</button>
-    </div>
-    <div id="containerNama" class="senarai-nama"></div>
+<div class="senarai-peserta-awam">
+    <h4 style="margin-top:0; color:var(--emas);">SENARAI PASUKAN BERDAFTAR</h4>
+    <div id="gridPesertaAwam" class="grid-peserta">
+        </div>
 </div>
 
 <div class="tournament-layout">
@@ -87,23 +118,50 @@
 let config = { n: 0, p2: 0, seeds: [] };
 let infoPasukan = {};
 let matchCounter = 1;
+const ADMIN_PASSWORD = "admin123"; // ANDA BOLEH TUKAR PASSWORD DI SINI
+
+function toggleAdmin() {
+    let p = document.getElementById('panelAdmin');
+    p.style.display = (p.style.display === 'block') ? 'none' : 'block';
+}
+
+function login() {
+    let pass = document.getElementById('adminPass').value;
+    if(pass === ADMIN_PASSWORD) {
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('adminControls').style.display = 'block';
+    } else {
+        alert("Password Salah!");
+    }
+}
 
 function jana() {
     config.n = parseInt(document.getElementById('bilPasukan').value);
     config.p2 = Math.pow(2, Math.ceil(Math.log2(config.n)));
     config.seeds = getSeededOrder(config.p2);
     infoPasukan = {};
-    matchCounter = 1;
     
-    const container = document.getElementById('containerNama');
+    const container = document.getElementById('containerNamaAdmin');
+    const gridAwam = document.getElementById('gridPesertaAwam');
+    
     container.innerHTML = '';
+    gridAwam.innerHTML = '';
+
     for(let i=0; i<config.n; i++) {
+        // Bahagian Admin
         container.innerHTML += `
             <div class="input-kad">
                 <label style="font-size:11px; color:var(--emas)">PASUKAN ${i+1}</label>
-                <input type="text" class="input-pasukan" placeholder="Nama..." oninput="update(${i}, 'nama', this.value)">
-                <input type="text" class="input-pasukan" placeholder="Direct Link Gambar..." oninput="update(${i}, 'foto', this.value)">
+                <input type="text" class="input-pasukan" id="in_nama_${i}" placeholder="Nama..." oninput="update(${i}, 'nama', this.value)">
+                <input type="text" class="input-pasukan" id="in_foto_${i}" placeholder="Link PostImages..." oninput="update(${i}, 'foto', this.value)">
             </div>`;
+        
+        // Bahagian Awam
+        gridAwam.innerHTML += `
+            <div class="kad-peserta-ringkas" id="kad_awam_${i}">
+                <span class="no-peserta">${i+1}.</span> <span id="nama_awam_${i}">Pasukan ${i+1}</span>
+            </div>`;
+
         infoPasukan[i] = { nama: `Pasukan ${i+1}`, foto: "" };
     }
     render();
@@ -166,13 +224,18 @@ function buatKotak(j, p, m, gf=false) {
     return div;
 }
 
-// FUNGSI UPDATE BARU: Guna data-pid (Team ID) supaya 'space' tidak jadi masalah
 function update(index, jenis, nilai) {
     infoPasukan[index][jenis] = nilai;
     const defaultNama = `Pasukan ${index + 1}`;
 
+    // Update Nama di Bahagian Awam
+    if(jenis === 'nama') {
+        document.getElementById(`nama_awam_${index}`).innerText = nilai || defaultNama;
+    }
+
+    // Update Nama & Gambar di Bracket
     document.querySelectorAll(`[data-pid="${index}"]`).forEach(slot => {
-        let side = slot.id.split('_').pop(); // s1 atau s2
+        let side = slot.id.split('_').pop(); 
         let base = slot.id.replace('_' + side, '');
         let num = side.replace('s', '');
 
@@ -211,7 +274,6 @@ function kira(id) {
     
     if (j === 'W') {
         passToNext('W', p+1, Math.floor(m/2), (m%2)+1, menangNama, menangFoto, menangID);
-        
         let tP = (p === 0) ? 0 : p * 2 - 1;
         let totalM = (config.p2 / 2);
         let flipM = (m < totalM/2) ? (m + totalM/2) : (m - totalM/2);
@@ -234,7 +296,6 @@ function passToNext(j, p, m, s, nama, foto, pid) {
         targetImg.src = foto;
         targetSlot.setAttribute('data-pid', pid);
     } else if (j === 'W' || (j === 'L' && p > 0)) {
-        // Grand Final
         document.getElementById(`GF_0_0_p${j==='W'?1:2}`).innerText = nama;
         document.getElementById(`GF_0_0_img${j==='W'?1:2}`).src = foto;
         document.getElementById(`GF_0_0_s${j==='W'?1:2}`).setAttribute('data-pid', pid);
