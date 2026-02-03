@@ -7,7 +7,9 @@
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
             --emas: #ffd700; --bg: #0b0b0d; --kad: #1a1a1f; 
-            --ws-hijau: #25D366; --garis: #333; --biru-nombor: #00e5ff;
+            --ws-hijau: #25D366; --garis: #333; 
+            /* Nombor penyertaan digelapkan sedikit */
+            --biru-nombor: rgba(0, 229, 255, 0.5); 
             --bg-menang: rgba(0, 210, 255, 0.04);
             --bg-kalah: rgba(231, 76, 60, 0.04);
         }
@@ -50,7 +52,7 @@
         .ws-name { color: #fff; font-weight: 800; font-size: 0.9rem; margin: 0; }
         .ws-role { color: var(--emas); font-size: 0.65rem; text-transform: uppercase; font-weight: bold; margin: 0; }
 
-        /* KONTENA PENYERTAAN (LUAR HEADER) */
+        /* KONTENA PENYERTAAN */
         .senarai-luar { 
             width: 100%; max-width: 1100px; background: rgba(255,255,255,0.05); 
             border-radius: 25px; padding: 20px; border: 1px solid var(--garis); margin-bottom: 30px;
@@ -65,14 +67,17 @@
         /* TOURNAMENT LAYOUT */
         .tournament-layout { display: flex; flex-direction: column; gap: 50px; align-items: flex-start; margin-left: 20px; }
         .laluan-row { display: flex; gap: 30px; padding: 45px; border-radius: 25px; border: 1px solid #222; position: relative; width: min-content; }
-        .baris-menang { background: var(--bg-menang); border-color: var(--utama); }
+        
+        /* Baris Menang Vertical Center Adjustment */
+        .baris-menang { background: var(--bg-menang); border-color: var(--utama); align-items: center; }
         .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
+        
         .label-bracket { position: absolute; top: -15px; left: 30px; background: var(--bg); padding: 0 15px; font-weight: 900; font-size: 0.9rem; border-radius: 10px; }
         .label-menang { color: var(--utama); border: 1px solid var(--utama); }
         .label-kalah { color: var(--kalah); border: 1px solid var(--kalah); }
 
-        .pusingan { display: flex; flex-direction: column; gap: 20px; min-width: 240px; justify-content: space-around; }
-        .tajuk-pusingan { font-size: 0.75rem; font-weight: 900; text-align: center; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 6px; text-transform: uppercase; }
+        .pusingan { display: flex; flex-direction: column; gap: 20px; min-width: 240px; justify-content: center; }
+        .tajuk-pusingan { font-size: 0.75rem; font-weight: 900; text-align: center; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 6px; text-transform: uppercase; margin-bottom: 10px; }
         .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 25px; width: 240px; }
         .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: var(--biru-nombor); font-size: 8px; padding: 4px; text-align: center; font-weight: bold; border-top-left-radius: 11px; border-top-right-radius: 11px; }
         .p-logo { width: 22px; height: 22px; border-radius: 4px; object-fit: cover; background: #333; }
@@ -81,7 +86,8 @@
         .skor { width: 35px; height: 28px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; }
         .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
         .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none; }
-        .grand-final { border: 3px solid var(--emas) !important; background: rgba(255, 215, 0, 0.1) !important; box-shadow: 0 0 20px var(--emas); }
+        
+        .grand-final { border: 3px solid var(--emas) !important; background: rgba(255, 215, 0, 0.1) !important; box-shadow: 0 0 20px var(--emas); margin-top: 30px; }
 
         /* ADMIN PANEL */
         #panelAdmin { display: none; position: fixed; top: 10px; right: 10px; width: 340px; max-height: 90vh; background: var(--kad); border: 2px solid var(--utama); border-radius: 20px; z-index: 9999; padding: 25px; overflow-y: auto; box-shadow: 0 0 50px #000; }
@@ -129,11 +135,11 @@
     <div class="tournament-layout">
         <div id="barisW" class="laluan-row baris-menang">
             <div class="label-bracket label-menang">BRACKET MENANG</div>
-        </div>
+            </div>
 
         <div id="barisL" class="laluan-row baris-kalah">
             <div class="label-bracket label-kalah">BRACKET KALAH (NYAWA KEDUA)</div>
-        </div>
+            </div>
     </div>
 </div>
 
@@ -209,7 +215,6 @@
             slot.setAttribute('data-pid', pid);
             document.getElementById(`${targetId}_img${s}`).src = (teamData[pid] && teamData[pid].logo) ? teamData[pid].logo : 'https://via.placeholder.com/22';
         } else if(jenis === 'W' || (jenis === 'L' && p === ((Math.log2(p2)-1)*2))) {
-             // To Grand Final
              let gfS = (jenis === 'W') ? 1 : 2;
              let gfSlot = document.getElementById(`GF_0_0_s${gfS}`);
              if(gfSlot) {
@@ -238,7 +243,6 @@
         document.getElementById('barisL').innerHTML = '<div class="label-bracket label-kalah">BRACKET KALAH (NYAWA KEDUA)</div>';
         let rounds = Math.log2(p2);
 
-        // Render Winner Bracket
         for(let r=0; r<rounds; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">PUSINGAN ${r+1}</div>`;
@@ -246,13 +250,11 @@
             document.getElementById('barisW').appendChild(divR);
         }
 
-        // Grand Final inside barisW
         let divGF = document.createElement('div'); divGF.className = 'pusingan';
         divGF.innerHTML = `<div class="tajuk-pusingan" style="background:var(--emas); color:#000;">GRAND FINAL</div>`;
         divGF.appendChild(createMatch('GF', 0, 0, true));
         document.getElementById('barisW').appendChild(divGF);
 
-        // Render Loser Bracket
         for(let r=0; r<(rounds - 1) * 2; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">KALAH P${r+1}</div>`;
