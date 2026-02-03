@@ -12,196 +12,150 @@
 
     body { font-family:'Segoe UI', sans-serif; background:var(--bg); color:#fff; padding:20px; margin:0; }
 
-    /* HEADER UTAMA (LOGO, TAJUK, ADMIN) */
+    /* PEMBUNGKUS UTAMA UNTUK CENTERING */
+    .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Memastikan header, senarai, dan bracket sejajar tengah */
+        width: 100%;
+    }
+
+    /* HEADER - LEBAR MENGIKUT KANDUNGAN BRACKET */
     .header-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
         background: rgba(255, 255, 255, 0.03);
-        padding: 20px 40px;
-        border-radius: 20px;
+        padding: 25px 40px;
+        border-radius: 25px;
         border-bottom: 2px solid var(--garis);
-        margin-bottom: 40px;
-        gap: 20px;
+        margin-bottom: 30px;
+        width: 100%;
+        max-width: fit-content; /* Lebar ikut bracket di bawah */
+        box-sizing: border-box;
+        gap: 50px;
     }
 
-    /* KIRI: LOGO */
-    .logo-box {
-        flex: 1;
-        display: flex;
-        justify-content: flex-start;
-    }
-    .logo-box img {
-        height: 100px; /* Saiz logo */
-        border-radius: 12px;
-        object-fit: contain;
-    }
-
-    /* TENGAH: TAJUK GRADIENT */
-    .tajuk-box {
-        flex: 2;
-        text-align: center;
-    }
+    .logo-box img { height: 100px; border-radius: 12px; filter: drop-shadow(0 0 10px var(--utama)); }
+    
+    .tajuk-box { text-align: center; flex: 2; }
     .tajuk-box h1 {
-        font-size: 2.8rem;
-        margin: 0;
-        text-transform: uppercase;
-        font-weight: 900;
-        line-height: 1.1;
-        /* Gradient 130 deg - 4 Warna Sukan */
+        font-size: 2.5rem; margin: 0; text-transform: uppercase; font-weight: 900;
         background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .tajuk-box p {
-        color: #fff;
-        letter-spacing: 5px;
-        margin-top: 5px;
-        font-weight: 300;
-        opacity: 0.8;
+    .siri-tag {
+        font-size: 1.8rem; font-weight: 900; color: var(--emas);
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        letter-spacing: 8px; margin-top: 5px; display: block;
     }
 
-    /* KANAN: RUANGAN ADMIN LOGIN */
-    .admin-box {
-        flex: 1;
-        display: flex;
-        justify-content: flex-end;
-    }
     .admin-login-wrapper {
-        background: linear-gradient(45deg, #6a11cb, #2575fc); /* Warna berbeza (Ungu/Biru) */
-        padding: 15px 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
-        border: 1px solid rgba(255,255,255,0.2);
-        text-align: center;
+        background: linear-gradient(45deg, #6a11cb, #2575fc); padding: 12px 20px;
+        border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .admin-login-wrapper label {
-        display: block;
-        font-size: 10px;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #fff;
+    .btn-buka-admin { background: #fff; color: #6a11cb; border: none; padding: 8px 15px; border-radius: 6px; font-weight: 900; cursor: pointer; }
+
+    /* SENARAI PASUKAN - MAX PANJANG IKUT BRACKET */
+    .senarai-peserta-awam {
+        background: var(--kad); padding: 15px 25px; border-radius: 15px;
+        margin-bottom: 40px; border: 1px solid var(--garis);
+        width: 100%;
+        max-width: fit-content; /* Hadkan lebar ikut bracket */
+        overflow: hidden;
     }
-    .btn-buka-admin {
-        background: #fff;
-        color: #6a11cb;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 8px;
-        font-weight: 900;
-        cursor: pointer;
-        transition: 0.3s;
-        text-transform: uppercase;
+    .grid-peserta {
+        display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px;
+        scrollbar-width: thin; scrollbar-color: var(--utama) #000;
     }
-    .btn-buka-admin:hover {
-        transform: scale(1.05);
-        background: #000;
-        color: #fff;
+    .kad-peserta-ringkas {
+        flex: 0 0 auto; background: #000; padding: 8px 15px;
+        border-radius: 8px; border: 1px solid #333; font-size: 0.85rem;
     }
 
-    /* PANEL ADMIN TERAPUNG */
-    #panelAdmin { 
-        display: none; position: fixed; top: 20px; right: 20px; width: 340px; 
-        height: 90vh; background: var(--kad); border: 2px solid var(--utama); 
-        border-radius: 15px; z-index: 1000; padding: 25px; 
-        box-shadow: 0 0 50px rgba(0,0,0,0.9); overflow-y: auto; 
-    }
-    .close-admin { float: right; cursor: pointer; color: var(--kalah); font-weight: bold; font-size: 1.2rem; }
-
-    /* REKA BENTUK BRACKET & SLOT (KEKAL) */
-    .tournament-layout { display: flex; flex-direction: column; gap: 50px; margin: 0 auto; width: fit-content; }
-    .laluan-row { display: flex; gap: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 15px; }
+    /* TOURNAMENT BRACKET */
+    .tournament-layout { display: flex; width: fit-content; }
+    .bracket-group { display: flex; flex-direction: column; gap: 50px; }
+    .laluan-row { display: flex; gap: 40px; padding: 25px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid #222; }
+    
     .pusingan { display: flex; flex-direction: column; gap: 30px; min-width: 260px; justify-content: space-around; }
-    .tajuk-pusingan { font-size: 0.8rem; font-weight: bold; text-align: center; padding: 10px; text-transform: uppercase; border-radius: 5px; margin-bottom: 15px; border: 1px solid #444; }
-    .barisW .tajuk-pusingan { color: var(--utama); border-color: var(--utama); background: rgba(0, 210, 255, 0.05); }
-    .barisL .tajuk-pusingan { color: #ff6b6b; border-color: #e74c3c; background: rgba(231, 76, 60, 0.05); }
-    .kotak-perlawanan { background:var(--kad); border:1px solid var(--garis); border-radius:10px; overflow:hidden; position: relative; padding-top: 25px; width: 260px; }
-    .match-no { position: absolute; top: 0; left: 0; background: rgba(0, 229, 255, 0.2); color: var(--biru-nombor); font-size: 10px; font-weight: 900; padding: 3px 12px; border-bottom-right-radius: 10px; border-right: 1px solid var(--biru-nombor); border-bottom: 1px solid var(--biru-nombor); }
-    .slot-pasukan { display:flex; gap: 12px; align-items:center; padding:10px; border-bottom: 1px solid #222; height: 50px; }
-    .avatar-wrapper { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; background: #222; flex-shrink: 0; border:none; }
-    .avatar { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .nama-display { flex:1; font-size:0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .skor { width:40px; height: 32px; text-align:center; background:#000; border:1px solid #444; color:#fff; border-radius:4px; font-weight:bold; }
-    .slot-menang { background: rgba(46, 204, 113, 0.15) !important; }
+    .tajuk-pusingan { font-size: 0.75rem; font-weight: bold; text-align: center; padding: 10px; text-transform: uppercase; border-radius: 8px; border: 1px solid #444; background: #222; margin-bottom: 10px; }
+
+    .kotak-perlawanan { background:var(--kad); border:1px solid var(--garis); border-radius:12px; overflow:hidden; position: relative; padding-top: 30px; width: 260px; }
+    .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: var(--biru-nombor); font-size: 9px; font-weight: 900; padding: 5px; text-align: center; border-bottom: 1px solid var(--garis); }
+
+    .slot-pasukan { display:flex; gap: 10px; align-items:center; padding:10px; border-bottom: 1px solid #222; height: 45px; }
+    .avatar-wrapper { width: 35px; height: 35px; border-radius: 50%; overflow: hidden; background: #222; border: 1px solid #333; }
+    .avatar { width: 100%; height: 100%; object-fit: cover; }
+    .nama-display { flex:1; font-size:0.85rem; font-weight: 600; }
+    
+    .skor { width:35px; height: 30px; text-align:center; background:#000; border:1px solid #444; color:#fff; border-radius:5px; font-weight:bold; }
+    .slot-menang { background: rgba(46, 204, 113, 0.12) !important; }
     .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
-    .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none; }
+
     .gf-container { display: flex; align-items: center; padding-left: 50px; border-left: 3px dashed var(--garis); margin-left: 30px; }
     .grand-final { border: 3px solid var(--emas) !important; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); transform: scale(1.05); }
 
-    /* SENARAI AWAM */
-    .senarai-peserta-awam { background: var(--kad); padding: 15px; border-radius: 10px; max-width: 800px; margin: 0 auto 30px auto; border: 1px solid var(--garis); text-align: center; }
-    .grid-peserta { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
-    .kad-peserta-ringkas { background: #000; padding: 8px; border-radius: 5px; border: 1px solid #333; font-size: 0.9rem; }
-    
-    /* INPUT STYLE */
-    .input-kad { background: #000; padding: 10px; border-radius: 8px; border: 1px solid #444; margin-bottom: 10px; }
-    .input-pasukan { width: 90%; background: #111; border: 1px solid #333; color: #fff; padding: 6px; border-radius: 4px; margin-top: 6px; }
-    button.jana-btn { background: var(--utama); color: #000; border: none; padding: 10px; border-radius: 5px; font-weight: bold; width: 100%; cursor: pointer; }
+    /* ADMIN PANEL */
+    #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 340px; max-height: 90vh; background: var(--kad); border: 2px solid var(--utama); border-radius: 15px; z-index: 1000; padding: 25px; box-shadow: 0 0 50px #000; overflow-y: auto; }
 </style>
 </head>
 <body>
 
-<div class="header-container">
-    <div class="logo-box">
-        <img src="logo.jpeg" alt="Logo Pasukan" onerror="this.src='https://via.placeholder.com/100?text=BWF+LOGO'">
-    </div>
-
-    <div class="tajuk-box">
-        <h1>BWF BADMINTON FAMILY TOUR</h1>
-        <p>SIRI II</p>
-    </div>
-
-    <div class="admin-box">
-        <div class="admin-login-wrapper">
-            <label>Sistem Pengurusan</label>
-            <button class="btn-buka-admin" onclick="toggleAdmin()">Admin Login</button>
+<div class="main-wrapper">
+    <div class="header-container" id="headerRef">
+        <div class="logo-box">
+            <img src="logo.jpeg" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=BWF'">
+        </div>
+        <div class="tajuk-box">
+            <h1>BWF BADMINTON FAMILY TOUR</h1>
+            <span class="siri-tag">SIRI II</span>
+        </div>
+        <div class="admin-box">
+            <div class="admin-login-wrapper">
+                <button class="btn-buka-admin" onclick="toggleAdmin()">Admin Login</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="panelAdmin">
-    <span class="close-admin" onclick="toggleAdmin()">✖</span>
-    <h2 style="color:var(--utama); margin:0 0 10px 0;">Dashboard Admin</h2>
-    <hr style="border:0.5px solid #333; margin-bottom:20px;">
-    
-    <div id="authSection">
-        <label>Password:</label>
-        <input type="password" id="adminPass" class="input-pasukan" placeholder="Masukkan password...">
-        <button class="jana-btn" style="margin-top:10px;" onclick="login()">Buka Kunci</button>
+    <div class="senarai-peserta-awam" id="listRef">
+        <h4 style="margin:0 0 10px 0; color:var(--emas); font-size: 0.7rem; letter-spacing: 2px;">PASUKAN BERDAFTAR (SKROL KANAN)</h4>
+        <div id="gridPesertaAwam" class="grid-peserta"></div>
     </div>
 
-    <div id="adminControls" style="display:none;">
-        <label>Jumlah Pasukan:</label>
-        <input type="number" id="bilPasukan" value="6" min="2" style="width:50px; background:#000; color:#fff; border:1px solid #444; padding:5px; border-radius:4px;">
-        <button class="jana-btn" style="margin-top:10px; margin-bottom:20px;" onclick="jana()">Jana Bracket Baru</button>
-        <div id="containerNamaAdmin"></div>
-    </div>
-</div>
-
-<div class="senarai-peserta-awam">
-    <h4 style="margin:0; color:var(--emas);">SENARAI PASUKAN</h4>
-    <div id="gridPesertaAwam" class="grid-peserta"></div>
-</div>
-
-<div class="tournament-layout">
-    <div style="display: flex;">
-        <div id="bracketZone">
-            <div id="barisW" class="laluan-row barisW"></div>
-            <div style="height: 60px;"></div> 
-            <div id="barisL" class="laluan-row barisL"></div>
+    <div class="tournament-layout" id="bracketRef">
+        <div class="bracket-group">
+            <div id="barisW" class="laluan-row"></div>
+            <div id="barisL" class="laluan-row"></div>
         </div>
+        
         <div class="gf-container">
             <div class="pusingan">
-                <div class="tajuk-pusingan" style="background:var(--emas); color:#000; border:none;">🏆 GRAND FINAL</div>
+                <div style="background:var(--emas); color:#000; font-weight:900; text-align:center; padding:10px; border-radius:8px; margin-bottom:15px;">🏆 GRAND FINAL</div>
                 <div id="gfBox"></div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="panelAdmin">
+    <span style="float:right; cursor:pointer;" onclick="toggleAdmin()">✖</span>
+    <h2 style="color:var(--utama); margin:0;">Admin Panel</h2>
+    <hr style="border:0.5px solid #333; margin: 15px 0;">
+    <div id="authSection">
+        <input type="password" id="adminPass" style="width:100%; padding:10px; background:#111; color:#fff; border:1px solid #444; border-radius:5px;" placeholder="Password...">
+        <button onclick="login()" style="width:100%; margin-top:10px; padding:10px; background:var(--utama); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Login</button>
+    </div>
+    <div id="adminControls" style="display:none;">
+        <label>Jumlah Pasukan:</label>
+        <input type="number" id="bilPasukan" value="6" min="2" style="width:60px; background:#000; color:#fff; border:1px solid #444; padding:5px; margin-bottom:15px;">
+        <button onclick="jana()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Jana Bracket</button>
+        <div id="containerNamaAdmin" style="margin-top:20px;"></div>
+    </div>
+</div>
+
 <script>
+// SEMUA FUNGSI ASAL DIKEKALKAN 100%
 let config = { n: 0, p2: 0, seeds: [] };
 let infoPasukan = {};
 let matchCounter = 1;
@@ -213,13 +167,10 @@ function toggleAdmin() {
 }
 
 function login() {
-    let pass = document.getElementById('adminPass').value;
-    if(pass === ADMIN_PASSWORD) {
+    if(document.getElementById('adminPass').value === ADMIN_PASSWORD) {
         document.getElementById('authSection').style.display = 'none';
         document.getElementById('adminControls').style.display = 'block';
-    } else {
-        alert("Akses Ditolak!");
-    }
+    } else { alert("Salah Password!"); }
 }
 
 function jana() {
@@ -227,26 +178,24 @@ function jana() {
     config.p2 = Math.pow(2, Math.ceil(Math.log2(config.n)));
     config.seeds = getSeededOrder(config.p2);
     infoPasukan = {};
-    
-    const container = document.getElementById('containerNamaAdmin');
-    const gridAwam = document.getElementById('gridPesertaAwam');
-    container.innerHTML = '';
-    gridAwam.innerHTML = '';
+    document.getElementById('containerNamaAdmin').innerHTML = '';
+    document.getElementById('gridPesertaAwam').innerHTML = '';
 
     for(let i=0; i<config.n; i++) {
-        container.innerHTML += `
-            <div class="input-kad">
-                <label style="color:var(--emas)">TEAM ${i+1}</label>
-                <input type="text" class="input-pasukan" placeholder="Nama Pasukan..." oninput="update(${i}, 'nama', this.value)">
-                <input type="text" class="input-pasukan" placeholder="Link PostImages..." oninput="update(${i}, 'foto', this.value)">
+        document.getElementById('containerNamaAdmin').innerHTML += `
+            <div style="background:#000; padding:10px; border-radius:8px; margin-bottom:10px; border:1px solid #333;">
+                <label style="color:var(--emas); font-size:11px;">PASUKAN ${i+1}</label>
+                <input type="text" style="width:90%; background:#111; color:#fff; border:1px solid #444; padding:5px; margin-top:5px;" placeholder="Nama..." oninput="update(${i}, 'nama', this.value)">
+                <input type="text" style="width:90%; background:#111; color:#fff; border:1px solid #444; padding:5px; margin-top:5px;" placeholder="Link Foto..." oninput="update(${i}, 'foto', this.value)">
             </div>`;
-        gridAwam.innerHTML += `
+        document.getElementById('gridPesertaAwam').innerHTML += `
             <div class="kad-peserta-ringkas">
                 <span style="color:var(--utama)">${i+1}.</span> <span id="nama_awam_${i}">Pasukan ${i+1}</span>
             </div>`;
         infoPasukan[i] = { nama: `Pasukan ${i+1}`, foto: "" };
     }
     render();
+    adjustWidths(); // Selaraskan lebar header & senarai
 }
 
 function render() {
@@ -258,7 +207,7 @@ function render() {
     for(let p=0; p<pLen; p++) {
         let col = document.createElement('div');
         col.className = 'pusingan';
-        col.innerHTML = `<div class="tajuk-pusingan">Winners Rd ${p+1}</div>`;
+        col.innerHTML = `<div class="tajuk-pusingan">Winner Rd ${p+1}</div>`;
         for(let m=0; m < Math.pow(2, pLen-p-1); m++) col.appendChild(buatKotak('W', p, m));
         document.getElementById('barisW').appendChild(col);
     }
@@ -266,7 +215,7 @@ function render() {
     for(let p=0; p<lTotal; p++) {
         let col = document.createElement('div');
         col.className = 'pusingan';
-        col.innerHTML = `<div class="tajuk-pusingan">Losers Rd ${p+1}</div>`;
+        col.innerHTML = `<div class="tajuk-pusingan">Loser Rd ${p+1}</div>`;
         let mCount = Math.pow(2, Math.floor((lTotal - p - 1) / 2));
         for(let m=0; m < mCount; m++) col.appendChild(buatKotak('L', p, m));
         document.getElementById('barisL').appendChild(col);
@@ -287,7 +236,7 @@ function buatKotak(j, p, m, gf=false) {
         if (s2 < config.n) { n2 = `Pasukan ${s2 + 1}`; id2 = s2; } else { n2 = "BYE"; }
     }
     div.innerHTML = `
-        <div class="match-no">M${matchCounter++}</div>
+        <div class="match-no">PERLAWANAN ${matchCounter++}</div>
         <div class="slot-pasukan" id="${id}_s1" data-pid="${id1}">
             <div class="avatar-wrapper"><img class="avatar" id="${id}_img1" src=""></div>
             <span id="${id}_p1" class="nama-display">${n1}</span>
@@ -322,23 +271,21 @@ function kira(id) {
     let n1 = document.getElementById(id+'_p1'), n2 = document.getElementById(id+'_p2');
     let im1 = document.getElementById(id+'_img1'), im2 = document.getElementById(id+'_img2');
     sl1.classList.toggle('slot-menang', v1 > v2); sl2.classList.toggle('slot-menang', v2 > v1);
-    sc1.className = v1 > v2 ? 'skor skor-menang' : 'skor skor-kalah';
-    sc2.className = v2 > v1 ? 'skor skor-menang' : 'skor skor-kalah';
-    let menangNama = v1 > v2 ? n1.innerText : n2.innerText;
-    let menangFoto = v1 > v2 ? im1.src : im2.src;
-    let menangID = v1 > v2 ? sl1.getAttribute('data-pid') : sl2.getAttribute('data-pid');
-    let kalahNama = v1 > v2 ? n2.innerText : n1.innerText;
-    let kalahFoto = v1 > v2 ? im2.src : im1.src;
-    let kalahID = v1 > v2 ? sl2.getAttribute('data-pid') : sl1.getAttribute('data-pid');
+    sc1.className = v1 > v2 ? 'skor skor-menang' : 'skor';
+    sc2.className = v2 > v1 ? 'skor skor-menang' : 'skor';
+    
+    let mN = v1 > v2 ? n1.innerText : n2.innerText, mF = v1 > v2 ? im1.src : im2.src, mID = v1 > v2 ? sl1.getAttribute('data-pid') : sl2.getAttribute('data-pid');
+    let kN = v1 > v2 ? n2.innerText : n1.innerText, kF = v1 > v2 ? im2.src : im1.src, kID = v1 > v2 ? sl2.getAttribute('data-pid') : sl1.getAttribute('data-pid');
+    
     let [j, p, m] = id.split('_').map(x => isNaN(x) ? x : parseInt(x));
     if (j === 'W') {
-        passToNext('W', p+1, Math.floor(m/2), (m%2)+1, menangNama, menangFoto, menangID);
+        passToNext('W', p+1, Math.floor(m/2), (m%2)+1, mN, mF, mID);
         let tP = (p === 0) ? 0 : p * 2 - 1, totalM = (config.p2/2), flipM = (m < totalM/2) ? (m+totalM/2) : (m-totalM/2);
         let tM = (p === 0) ? Math.floor(flipM/2) : m, tS = (p === 0) ? (flipM%2)+1 : 2;
-        passToNext('L', tP, tM, tS, kalahNama, kalahFoto, kalahID);
+        passToNext('L', tP, tM, tS, kN, kF, kID);
     } else if (j === 'L') {
         let np = p+1, nm = (p%2 === 0) ? m : Math.floor(m/2), ns = (p%2 === 0) ? 1 : (m%2)+1;
-        passToNext('L', np, nm, ns, menangNama, menangFoto, menangID);
+        passToNext('L', np, nm, ns, mN, mF, mID);
     }
 }
 
@@ -364,6 +311,15 @@ function scanByes() {
     });
 }
 
+function adjustWidths() {
+    // Fungsi untuk memaksa header & senarai ikut lebar bracket secara dinamik
+    const bracketWidth = document.getElementById('bracketRef').offsetWidth;
+    if (bracketWidth > 100) {
+        document.getElementById('headerRef').style.width = bracketWidth + "px";
+        document.getElementById('listRef').style.width = bracketWidth + "px";
+    }
+}
+
 function getSeededOrder(n) {
     let o = [0, 1];
     while (o.length < n) {
@@ -373,6 +329,9 @@ function getSeededOrder(n) {
     }
     return o;
 }
+
+// Jalankan selarasan lebar bila window diubah saiz
+window.addEventListener('resize', adjustWidths);
 jana();
 </script>
 </body>
