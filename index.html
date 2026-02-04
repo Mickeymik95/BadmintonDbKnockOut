@@ -2,274 +2,253 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BWF FAMILY TOUR SIRI II - SISTEM RASMI</title>
+    <title>BWF BADMINTON SUPER SERIES - FAMILY TOUR</title>
     <style>
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
             --emas: #ffd700; --bg: #0b0b0d; --kad: #1a1a1f; 
             --ws-hijau: #25D366; --garis: #333; 
             --biru-final: #0088ff;
-            --putih: #ffffff;
+            --bg-menang: rgba(0, 210, 255, 0.04);
+            --bg-kalah: rgba(231, 76, 60, 0.04);
         }
 
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; padding: 20px; margin: 0; overflow-x: auto; }
-        .main-container { display: flex; flex-direction: column; align-items: center; min-width: 1200px; padding-bottom: 100px; }
+        .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 100px; }
 
         /* HEADER */
-        .header-section {
-            background: rgba(255, 255, 255, 0.02); padding: 40px;
+        .header-container {
+            background: rgba(255, 255, 255, 0.03); padding: 30px;
             border-radius: 40px; border: 1px solid var(--garis); margin-bottom: 30px;
-            width: 95%; max-width: 1300px; text-align: center;
+            width: 100%; max-width: 1200px; text-align: center;
         }
-        .header-flex { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
-        .logo-img { height: 140px; border-radius: 20px; filter: drop-shadow(0 0 15px var(--utama)); }
-        .title-group h1 { font-size: 3rem; margin: 0; background: linear-gradient(to right, var(--utama), var(--emas)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+        .logo-box img { height: 120px; border-radius: 20px; filter: drop-shadow(0 0 15px var(--utama)); }
         
-        /* WHATSAPP ADMIN */
-        .admin-grid { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .ws-box { 
-            background: rgba(37, 211, 102, 0.1); border: 1px solid var(--ws-hijau); 
-            padding: 10px 20px; border-radius: 15px; text-decoration: none; color: #fff;
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        .btn-admin-akses { 
+            padding: 15px 25px; border-radius: 15px; border: 3px solid var(--utama); 
+            background: rgba(0, 210, 255, 0.1); color: var(--utama); cursor: pointer; 
+            font-weight: 900; text-transform: uppercase; transition: 0.3s;
         }
-        .ws-box:hover { background: var(--ws-hijau); color: #000; }
+        .btn-admin-akses:hover { background: var(--utama); color: #000; box-shadow: 0 0 20px var(--utama); }
 
-        /* JADUAL PENYERTAAN */
-        .jadual-penyertaan-container {
-            width: 95%; max-width: 1300px; background: var(--kad); 
-            border-radius: 25px; border: 1px solid var(--garis); padding: 30px; margin-bottom: 50px;
-        }
-        .jadual-title { color: var(--emas); font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; border-left: 5px solid var(--emas); padding-left: 15px; }
-        .table-peserta { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .table-peserta th { background: #25252b; color: var(--utama); padding: 15px; text-align: left; border-bottom: 2px solid var(--garis); }
-        .table-peserta td { padding: 12px 15px; border-bottom: 1px solid #222; font-weight: 600; color: #ddd; }
-        .table-peserta tr:hover { background: rgba(255,255,255,0.03); }
+        .tajuk-box h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .siri-tag { font-size: 1.2rem; color: var(--emas); letter-spacing: 10px; font-weight: 900; }
+
+        /* SENARAI PENYERTAAN */
+        .senarai-luar { width: 100%; max-width: 1200px; background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; border: 1px solid var(--garis); margin-bottom: 30px; }
+        .grid-penyertaan { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+        .kad-pasukan { background: #111; border: 1px solid #222; border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 10px; }
+        .no-p { background: var(--utama); color: #000; font-weight: 900; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
         /* BRACKET LAYOUT */
-        .bracket-wrapper { display: flex; flex-direction: column; gap: 60px; }
-        .bracket-row { display: flex; gap: 40px; padding: 70px 40px; border-radius: 40px; border: 2px solid #222; position: relative; }
-        .bracket-row.top { border-color: var(--utama); background: rgba(0, 210, 255, 0.03); }
-        .bracket-row.bottom { border-color: var(--kalah); background: rgba(231, 76, 60, 0.03); }
+        .tournament-layout { display: flex; flex-direction: column; gap: 50px; padding: 20px; }
+        .laluan-row { display: flex; gap: 40px; padding: 80px 40px; border-radius: 40px; border: 2px solid #222; position: relative; }
+        .baris-menang { background: var(--bg-menang); border-color: var(--utama); }
+        .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
         
-        .label-kategori { position: absolute; top: -18px; left: 50px; background: var(--bg); padding: 5px 25px; font-weight: 900; border-radius: 50px; border: 2px solid; }
+        .label-bracket { position: absolute; top: -15px; left: 40px; background: var(--bg); padding: 5px 25px; font-weight: 900; border-radius: 50px; border: 2px solid; }
 
-        .round { display: flex; flex-direction: column; gap: 40px; width: 280px; justify-content: center; }
-        .round-title { font-size: 0.75rem; font-weight: 900; text-align: center; padding: 10px; background: #000; border: 1px solid #333; border-radius: 8px; margin-bottom: 15px; color: var(--utama); }
+        .pusingan { display: flex; flex-direction: column; gap: 30px; width: 260px; justify-content: center; }
+        .tajuk-pusingan { font-size: 0.75rem; font-weight: 900; text-align: center; padding: 8px; background: #000; border: 1px solid #333; border-radius: 6px; margin-bottom: 10px; color: var(--utama); }
 
-        /* MATCH BOX */
-        .match-card { background: #15151a; border: 1px solid #333; border-radius: 15px; position: relative; padding-top: 25px; }
-        .match-label { position: absolute; top: 0; left: 0; right: 0; background: #222; color: #888; font-size: 9px; padding: 5px; text-align: center; border-radius: 14px 14px 0 0; font-weight: bold; }
-        .team-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #222; }
-        .team-name { font-size: 0.95rem; font-weight: 700; color: #eee; }
-        
-        /* SCORE INPUTS */
-        .score-input { width: 45px; height: 35px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; }
-        .score-win { background: var(--menang) !important; color: #000 !important; border: none !important; }
-        .score-lose { background: var(--kalah) !important; color: #fff !important; border: none !important; }
+        /* KOTAK PERLAWANAN */
+        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 14px; position: relative; padding-top: 25px; }
+        .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: #777; font-size: 9px; padding: 4px; text-align: center; border-radius: 13px 13px 0 0; }
+        .slot-pasukan { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #222; }
+        .nama-display { font-size: 0.85rem; font-weight: 700; color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .skor { width: 35px; height: 30px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px; font-weight: 900; }
+        .skor-menang { background: var(--menang) !important; color: #000 !important; border: none; }
+        .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none; }
 
-        /* HIGHLIGHTS */
-        .highlight-lb { border: 4px solid var(--biru-final) !important; box-shadow: 0 0 20px var(--biru-final); }
-        .highlight-gf { border: 5px solid var(--emas) !important; box-shadow: 0 0 30px var(--emas); transform: scale(1.05); }
+        /* SPECIAL BOXES */
+        .final-lb-box { border: 3px solid var(--biru-final) !important; box-shadow: 0 0 20px var(--biru-final); }
+        .grand-final-box { border: 5px solid var(--emas) !important; box-shadow: 0 0 40px var(--emas); transform: scale(1.1); }
 
-        /* ADMIN */
-        #adminPanel { display: none; position: fixed; top: 20px; right: 20px; width: 350px; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 1000; padding: 25px; box-shadow: 0 0 50px #000; }
-        .input-text { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
-        .btn-admin { padding: 15px 30px; border-radius: 15px; border: 2px solid var(--utama); background: rgba(0,210,255,0.1); color: var(--utama); cursor: pointer; font-weight: bold; }
+        /* ADMIN PANEL */
+        #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 320px; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 1000; padding: 20px; box-shadow: 0 0 50px #000; }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 8px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <div class="header-section">
-        <div class="header-flex">
-            <img src="logo.jpeg" class="logo-img" onerror="this.src='https://via.placeholder.com/140'">
-            <div class="title-group">
-                <h1>BWF FAMILY TOUR</h1>
-                <div style="color:var(--emas); letter-spacing:10px; font-weight:900;">SIRI II</div>
+<div class="main-wrapper">
+    <div class="header-container">
+        <div class="header-top">
+            <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/120'"></div>
+            <div class="tajuk-box">
+                <h1>BWF BADMINTON FAMILY TOUR</h1>
+                <div class="siri-tag">SIRI II</div>
             </div>
-            <button class="btn-admin" onclick="toggleAdmin()">ADMIN</button>
+            <button class="btn-admin-akses" onclick="toggleAdmin()">ADMIN</button>
         </div>
-        
-        <div class="admin-grid">
-            <a href="https://wa.me/60149236577" class="ws-box"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20"> AMMIK</a>
-            <a href="https://wa.me/601111639636" class="ws-box"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20"> ANGGAN</a>
-            <a href="https://wa.me/601139058698" class="ws-box"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20"> BANDING</a>
-            <a href="https://wa.me/60128228860" class="ws-box"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20"> AZIS</a>
         </div>
+
+    <div class="senarai-luar">
+        <div id="displayPenyertaan" class="grid-penyertaan"></div>
     </div>
 
-    <div class="jadual-penyertaan-container">
-        <div class="jadual-title">JADUAL PENYERTAAN PASUKAN</div>
-        <table class="table-peserta" id="pesertaTable">
-            <thead>
-                <tr>
-                    <th width="10%">NO</th>
-                    <th width="60%">NAMA PASUKAN / PEMAIN</th>
-                    <th width="30%">STATUS</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                </tbody>
-        </table>
-    </div>
-
-    <div class="bracket-wrapper">
-        <div id="bracketTop" class="bracket-row top">
-            <div class="label-kategori" style="color:var(--utama); border-color:var(--utama);">KUMPULAN PEMENANG</div>
+    <div class="tournament-layout">
+        <div id="barisW" class="laluan-row baris-menang">
+            <div class="label-bracket" style="color:var(--utama); border-color:var(--utama);">KUMPULAN PEMENANG</div>
         </div>
-        <div id="bracketBottom" class="bracket-row bottom">
-            <div class="label-kategori" style="color:var(--kalah); border-color:var(--kalah);">KUMPULAN RECOVERY</div>
+        <div id="barisL" class="laluan-row baris-kalah">
+            <div class="label-bracket" style="color:var(--kalah); border-color:var(--kalah);">KUMPULAN RECOVERY (NYAWA KEDUA)</div>
         </div>
     </div>
 </div>
 
-<div id="adminPanel">
-    <h3 style="text-align:center; color:var(--utama);">LOG MASUK ADMIN</h3>
-    <input type="password" id="pass" class="input-text" placeholder="Kata Laluan">
-    <button onclick="login()" style="width:100%; padding:12px; background:var(--utama); border:none; border-radius:8px; font-weight:bold; cursor:pointer;">MASUK</button>
-    
-    <div id="editZone" style="display:none; margin-top:20px; border-top:1px solid #333; pt:20px;">
-        <p style="font-size:0.8rem; color:var(--emas);">Edit Nama Pasukan:</p>
-        <div id="inputList" style="max-height:300px; overflow-y:auto; margin-bottom:15px;"></div>
-        <button onclick="save()" style="width:100%; padding:12px; background:var(--menang); border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SIMPAN & RESET SKOR</button>
+<div id="panelAdmin">
+    <h3 style="color:var(--utama); margin-top:0;">Login Admin</h3>
+    <input type="password" id="passInput" class="admin-input" placeholder="Kata Laluan">
+    <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">MASUK</button>
+    <div id="controlBox" style="display:none; margin-top:20px;">
+        <label style="font-size:11px; color:var(--emas);">JUMLAH PASUKAN (MAX 16):</label>
+        <input type="number" id="inputNumTeams" class="admin-input" value="16">
+        <div id="adminTeamInputs" style="max-height:300px; overflow-y:auto;"></div>
+        <button onclick="saveData()" style="width:100%; padding:15px; background:var(--menang); border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">SIMPAN & RESET CARTA</button>
     </div>
 </div>
 
 <script>
-    let teams = {};
-    let isLogged = false;
-    let matchNo = 1;
+    let nPasukan = 16;
+    let teamData = {};
+    let isAdmin = false;
+    let matchCounter = 1;
 
     function toggleAdmin() {
-        let p = document.getElementById('adminPanel');
-        p.style.display = (p.style.display==='block')?'none':'block';
+        let p = document.getElementById('panelAdmin');
+        p.style.display = (p.style.display === 'block') ? 'none' : 'block';
     }
 
-    function login() {
-        if(document.getElementById('pass').value === "admin123") {
-            document.getElementById('editZone').style.display = 'block';
-            isLogged = true;
-            renderAdminInputs();
-            unlockScores();
+    function checkAuth() {
+        if(document.getElementById('passInput').value === "admin123") {
+            document.getElementById('controlBox').style.display = 'block';
+            isAdmin = true;
+            renderInputs();
+            updateInputAccess();
         }
     }
 
-    function renderAdminInputs() {
-        let cont = document.getElementById('inputList');
-        cont.innerHTML = "";
-        for(let i=0; i<16; i++) {
-            let n = teams[i] ? teams[i].nama : `Pasukan ${i+1}`;
-            cont.innerHTML += `<input type="text" class="input-text" value="${n}" id="in_${i}">`;
+    function renderInputs() {
+        let container = document.getElementById('adminTeamInputs');
+        container.innerHTML = "";
+        for(let i=0; i<nPasukan; i++) {
+            let t = teamData[i] || { nama: `Pasukan ${i+1}` };
+            container.innerHTML += `<input type="text" class="admin-input" value="${t.nama}" oninput="teamData[${i}]={nama:this.value}">`;
         }
     }
 
-    function save() {
-        for(let i=0; i<16; i++) {
-            teams[i] = { nama: document.getElementById(`in_${i}`).value };
-        }
-        localStorage.setItem('bwf_siri2_teams', JSON.stringify(teams));
+    function updateInputAccess() {
+        document.querySelectorAll('.skor').forEach(input => input.readOnly = !isAdmin);
+    }
+
+    function saveData() {
+        nPasukan = document.getElementById('inputNumTeams').value;
+        localStorage.setItem('bwf_final_data', JSON.stringify({n: nPasukan, teams: teamData}));
         location.reload();
     }
 
-    function unlockScores() {
-        document.querySelectorAll('.score-input').forEach(el => el.readOnly = false);
-    }
+    function jana() {
+        const bw = document.getElementById('barisW'), bl = document.getElementById('barisL');
+        const seeds = [0,15,7,8,3,12,4,11,1,14,6,9,2,13,5,10];
+        matchCounter = 1;
 
-    function build() {
-        const bt = document.getElementById('bracketTop'), bb = document.getElementById('bracketBottom');
-        const tb = document.getElementById('tableBody');
-        const seed = [0,15,7,8,3,12,4,11,1,14,6,9,2,13,5,10];
-        matchNo = 1;
-
-        // 1. Fill Entry Table
-        tb.innerHTML = "";
-        for(let i=0; i<16; i++) {
-            let n = teams[i] ? teams[i].nama : `Pasukan ${i+1}`;
-            tb.innerHTML += `<tr><td>${i+1}</td><td>${n}</td><td style="color:var(--menang)">BERDAFTAR</td></tr>`;
-        }
-
-        // 2. Upper Bracket
+        // Pemenang P1-P3
         for(let r=0; r<3; r++) {
-            let div = document.createElement('div'); div.className = 'round';
-            div.innerHTML = `<div class="round-title">PUSINGAN ${r+1}</div>`;
-            let num = Math.pow(2, 3-r);
-            for(let m=0; m<num; m++) div.appendChild(createMatch('W', r, m, seed));
-            bt.appendChild(div);
+            let divR = document.createElement('div'); divR.className = 'pusingan';
+            divR.innerHTML = `<div class="tajuk-pusingan">PUSINGAN ${r+1}</div>`;
+            let numM = Math.pow(2, 3-r);
+            for(let m=0; m<numM; m++) divR.appendChild(createMatch('W', r, m, seeds));
+            bw.appendChild(divR);
         }
 
-        // 3. Lower Bracket
+        // Recovery R1-R5
         for(let r=0; r<5; r++) {
-            let div = document.createElement('div'); div.className = 'round';
-            div.innerHTML = `<div class="round-title">RECOVERY P${r+1}</div>`;
-            let num = Math.pow(2, Math.floor((4-r)/2));
-            for(let m=0; m<num; m++) div.appendChild(createMatch('L', r, m));
-            bb.appendChild(div);
+            let divR = document.createElement('div'); divR.className = 'pusingan';
+            divR.innerHTML = `<div class="tajuk-pusingan">RECOVERY P${r+1}</div>`;
+            let numM = Math.pow(2, Math.floor((5-r)/2));
+            for(let m=0; m<numM; m++) divR.appendChild(createMatch('L', r, m));
+            bl.appendChild(divR);
         }
 
-        // 4. Final LB
-        let flb = document.createElement('div'); flb.className = 'round';
-        flb.innerHTML = `<div class="round-title" style="color:var(--biru-final)">FINAL LB</div>`;
-        flb.appendChild(createMatch('L', 5, 0, null, true));
-        bb.appendChild(flb);
+        // Final LB
+        let divFLB = document.createElement('div'); divFLB.className = 'pusingan';
+        divFLB.innerHTML = `<div class="tajuk-pusingan" style="color:var(--biru-final)">FINAL LB</div>`;
+        divFLB.appendChild(createMatch('L', 5, 0, null, true));
+        bl.appendChild(divFLB);
 
-        // 5. Grand Final
-        let gf = document.createElement('div'); gf.className = 'round';
-        gf.innerHTML = `<div class="round-title" style="color:var(--emas)">GRAND FINAL</div>`;
-        gf.appendChild(createMatch('GF', 0, 0, null, false, true));
-        bt.appendChild(gf);
+        // Grand Final
+        let divGF = document.createElement('div'); divGF.className = 'pusingan';
+        divGF.innerHTML = `<div class="tajuk-pusingan" style="color:var(--emas)">GRAND FINAL</div>`;
+        divGF.appendChild(createMatch('GF', 0, 0, null, false, true));
+        bw.appendChild(divGF);
+
+        // Render Senarai Nama Pasukan di Atas
+        let list = document.getElementById('displayPenyertaan');
+        list.innerHTML = "";
+        for(let i=0; i<nPasukan; i++) {
+            let t = teamData[i] || { nama: `Pasukan ${i+1}` };
+            list.innerHTML += `<div class="kad-pasukan"><div class="no-p">${i+1}</div><div class="nama-display">${t.nama}</div></div>`;
+        }
+        updateInputAccess();
     }
 
-    function createMatch(j, r, m, seed, isLB=false, isGF=false) {
-        let id = `${j}_${r}_${m}`;
-        let div = document.createElement('div');
-        div.className = "match-card" + (isLB?" highlight-lb":"") + (isGF?" highlight-gf":"");
+    function createMatch(j, r, m, seeds, isFLB=false, isGF=false) {
+        let mId = `${j}_${r}_${m}`;
+        let div = document.createElement('div'); 
+        div.className = "kotak-perlawanan" + (isFLB?" final-lb-box":"") + (isGF?" grand-final-box":"");
+        div.id = mId;
         
         let p1 = "Menunggu...", p2 = "Menunggu...";
         if(j==='W' && r===0) {
-            p1 = teams[seed[m*2]] ? teams[seed[m*2]].nama : `Pasukan ${seed[m*2]+1}`;
-            p2 = teams[seed[m*2+1]] ? teams[seed[m*2+1]].nama : `Pasukan ${seed[m*2+1]+1}`;
+            p1 = teamData[seeds[m*2]]?.nama || `Pasukan ${seeds[m*2]+1}`;
+            p2 = teamData[seeds[m*2+1]]?.nama || `Pasukan ${seeds[m*2+1]+1}`;
         }
 
-        div.innerHTML = `<div class="match-label">PERLAWANAN ${matchNo++}</div>
-            <div class="team-row"><span class="team-name" id="${id}_n1">${p1}</span><input type="number" class="score-input" id="${id}_s1" oninput="calc('${id}')" readonly></div>
-            <div class="team-row"><span class="team-name" id="${id}_n2">${p2}</span><input type="number" class="score-input" id="${id}_s2" oninput="calc('${id}')" readonly></div>`;
+        div.innerHTML = `<div class="match-no">PERLAWANAN ${matchCounter++}</div>
+            <div class="slot-pasukan"><span class="nama-display" id="${mId}_p1">${p1}</span><input type="number" class="skor" id="${mId}_sc1" oninput="kira('${mId}')"></div>
+            <div class="slot-pasukan"><span class="nama-display" id="${mId}_p2">${p2}</span><input type="number" class="skor" id="${mId}_sc2" oninput="kira('${mId}')"></div>`;
         return div;
     }
 
-    function calc(id) {
-        let s1 = document.getElementById(id+'_s1'), s2 = document.getElementById(id+'_s2');
+    function kira(id) {
+        let s1 = document.getElementById(id+'_sc1'), s2 = document.getElementById(id+'_sc2');
         if(!s1.value || !s2.value) return;
         
         let v1 = parseInt(s1.value), v2 = parseInt(s2.value);
-        s1.className = v1 > v2 ? "score-input score-win" : "score-input score-lose";
-        s2.className = v2 > v1 ? "score-input score-win" : "score-input score-lose";
+        s1.className = v1 > v2 ? 'skor skor-menang' : 'skor skor-kalah';
+        s2.className = v2 > v1 ? 'skor skor-menang' : 'skor skor-kalah';
 
-        let win = v1 > v2 ? document.getElementById(id+'_n1').innerText : document.getElementById(id+'_n2').innerText;
-        let los = v1 > v2 ? document.getElementById(id+'_n2').innerText : document.getElementById(id+'_n1').innerText;
+        let win = v1 > v2 ? document.getElementById(id+'_p1').innerText : document.getElementById(id+'_p2').innerText;
+        let los = v1 > v2 ? document.getElementById(id+'_p2').innerText : document.getElementById(id+'_p1').innerText;
 
-        let p = id.split('_'), j = p[0], r = parseInt(p[1]), m = parseInt(p[2]);
+        let d = id.split('_'), j = d[0], r = parseInt(d[1]), m = parseInt(d[2]);
 
         if(j==='W') {
-            if(r < 2) push('W', r+1, Math.floor(m/2), (m%2)+1, win);
-            else if(r === 2) push('GF', 0, 0, 1, win);
-            push('L', r===0?0:r*2-1, m, r===0?(m%2)+1:2, los);
+            if(r < 2) hantar('W', r+1, Math.floor(m/2), (m%2)+1, win);
+            else if(r===2) hantar('GF', 0, 0, 1, win);
+            hantar('L', r===0?0:r*2-1, m, r===0?(m%2)+1:2, los);
         } else if(j==='L') {
-            if(r < 5) push('L', r+1, (r%2===0)?m:Math.floor(m/2), (r%2===0)?1:(m%2)+1, win);
-            else push('GF', 0, 0, 2, win);
+            if(r < 5) hantar('L', r+1, (r%2===0)?m:Math.floor(m/2), (r%2===0)?1:(m%2)+1, win);
+            else if(r===5) hantar('GF', 0, 0, 2, win);
         }
     }
 
-    function push(j, r, m, s, n) {
-        let el = document.getElementById(`${j}_${r}_${m}_n${s}`);
+    function hantar(j, r, m, s, n) {
+        let el = document.getElementById(`${j}_${r}_${m}_p${s}`);
         if(el) el.innerText = n;
     }
 
     window.onload = () => {
-        let data = localStorage.getItem('bwf_siri2_teams');
-        if(data) teams = JSON.parse(data);
-        build();
-    }
+        let saved = localStorage.getItem('bwf_final_data');
+        if(saved) {
+            let p = JSON.parse(saved);
+            nPasukan = p.n;
+            teamData = p.teams;
+        }
+        jana();
+    };
 </script>
 </body>
 </html>
