@@ -10,7 +10,6 @@
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
             --emas: linear-gradient(135deg, #ffd700, #b8860b);
-            --perak: #c0c0c0; --gangsa: #cd7f32;
             --kuning-pekat: #ffcc00; 
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
@@ -46,28 +45,20 @@
         }
         .tajuk-box p { font-size: 1.5rem; color: #888; margin-top: 10px; letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 700; }
 
-        /* GAYA PODIUM KEPUTUSAN */
-        #podiumKeputusan {
-            margin: 40px 0;
-            padding: 30px;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 2px solid #333;
-            display: none; /* Muncul bila selesai */
+        /* --- TAMBAHAN GAYA PODIUM --- */
+        #podiumBorder {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+            display: none; /* Muncul bila final selesai */
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
         }
-        .podium-grid { display: flex; gap: 20px; justify-content: center; align-items: flex-end; margin-top: 20px; }
-        .kad-pemenang { 
-            padding: 20px; border-radius: 15px; background: #111; min-width: 200px; 
-            border: 1px solid #333; position: relative;
-        }
-        .kad-pemenang.no1 { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); order: 2; transform: scale(1.1); }
-        .kad-pemenang.no2 { order: 1; }
-        .kad-pemenang.no3 { order: 3; }
-        .medal-txt { font-size: 2rem; display: block; margin-bottom: 5px; }
-        .nama-pemenang { font-weight: 900; font-size: 1.2rem; color: #fff; display: block; }
-        .label-pemenang { font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 700; }
+        .podium-list { list-style: none; padding: 0; margin: 0; font-size: 1.4rem; font-weight: 900; }
+        .podium-list li { margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        /* --------------------------- */
 
         #syncToast {
             color: var(--menang); font-weight: 800; font-size: 1rem; margin-top: 15px;
@@ -166,25 +157,12 @@
             <div id="syncToast">✓ Data Berjaya Disinkron!</div>
         </div>
 
-        <div id="podiumKeputusan">
-            <h2 style="color:var(--emas); text-transform:uppercase; letter-spacing:2px; margin:0;">Keputusan Rasmi Kejohanan</h2>
-            <div class="podium-grid">
-                <div class="kad-pemenang no2">
-                    <span class="label-pemenang">Naib Juara</span>
-                    <span class="medal-txt">🥈</span>
-                    <span class="nama-pemenang" id="pemenang_2">-</span>
-                </div>
-                <div class="kad-pemenang no1">
-                    <span class="label-pemenang">Juara</span>
-                    <span class="medal-txt">🥇</span>
-                    <span class="nama-pemenang" id="pemenang_1">-</span>
-                </div>
-                <div class="kad-pemenang no3">
-                    <span class="label-pemenang">Tempat Ke-3</span>
-                    <span class="medal-txt">🥉</span>
-                    <span class="nama-pemenang" id="pemenang_3">-</span>
-                </div>
-            </div>
+        <div id="podiumBorder">
+            <ul class="podium-list">
+                <li style="color:#ffd700;"><span id="nama_1"></span> 🥇</li>
+                <li style="color:#c0c0c0;"><span id="nama_2"></span> 🥈</li>
+                <li style="color:#cd7f32;"><span id="nama_3"></span> 🥉</li>
+            </ul>
         </div>
 
         <div class="header-actions-grid">
@@ -407,14 +385,14 @@
                 else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
             } else {
                 updateSlot('GF_0_0', 2, winN, winP);
-                // Kemaskini Tempat Ke-3
-                document.getElementById('pemenang_3').innerText = losN;
+                // SET TEMPAT KE-3 (LOSER FINAL)
+                document.getElementById('nama_3').innerText = losN;
             }
         } else if(p[0] === 'GF') {
-            // Kemaskini Juara & Naib Juara
-            document.getElementById('pemenang_1').innerText = winN;
-            document.getElementById('pemenang_2').innerText = losN;
-            document.getElementById('podiumKeputusan').style.display = 'block';
+            // SET JUARA & NAIB JUARA (GRAND FINAL)
+            document.getElementById('nama_1').innerText = winN;
+            document.getElementById('nama_2').innerText = losN;
+            document.getElementById('podiumBorder').style.display = 'block';
         }
     };
 
