@@ -18,7 +18,7 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 100px; }
 
-        /* HEADER TERKINI */
+        /* HEADER */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
             background: rgba(255, 255, 255, 0.03); padding: 30px;
@@ -62,11 +62,8 @@
             display: flex; gap: 40px; padding: 60px 30px; border-radius: 30px; 
             border: 2px solid #222; position: relative; min-width: 100%;
         }
-        .baris-menang { background: var(--bg-menang); border-color: var(--utama); justify-content: flex-start; }
+        .baris-menang { background: var(--bg-menang); border-color: var(--utama); align-items: flex-start; }
         .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
-
-        /* RAPATKAN GRAND FINAL */
-        .pusingan-gf-container { margin-left: -20px; }
 
         .label-bracket { 
             position: absolute; top: -15px; left: 30px; background: var(--bg); 
@@ -74,10 +71,17 @@
         }
 
         .pusingan { display: flex; flex-direction: column; gap: 30px; width: 220px; justify-content: space-around; }
+        
+        /* RAPATKAN GF KE TENGAH SECARA VERTIKAL */
+        .pusingan-gf-container { 
+            justify-content: center !important; 
+            margin-top: 35px; /* Adjust based on title height */
+        }
+
         .tajuk-pusingan { font-size: 0.7rem; font-weight: 900; text-align: center; padding: 6px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 10px; }
 
-        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; overflow: hidden; }
-        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: var(--utama); font-size: 8px; padding: 4px 0; text-align: center; font-weight: bold; }
+        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; overflow: hidden; margin-bottom: 5px; }
+        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: var(--utama); font-size: 9px; padding: 4px 0; text-align: center; font-weight: bold; letter-spacing: 1px; }
 
         .slot-pasukan { display: flex; gap: 8px; align-items: center; padding: 8px 12px; height: 35px; border-bottom: 1px solid #222; }
         .slot-pasukan:last-child { border-bottom: none; }
@@ -85,11 +89,9 @@
         .p-logo { width: 20px; height: 20px; border-radius: 4px; background: #333; }
 
         .skor { width: 35px; height: 25px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; font-size: 0.8rem; }
-        .skor-menang { background: var(--menang) !important; color: #000 !important; }
-        .skor-kalah { background: var(--kalah) !important; color: #fff !important; }
-
+        
         /* HIGHLIGHTS */
-        .grand-final { border: 4px solid var(--emas) !important; transform: scale(1.05); }
+        .grand-final { border: 4px solid var(--emas) !important; transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
         .final-loser-highlight { border: 3px solid var(--kalah) !important; box-shadow: 0 0 15px rgba(231, 76, 60, 0.3); }
 
         #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 320px; max-height: 80vh; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 1000; padding: 20px; overflow-y: auto; box-shadow: 0 10px 40px #000; }
@@ -103,7 +105,6 @@
         <div class="tajuk-box">
             <h1>BWF BADMINTON FAMILY TOUR</h1>
         </div>
-
         <div class="header-actions-grid">
             <a href="https://wa.me/60149236577" target="_blank" class="admin-ws-card">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20">
@@ -135,7 +136,6 @@
     <h3 style="color:var(--utama); margin-top:0;">Pengurusan Admin</h3>
     <input type="password" id="passInput" class="admin-input" placeholder="Kata Laluan">
     <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:6px; cursor:pointer; font-weight: bold;">LOG MASUK</button>
-
     <div id="controlBox" style="display:none; margin-top:20px;">
         <label style="font-size:10px; color:var(--emas);">JUMLAH PASUKAN:</label>
         <input type="number" id="inputNumTeams" class="admin-input" value="14">
@@ -149,6 +149,7 @@
     let nPasukan = 14;
     let teamData = {};
     let isAdmin = false;
+    let matchCounter = 1;
 
     function toggleAdmin() {
         const p = document.getElementById('panelAdmin');
@@ -168,11 +169,7 @@
         container.innerHTML = "";
         for(let i=0; i<nPasukan; i++) {
             let t = teamData[i] || { nama: `Pasukan ${i+1}`, logo: '' };
-            container.innerHTML += `
-                <div style="display:flex; gap:5px; margin-bottom:5px;">
-                    <input type="text" class="admin-input" placeholder="Nama" value="${t.nama}" oninput="updateTempData(${i}, 'nama', this.value)">
-                    <input type="text" class="admin-input" placeholder="Logo URL" value="${t.logo}" oninput="updateTempData(${i}, 'logo', this.value)">
-                </div>`;
+            container.innerHTML += `<div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" class="admin-input" placeholder="Nama" value="${t.nama}" oninput="updateTempData(${i}, 'nama', this.value)"><input type="text" class="admin-input" placeholder="Logo URL" value="${t.logo}" oninput="updateTempData(${i}, 'logo', this.value)"></div>`;
         }
     }
 
@@ -184,19 +181,12 @@
     function saveData() {
         nPasukan = parseInt(document.getElementById('inputNumTeams').value);
         let currentScores = {};
-        document.querySelectorAll('.skor').forEach(input => {
-            if(input.value !== "") currentScores[input.id] = input.value;
-        });
+        document.querySelectorAll('.skor').forEach(input => { if(input.value !== "") currentScores[input.id] = input.value; });
         localStorage.setItem('bwf_v2_data', JSON.stringify({ n: nPasukan, teams: teamData, scores: currentScores }));
         location.reload();
     }
 
-    function resetData() {
-        if(confirm("Padam semua data?")) {
-            localStorage.removeItem('bwf_v2_data');
-            location.reload();
-        }
-    }
+    function resetData() { if(confirm("Padam semua data?")) { localStorage.removeItem('bwf_v2_data'); location.reload(); } }
 
     function loadData() {
         let saved = localStorage.getItem('bwf_v2_data');
@@ -206,25 +196,21 @@
             teamData = data.teams;
             document.getElementById('inputNumTeams').value = nPasukan;
             jana(data.scores);
-        } else {
-            jana({});
-        }
+        } else { jana({}); }
     }
 
     function getSeeds(n) {
         let seeds = [0, 1];
         for (let i = 2; i < n; i <<= 1) {
             let next = [];
-            for (let s of seeds) {
-                next.push(s);
-                next.push(2 * i - 1 - s);
-            }
+            for (let s of seeds) { next.push(s); next.push(2 * i - 1 - s); }
             seeds = next;
         }
         return seeds;
     }
 
     function jana(savedScores) {
+        matchCounter = 1;
         const p2 = Math.pow(2, Math.ceil(Math.log2(nPasukan)));
         const seeds = getSeeds(p2);
         const rounds = Math.log2(p2);
@@ -236,10 +222,7 @@
         if(savedScores) {
             for(let id in savedScores) {
                 let el = document.getElementById(id);
-                if(el) {
-                    el.value = savedScores[id];
-                    kira(id.replace('_sc1','').replace('_sc2',''));
-                }
+                if(el) { el.value = savedScores[id]; kira(id.replace('_sc1','').replace('_sc2','')); }
             }
         }
         autoBye();
@@ -251,9 +234,7 @@
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">W-P${r+1}</div>`;
             let matches = Math.pow(2, rounds-r-1);
-            for(let m=0; m<matches; m++) {
-                divR.appendChild(createMatchBox('W', r, m));
-            }
+            for(let m=0; m<matches; m++) { divR.appendChild(createMatchBox('W', r, m)); }
             bw.appendChild(divR);
         }
         for(let m=0; m < p2/2; m++) {
@@ -268,13 +249,9 @@
         const totalLRounds = (rounds - 1) * 2;
         for(let r=0; r < totalLRounds; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
-            
-            // Check if this is the last round in Loser Bracket
             let matches = Math.pow(2, Math.floor(((totalLRounds - 1) - r) / 2));
             let isFinalLoser = (r === totalLRounds - 1);
-            
             divR.innerHTML = `<div class="tajuk-pusingan">${isFinalLoser ? 'FINAL LOSER BRACKET' : 'L-P'+(r+1)}</div>`;
-            
             for(let m=0; m<matches; m++) {
                 let box = createMatchBox('L', r, m);
                 if(isFinalLoser) box.classList.add('final-loser-highlight');
@@ -299,8 +276,13 @@
         let div = document.createElement('div');
         div.className = 'kotak-perlawanan';
         div.id = mid;
+        
+        // Guna nama "Perlawanan X" untuk paparan sahaja
+        let labelMatch = `PERLAWANAN ${matchCounter++}`;
+        if(j === 'GF') labelMatch = "PENENTU JUARA";
+
         div.innerHTML = `
-            <div class="match-no">${mid}</div>
+            <div class="match-no">${labelMatch}</div>
             <div class="slot-pasukan" id="${mid}_s1" data-pid="">
                 <img src="https://via.placeholder.com/20" class="p-logo" id="${mid}_img1">
                 <span class="nama-display" id="${mid}_p1">Menunggu...</span>
@@ -317,41 +299,31 @@
     function updateSlot(mid, slot, nama, pid) {
         let elNama = document.getElementById(`${mid}_p${slot}`);
         if(elNama) elNama.innerText = nama;
-        
         let elSlot = document.getElementById(`${mid}_s${slot}`);
         if(elSlot) elSlot.setAttribute('data-pid', pid);
-        
         let elImg = document.getElementById(`${mid}_img${slot}`);
-        if(elImg && pid !== "BYE" && pid !== "" && teamData[pid]?.logo) {
-            elImg.src = teamData[pid].logo;
-        }
+        if(elImg && pid !== "BYE" && pid !== "" && teamData[pid]?.logo) { elImg.src = teamData[pid].logo; }
     }
 
     function kira(mid) {
         let sc1 = document.getElementById(mid+'_sc1').value;
         let sc2 = document.getElementById(mid+'_sc2').value;
         if(sc1 === "" || sc2 === "" || sc1 === sc2) return;
-
         let v1 = parseInt(sc1), v2 = parseInt(sc2);
         let winSlot = v1 > v2 ? 1 : 2;
         let loseSlot = v1 > v2 ? 2 : 1;
-
         let winName = document.getElementById(`${mid}_p${winSlot}`).innerText;
         let winPid = document.getElementById(`${mid}_s${winSlot}`).getAttribute('data-pid');
         let loseName = document.getElementById(`${mid}_p${loseSlot}`).innerText;
         let losePid = document.getElementById(`${mid}_s${loseSlot}`).getAttribute('data-pid');
-
         let parts = mid.split('_'), j = parts[0], r = parseInt(parts[1]), m = parseInt(parts[2]);
 
         if(j === 'W') {
             let nextR = r + 1;
             let nextM = Math.floor(m/2);
             let nextS = (m % 2) + 1;
-            if(document.getElementById(`W_${nextR}_${nextM}`)) {
-                updateSlot(`W_${nextR}_${nextM}`, nextS, winName, winPid);
-            } else {
-                updateSlot(`GF_0_0`, 1, winName, winPid);
-            }
+            if(document.getElementById(`W_${nextR}_${nextM}`)) { updateSlot(`W_${nextR}_${nextM}`, nextS, winName, winPid); }
+            else { updateSlot(`GF_0_0`, 1, winName, winPid); }
             let lr = r * 2;
             let lm = m;
             updateSlot(`L_${lr}_${lm}`, 2, loseName, losePid);
@@ -363,9 +335,7 @@
                 let nextM = (r % 2 === 0) ? m : Math.floor(m/2);
                 let nextS = (r % 2 === 0) ? 1 : (m % 2) + 1;
                 updateSlot(`L_${nextR}_${nextM}`, nextS, winName, winPid);
-            } else {
-                updateSlot(`GF_0_0`, 2, winName, winPid);
-            }
+            } else { updateSlot(`GF_0_0`, 2, winName, winPid); }
         }
         autoBye();
     }
@@ -376,11 +346,8 @@
             let p2 = document.getElementById(box.id + '_p2').innerText;
             let sc1 = document.getElementById(box.id + '_sc1');
             let sc2 = document.getElementById(box.id + '_sc2');
-            if(p1 === "BYE" && p2 !== "Menunggu..." && p2 !== "BYE") {
-                sc1.value = 0; sc2.value = 21; kira(box.id);
-            } else if(p2 === "BYE" && p1 !== "Menunggu..." && p1 !== "BYE") {
-                sc1.value = 21; sc2.value = 0; kira(box.id);
-            }
+            if(p1 === "BYE" && p2 !== "Menunggu..." && p2 !== "BYE") { sc1.value = 0; sc2.value = 21; kira(box.id); }
+            else if(p2 === "BYE" && p1 !== "Menunggu..." && p1 !== "BYE") { sc1.value = 21; sc2.value = 0; kira(box.id); }
         });
     }
 </script>
