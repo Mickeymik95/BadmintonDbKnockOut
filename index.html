@@ -25,41 +25,46 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 200px; }
 
-        /* HEADER LEBAR DENGAN LOGO */
+        /* HEADER PREMIUM (TANPA LOGO) */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
-            background: rgba(255, 255, 255, 0.02); padding: 30px 50px;
-            border-radius: 40px; border: 1px solid var(--garis); margin-bottom: 50px;
-            width: 95%; max-width: 1600px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: radial-gradient(circle at center, rgba(0, 210, 255, 0.05) 0%, rgba(0,0,0,0) 70%);
+            padding: 60px 20px;
+            width: 100%; max-width: 1400px; margin-bottom: 40px;
         }
 
-        .header-main-content {
-            display: flex; align-items: center; justify-content: space-between;
-            width: 100%; gap: 30px;
-        }
+        .tajuk-box { text-align: center; position: relative; }
 
-        .logo-img {
-            width: 150px; height: auto; object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.2));
-        }
-
-        .tajuk-box { flex: 1; text-align: center; }
+        /* KESAN TULISAN BERKILAU (SHINE) */
         .tajuk-box h1 { 
-            font-size: 3.2rem; margin: 0; 
-            background: linear-gradient(to right, #00d2ff, #fff, #00d2ff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            font-weight: 900; text-transform: uppercase; line-height: 1.1;
+            font-size: 4.5rem; margin: 0; 
+            font-weight: 900; text-transform: uppercase; line-height: 1;
+            background: linear-gradient(to right, #00d2ff 20%, #fff 40%, #fff 60%, #00d2ff 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            text-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+        }
+
+        .tajuk-box p {
+            font-size: 1.2rem; color: #888; margin-top: 10px;
+            letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 400;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
         }
 
         /* BUTTONS */
-        .header-actions-grid { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+        .header-actions-grid { display: flex; justify-content: center; gap: 15px; margin-top: 35px; }
         .btn-action { 
-            height: 50px; padding: 0 25px; border-radius: 12px; border: 1px solid var(--garis); 
-            background: #222; color: #fff; cursor: pointer; 
-            font-weight: 700; font-size: 0.75rem; text-transform: uppercase; transition: 0.2s;
+            height: 45px; padding: 0 25px; border-radius: 50px; border: 1px solid var(--garis); 
+            background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; 
+            font-weight: 700; font-size: 0.7rem; text-transform: uppercase; transition: 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-action:hover { background: #fff; color: #000; transform: translateY(-2px); }
+        .btn-action:hover { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
 
         /* BRACKET STRUCTURE */
@@ -74,13 +79,13 @@
         .pusingan { display: flex; flex-direction: column; width: 240px; justify-content: center; gap: 25px; }
         
         /* MATCH BOX */
-        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 25px; transition: 0.3s; }
+        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 25px; }
         .match-no { 
             position: absolute; top: 0; width: 100%; background: #25252b; color: #888; 
             font-size: 10px; padding: 5px 0; text-align: center; font-weight: 800; border-bottom: 1px solid #333;
         }
 
-        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #25252b; transition: 0.3s; }
+        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #25252b; }
         .slot-pasukan:last-child { border-bottom: none; }
         
         .nama-display { 
@@ -97,22 +102,15 @@
             background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px;
         }
 
-        /* AUTO-HIGHLIGHT PEMENANG */
+        /* HIGHLIGHT PEMENANG */
         .slot-pasukan.pemenang { background: var(--bg-pemenang); }
         .slot-pasukan.pemenang .nama-display { color: var(--menang); font-weight: 900; }
-        .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); box-shadow: 0 0 10px rgba(46, 204, 113, 0.4); }
+        .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); }
 
-        /* SPECIAL HIGHLIGHTS */
-        .grand-final { 
-            width: 320px !important; border: 2px solid #ffd700 !important; 
-            transform: scale(1.15); box-shadow: var(--glow-emas);
-        }
+        .grand-final { width: 320px !important; border: 2px solid #ffd700 !important; transform: scale(1.15); box-shadow: var(--glow-emas); }
         .grand-final .match-no { background: var(--emas); color: #000; font-weight: 900; }
-
         .loser-final { border: 2px solid var(--kalah) !important; box-shadow: 0 0 25px rgba(231, 76, 60, 0.4); }
-        .loser-final .match-no { background: var(--kalah); color: #fff; }
 
-        /* ADMIN PANEL */
         #panelAdmin { 
             display: none; position: fixed; top: 30px; right: 30px; width: 320px; 
             background: #111; border: 1px solid #444; border-radius: 20px; 
@@ -125,25 +123,22 @@
 
 <div class="main-wrapper">
     <div class="header-container">
-        <div class="header-main-content">
-            <img src="logo.jpg" alt="Logo Kiri" class="logo-img">
-            <div class="tajuk-box">
-                <h1>BADMINTON KELUARGA² SAJA'<br>SIRI 2</h1>
-            </div>
-            <img src="logo2.jpg" alt="Logo Kanan" class="logo-img">
+        <div class="tajuk-box">
+            <h1>BADMINTON KELUARGA² SAJA'</h1>
+            <p>• SIRI 2 • 2024 •</p>
         </div>
 
         <div class="header-actions-grid">
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
             <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 LOG KELUAR</button>
             <button id="btnSave" class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN & SYNC</button>
-            <button id="btnReset" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET KEJOHANAN</button>
+            <button id="btnReset" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET</button>
         </div>
     </div>
 
     <div class="tournament-layout">
-        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket (Upper)</div></div>
-        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket (Lower)</div></div>
+        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket</div></div>
+        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket</div></div>
     </div>
 </div>
 
@@ -154,7 +149,7 @@
         <button onclick="checkAuth()" class="btn-action" style="width:100%">LOG MASUK</button>
     </div>
     <div id="adminStatus" class="admin-only">
-        <p style="color:var(--menang); font-size:0.8rem; line-height:1.5; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF<br>Edit nama di Round 1 & masukkan skor untuk gerakkan pasukan.</p>
+        <p style="color:var(--menang); font-size:0.8rem; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF</p>
     </div>
 </div>
 
@@ -209,11 +204,11 @@
         }
         let scores = {};
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
-        set(dbRef, { n: 16, teams, scores }).then(() => alert("Data Berjaya Disimpan!"));
+        set(dbRef, { n: 16, teams, scores }).then(() => alert("Data Disimpan!"));
     };
 
     window.resetTournament = () => {
-        if(confirm("Padam semua data pasukan dan skor?")) {
+        if(confirm("Padam semua data?")) {
             set(dbRef, { n: 16, teams: {}, scores: {} }).then(() => location.reload());
         }
     };
@@ -223,14 +218,12 @@
         bw.innerHTML = '<div class="label-bracket">Winner Bracket</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket</div>';
 
-        // Winner rounds (4 rounds for 16 teams)
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m));
             bw.appendChild(div);
         }
 
-        // Loser rounds (6 rounds for 16 teams)
         for(let r=0; r < 6; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             let mCount = Math.pow(2, Math.floor((5 - r) / 2));
@@ -242,7 +235,6 @@
             bl.appendChild(div);
         }
 
-        // Grand Final
         let divGF = document.createElement('div'); divGF.className = 'pusingan';
         let gfBox = createBox('GF', 0, 0); gfBox.classList.add('grand-final');
         divGF.appendChild(gfBox); bw.appendChild(divGF);
@@ -291,17 +283,12 @@
     window.kira = (id) => {
         let sc1 = document.getElementById(id+'_sc1').value, sc2 = document.getElementById(id+'_sc2').value;
         const sl1 = document.getElementById(id+'_s1'), sl2 = document.getElementById(id+'_s2');
-
         if(sc1 === "" || sc2 === "" || sc1 === sc2) { sl1.classList.remove('pemenang'); sl2.classList.remove('pemenang'); return; }
-
         let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
         sl1.classList.toggle('pemenang', win === 1); sl2.classList.toggle('pemenang', win === 2);
-
         let winN = document.getElementById(`${id}_p${win}`).value, winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
         let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = document.getElementById(`${id}_s${win===1?2:1}`).getAttribute('data-pid');
-
-        let p = id.split('_'); let r = parseInt(p[1]), m = parseInt(p[2]);
-
+        let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
         if(p[0] === 'W') {
             let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
             if(document.getElementById(`W_${nextR}_${nextM}`)) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
