@@ -13,6 +13,7 @@
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
             --glow-emas: 0 0 30px rgba(255, 215, 0, 0.4);
+            --bg-pemenang: rgba(46, 204, 113, 0.2);
         }
 
         body { 
@@ -32,7 +33,7 @@
         }
         .tajuk-box h1 { 
             font-size: 3rem; margin: 0; text-align: center;
-            background: linear-gradient(to right, #fff, #888); 
+            background: linear-gradient(to right, #00d2ff, #fff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             font-weight: 900; text-transform: uppercase;
         }
@@ -66,29 +67,34 @@
             font-size: 9px; padding: 5px 0; text-align: center; font-weight: 800;
         }
 
-        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #25252b; }
+        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #25252b; transition: 0.3s; }
         .slot-pasukan:last-child { border-bottom: none; }
         
         .nama-display { 
             flex: 1; font-size: 0.85rem; font-weight: 700; color: #ccc; 
             background: transparent; border: none; outline: none; width: 100%;
         }
-        .nama-display:focus { color: var(--utama); }
 
         .skor { width: 35px; height: 30px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; font-weight: 900; font-size: 0.9rem; }
         .seed-no { color: #555; font-weight: 900; font-size: 0.75rem; min-width: 20px; }
 
-        /* WINNER HIGHLIGHT */
+        /* AUTO-HIGHLIGHT PEMENANG */
+        .slot-pasukan.pemenang { background: var(--bg-pemenang); }
         .slot-pasukan.pemenang .nama-display { color: var(--menang); font-weight: 900; }
-        .slot-pasukan.pemenang .skor { background: var(--menang) !important; color: #000 !important; border: none; }
+        .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); }
 
-        /* GRAND FINAL SPECIAL CSS */
+        /* SPECIAL HIGHLIGHTS */
         .grand-final { 
             width: 300px !important; border: 2px solid #ffd700 !important; 
-            transform: scale(1.1); box-shadow: var(--glow-emas);
+            transform: scale(1.15); box-shadow: var(--glow-emas);
         }
         .grand-final .match-no { background: var(--emas); color: #000; font-weight: 900; }
-        .grand-final .nama-display { font-size: 1rem; color: #fff; }
+
+        .loser-final {
+            border: 2px solid var(--kalah) !important;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+        .loser-final .match-no { background: var(--kalah); color: #fff; }
 
         /* ADMIN PANEL UI */
         #panelAdmin { 
@@ -108,13 +114,13 @@
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
             <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 LOG KELUAR</button>
             <button id="btnSave" class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN & SYNC</button>
-            <button id="btnReset" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET 16 PASUKAN</button>
+            <button id="btnReset" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET KEJOHANAN</button>
         </div>
     </div>
 
     <div class="tournament-layout">
-        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket</div></div>
-        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket</div></div>
+        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket (Upper)</div></div>
+        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket (Lower)</div></div>
     </div>
 </div>
 
@@ -131,7 +137,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBB6Su0uhNcKKoq9Qa_-RGb6cAZOmV2u-U",
@@ -161,7 +167,7 @@
         if(document.getElementById('passInput').value === "admin123") {
             localStorage.setItem('adminStatus', 'active');
             location.reload();
-        } else { alert("Akses Ditolak!"); }
+        } else { alert("Kunci Salah!"); }
     };
 
     window.logoutAdmin = () => { localStorage.removeItem('adminStatus'); location.reload(); };
@@ -169,7 +175,7 @@
 
     onValue(dbRef, (snapshot) => {
         const data = snapshot.val() || {};
-        window.nPasukan = data.n || 16;
+        window.nPasukan = 16;
         window.teamNames = data.teams || {};
         jana(data.scores || {});
     });
@@ -182,11 +188,11 @@
         }
         let scores = {};
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
-        set(dbRef, { n: window.nPasukan, teams, scores }).then(() => alert("Data Berjaya Di-Sync!"));
+        set(dbRef, { n: 16, teams, scores }).then(() => alert("Data Disimpan!"));
     };
 
     window.resetTournament = () => {
-        if(confirm("Semua data akan dipadam. Kembali ke tetapan 16 Pasukan?")) {
+        if(confirm("Padam semua skor dan nama?")) {
             set(dbRef, { n: 16, teams: {}, scores: {} }).then(() => location.reload());
         }
     };
@@ -196,7 +202,7 @@
         bw.innerHTML = '<div class="label-bracket">Winner Bracket</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket</div>';
 
-        const p2 = Math.pow(2, Math.ceil(Math.log2(window.nPasukan)));
+        const p2 = 16;
         const rounds = Math.log2(p2);
 
         for(let r=0; r<rounds; r++) {
@@ -209,7 +215,11 @@
         for(let r=0; r < totalLR; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             let mCount = Math.pow(2, Math.floor(((totalLR - 1) - r) / 2));
-            for(let m=0; m<mCount; m++) div.appendChild(createBox('L', r, m));
+            for(let m=0; m<mCount; m++) {
+                let box = createBox('L', r, m);
+                if(r === totalLR - 1) box.classList.add('loser-final');
+                div.appendChild(box);
+            }
             bl.appendChild(div);
         }
 
@@ -220,8 +230,8 @@
         const seeds = getSeeds(p2);
         for(let m=0; m < p2/2; m++) {
             let s1 = seeds[m*2], s2 = seeds[m*2+1];
-            updateSlot(`W_0_${m}`, 1, s1 < window.nPasukan ? (window.teamNames[s1]?.nama || "") : "BYE", s1);
-            updateSlot(`W_0_${m}`, 2, s2 < window.nPasukan ? (window.teamNames[s2]?.nama || "") : "BYE", s2);
+            updateSlot(`W_0_${m}`, 1, s1 < 16 ? (window.teamNames[s1]?.nama || "") : "BYE", s1);
+            updateSlot(`W_0_${m}`, 2, s2 < 16 ? (window.teamNames[s2]?.nama || "") : "BYE", s2);
         }
 
         for(let id in savedScores) {
@@ -239,7 +249,7 @@
     function createBox(j, r, m) {
         let id = `${j}_${r}_${m}`;
         let div = document.createElement('div'); div.className = 'kotak-perlawanan'; div.id = id;
-        let lbl = (j === 'GF') ? 'GRAND FINAL' : (j === 'L' && r === (Math.log2(16)-1)*2-1) ? 'LOSER FINAL' : `${j}${r+1}-M${m+1}`;
+        let lbl = (j === 'GF') ? 'GRAND FINAL' : (j === 'L' && r === 5) ? 'LOSER FINAL' : `${j}${r+1}-M${m+1}`;
         div.innerHTML = `<div class="match-no">${lbl}</div>
             <div class="slot-pasukan" id="${id}_s1"><span class="seed-no" id="${id}_sd1"></span><input type="text" class="nama-display" id="${id}_p1" placeholder="..."><input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}', true)"></div>
             <div class="slot-pasukan" id="${id}_s2"><span class="seed-no" id="${id}_sd2"></span><input type="text" class="nama-display" id="${id}_p2" placeholder="..."><input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}', true)"></div>`;
@@ -268,18 +278,22 @@
         let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
         sl1.classList.toggle('pemenang', win === 1); sl2.classList.toggle('pemenang', win === 2);
 
-        let winN = document.getElementById(`${id}_p${win}`).value, winP = sl1.parentElement.querySelector(`#${id}_s${win}`).getAttribute('data-pid');
-        let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = sl1.parentElement.querySelector(`#${id}_s${win===1?2:1}`).getAttribute('data-pid');
+        let winN = document.getElementById(`${id}_p${win}`).value, winP = sl1.getAttribute('data-pid');
+        let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = sl2.getAttribute('data-pid');
 
         let p = id.split('_'); let r = parseInt(p[1]), m = parseInt(p[2]);
 
+        // Logic Pergerakan Double Elimination
         if(p[0] === 'W') {
             let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
             if(document.getElementById(`W_${nextR}_${nextM}`)) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
             else updateSlot('GF_0_0', 1, winN, winP);
-            updateSlot(`L_${r*2}_${m}`, 2, losN, losP);
+            
+            // Loser dari Winner masuk ke Loser Bracket
+            let loserRound = r * 2;
+            updateSlot(`L_${loserRound}_${m}`, 2, losN, losP);
         } else if(p[0] === 'L') {
-            let total = (Math.log2(16)-1)*2;
+            let total = 6; // Untuk 16 teams
             if(r < total-1) {
                 let nextR = r+1, nextM = (r%2===0)?m:Math.floor(m/2), nextS = (r%2===0)?1:(m%2)+1;
                 updateSlot(`L_${nextR}_${nextM}`, nextS, winN, winP);
