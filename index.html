@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BWF BADMINTON FAMILY TOUR - ELITE 16</title>
+    <title>BADMINTON KELUARGA² SAJA' - SIRI 2</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
 
@@ -25,18 +25,30 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 200px; }
 
-        /* HEADER */
+        /* HEADER LEBAR DENGAN LOGO */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
-            background: rgba(255, 255, 255, 0.02); padding: 40px;
+            background: rgba(255, 255, 255, 0.02); padding: 30px 50px;
             border-radius: 40px; border: 1px solid var(--garis); margin-bottom: 50px;
-            width: 100%; max-width: 1300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            width: 95%; max-width: 1600px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
+
+        .header-main-content {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; gap: 30px;
+        }
+
+        .logo-img {
+            width: 150px; height: auto; object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.2));
+        }
+
+        .tajuk-box { flex: 1; text-align: center; }
         .tajuk-box h1 { 
-            font-size: 3rem; margin: 0; text-align: center;
-            background: linear-gradient(to right, #00d2ff, #fff); 
+            font-size: 3.2rem; margin: 0; 
+            background: linear-gradient(to right, #00d2ff, #fff, #00d2ff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            font-weight: 900; text-transform: uppercase;
+            font-weight: 900; text-transform: uppercase; line-height: 1.1;
         }
 
         /* BUTTONS */
@@ -78,19 +90,11 @@
 
         .skor { width: 35px; height: 32px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; font-weight: 900; font-size: 1rem; }
         
-        /* KUNING PEKAT NOMBOR (TETAP NAMPAK) */
+        /* KUNING PEKAT NOMBOR */
         .seed-no { 
-            color: var(--kuning-pekat); 
-            font-weight: 900; 
-            font-size: 0.75rem; 
-            min-width: 28px; 
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 204, 0, 0.1);
-            border: 1px solid rgba(255, 204, 0, 0.3);
-            border-radius: 4px;
+            color: var(--kuning-pekat); font-weight: 900; font-size: 0.75rem; 
+            min-width: 28px; height: 20px; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px;
         }
 
         /* AUTO-HIGHLIGHT PEMENANG */
@@ -104,12 +108,8 @@
             transform: scale(1.15); box-shadow: var(--glow-emas);
         }
         .grand-final .match-no { background: var(--emas); color: #000; font-weight: 900; }
-        .grand-final .nama-display { font-size: 1rem; }
 
-        .loser-final {
-            border: 2px solid var(--kalah) !important;
-            box-shadow: 0 0 25px rgba(231, 76, 60, 0.4);
-        }
+        .loser-final { border: 2px solid var(--kalah) !important; box-shadow: 0 0 25px rgba(231, 76, 60, 0.4); }
         .loser-final .match-no { background: var(--kalah); color: #fff; }
 
         /* ADMIN PANEL */
@@ -125,7 +125,14 @@
 
 <div class="main-wrapper">
     <div class="header-container">
-        <div class="tajuk-box"><h1>BADMINTON KELUARGA² SAJA KONO' SIRI 2</h1></div>
+        <div class="header-main-content">
+            <img src="logo.jpg" alt="Logo Kiri" class="logo-img">
+            <div class="tajuk-box">
+                <h1>BADMINTON KELUARGA² SAJA'<br>SIRI 2</h1>
+            </div>
+            <img src="logo2.jpg" alt="Logo Kanan" class="logo-img">
+        </div>
+
         <div class="header-actions-grid">
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
             <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 LOG KELUAR</button>
@@ -147,7 +154,7 @@
         <button onclick="checkAuth()" class="btn-action" style="width:100%">LOG MASUK</button>
     </div>
     <div id="adminStatus" class="admin-only">
-        <p style="color:var(--menang); font-size:0.8rem; line-height:1.5; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF<br>Taip nama di Round 1 & skor di mana-mana kotak.</p>
+        <p style="color:var(--menang); font-size:0.8rem; line-height:1.5; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF<br>Edit nama di Round 1 & masukkan skor untuk gerakkan pasukan.</p>
     </div>
 </div>
 
@@ -168,7 +175,6 @@
     const dbRef = ref(db, 'tournament_data');
 
     window.isAdminMode = false;
-    window.nPasukan = 16;
     window.teamNames = {}; 
 
     window.checkPersistentAdmin = () => {
@@ -203,21 +209,21 @@
         }
         let scores = {};
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
-        set(dbRef, { n: 16, teams, scores }).then(() => alert("Berjaya Disimpan!"));
+        set(dbRef, { n: 16, teams, scores }).then(() => alert("Data Berjaya Disimpan!"));
     };
 
     window.resetTournament = () => {
-        if(confirm("Padam semua data?")) {
+        if(confirm("Padam semua data pasukan dan skor?")) {
             set(dbRef, { n: 16, teams: {}, scores: {} }).then(() => location.reload());
         }
     };
 
     function jana(savedScores) {
         const bw = document.getElementById('barisW'); const bl = document.getElementById('barisL');
-        bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
-        bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
+        bw.innerHTML = '<div class="label-bracket">Winner Bracket</div>'; 
+        bl.innerHTML = '<div class="label-bracket">Loser Bracket</div>';
 
-        // Winner rounds
+        // Winner rounds (4 rounds for 16 teams)
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m));
@@ -274,20 +280,12 @@
         const pEl = document.getElementById(`${mid}_p${slot}`);
         const sEl = document.getElementById(`${mid}_s${slot}`);
         const sdEl = document.getElementById(`${mid}_sd${slot}`);
-        
-        if(pEl) {
-            pEl.value = nama;
-            if(mid.startsWith('W_0_')) pEl.setAttribute('data-seed-id', pid);
-        }
+        if(pEl) { pEl.value = nama; if(mid.startsWith('W_0_')) pEl.setAttribute('data-seed-id', pid); }
         if(sEl) sEl.setAttribute('data-pid', pid);
-        
-        // TETAP PAPAR NOMBOR UNTUK ROUND 1 W_0_
         if(sdEl && mid.startsWith('W_0_')) {
             sdEl.innerText = (parseInt(pid) + 1).toString().padStart(2, '0');
             sdEl.style.display = "flex";
-        } else if(sdEl) {
-            sdEl.style.display = "none";
-        }
+        } else if(sdEl) { sdEl.style.display = "none"; }
     }
 
     window.kira = (id) => {
@@ -299,8 +297,8 @@
         let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
         sl1.classList.toggle('pemenang', win === 1); sl2.classList.toggle('pemenang', win === 2);
 
-        let winN = document.getElementById(`${id}_p${win}`).value, winP = sl1.parentElement.querySelector(`#${id}_s${win}`).getAttribute('data-pid');
-        let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = sl1.parentElement.querySelector(`#${id}_s${win===1?2:1}`).getAttribute('data-pid');
+        let winN = document.getElementById(`${id}_p${win}`).value, winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
+        let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = document.getElementById(`${id}_s${win===1?2:1}`).getAttribute('data-pid');
 
         let p = id.split('_'); let r = parseInt(p[1]), m = parseInt(p[2]);
 
