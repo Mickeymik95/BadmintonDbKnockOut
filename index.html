@@ -64,13 +64,13 @@
         .match-no { position: absolute; top: 0; left: 0; right: 0; background: #25252b; color: var(--utama); font-size: 10px; padding: 6px; text-align: center; border-radius: 15px 15px 0 0; }
         .slot-pasukan { display: flex; gap: 12px; align-items: center; padding: 12px 18px; height: 50px; border-bottom: 1px solid #222; }
         .nama-display { flex: 1; font-size: 1rem; font-weight: 700; overflow: hidden; }
-        .p-logo { width: 32px; height: 32px; border-radius: 6px; background: #333; }
 
         .skor { width: 45px; height: 35px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; font-weight: 900; font-size: 1.1rem; }
         .skor-menang { background: var(--menang) !important; color: #000 !important; border: none !important; }
         .skor-kalah { background: var(--kalah) !important; color: #fff !important; border: none !important; }
 
-        .final-loser-box { border: 3px solid var(--biru-final) !important; }
+        /* HIGHLIGHT BIRU UNTUK FINAL BRACKET BAWAH */
+        .final-loser-box { border: 4px solid var(--biru-final) !important; box-shadow: 0 0 15px var(--biru-final); }
         .grand-final { border: 6px solid var(--emas) !important; transform: scale(1.05); }
 
         #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 350px; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 9999; padding: 20px; max-height: 80vh; overflow-y: auto; }
@@ -107,14 +107,14 @@
     <input type="password" id="passInput" class="admin-input" placeholder="Password">
     <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:8px; cursor:pointer;">LOG MASUK</button>
     <div id="controlBox" style="display:none; margin-top:15px;">
-        <input type="number" id="inputNumTeams" class="admin-input" value="14">
+        <input type="number" id="inputNumTeams" class="admin-input" value="16">
         <div id="adminTeamInputs"></div>
         <button onclick="saveData()" style="width:100%; padding:15px; background:var(--menang); border:none; border-radius:8px; cursor:pointer;">SIMPAN DATA</button>
     </div>
 </div>
 
 <script>
-    let nPasukan = 14; 
+    let nPasukan = 16; 
     let teamData = {}; 
     let isAdmin = false;
 
@@ -149,35 +149,34 @@
         let container = document.getElementById('adminTeamInputs');
         container.innerHTML = "";
         for(let i=0; i<nPasukan; i++) {
-            let t = teamData[i] || { nama: `Pasukan ${i+1}`, logo: '' };
+            let t = teamData[i] || { nama: `Pasukan ${i+1}` };
             container.innerHTML += `<div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" class="admin-input" value="${t.nama}" oninput="tempUpdate(${i},'nama',this.value)"></div>`;
         }
     }
 
-    function tempUpdate(idx, key, val) { if(!teamData[idx]) teamData[idx] = { nama: '', logo: '' }; teamData[idx][key] = val; }
+    function tempUpdate(idx, key, val) { if(!teamData[idx]) teamData[idx] = { nama: '' }; teamData[idx][key] = val; }
 
     function updateInputAccess() {
         document.querySelectorAll('.skor').forEach(input => {
-            if(!input.disabled) input.readOnly = !isAdmin;
+            input.readOnly = !isAdmin;
         });
     }
 
     function saveData() {
         nPasukan = parseInt(document.getElementById('inputNumTeams').value);
-        let sc = {};
-        document.querySelectorAll('.skor').forEach(i => { if(i.value !== "") sc[i.id] = i.value; });
-        localStorage.setItem('bwf_data', JSON.stringify({n: nPasukan, teams: teamData, scores: sc}));
+        // HANYA SIMPAN NAMA PASUKAN KE LOCALSTORAGE (RESET SKOR ON REFRESH)
+        localStorage.setItem('bwf_teams_only', JSON.stringify({n: nPasukan, teams: teamData}));
         location.reload(); 
     }
 
-    function jana(savedScores = null) {
+    function jana() {
         let p2 = Math.pow(2, Math.ceil(Math.log2(nPasukan)));
         let seeds = getSeeds(p2);
         
         let list = document.getElementById('displayPenyertaan');
         list.innerHTML = "";
         for(let i=0; i<nPasukan; i++) {
-            let t = teamData[i] || { nama: `Pasukan ${i+1}`, logo: '' };
+            let t = teamData[i] || { nama: `Pasukan ${i+1}` };
             list.innerHTML += `<div class="kad-pasukan"><div class="no-p">${i+1}</div><span>${t.nama}</span></div>`;
         }
 
@@ -194,57 +193,47 @@
             bw.appendChild(divR);
         }
 
+        // GRAND FINAL
         let divGF = document.createElement('div'); divGF.className = 'pusingan';
         divGF.innerHTML = `<div class="tajuk-pusingan" style="background:var(--emas);color:#000;">GRAND FINAL</div>`;
         divGF.appendChild(createMatch('GF', 0, 0, null, mCount++, true));
         bw.appendChild(divGF);
 
+        // RECOVERY BRACKET (BAWAH)
         let roundsL = (roundsW - 1) * 2;
         for(let r=0; r<roundsL; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">RECOVERY P${r+1}</div>`;
             let numM = Math.pow(2, Math.floor((roundsL-r-1)/2));
-            for(let m=0; m<numM; m++) divR.appendChild(createMatch('L', r, m, null, mCount++));
+            for(let m=0; m<numM; m++) {
+                // Highlight Biru jika ini adalah pusingan terakhir Recovery
+                let isFinalRecovery = (r === roundsL - 1);
+                divR.appendChild(createMatch('L', r, m, null, mCount++, false, isFinalRecovery));
+            }
             bl.appendChild(divR);
         }
-
-        if(savedScores) {
-            Object.keys(savedScores).forEach(id => {
-                let el = document.getElementById(id);
-                if(el) { el.value = savedScores[id]; }
-            });
-            document.querySelectorAll('.kotak-perlawanan').forEach(m => kira(m.id));
-        }
-        setTimeout(autoByeSystem, 500);
+        updateInputAccess();
     }
 
-    function createMatch(j, r, m, seeds, mNum, gf=false) {
+    function createMatch(j, r, m, seeds, mNum, gf=false, blueHighlight=false) {
         let mId = `${j}_${r}_${m}`;
-        let div = document.createElement('div'); div.className = "kotak-perlawanan" + (gf?" grand-final":""); div.id = mId;
-        let p1 = "Menunggu...", p2 = "Menunggu...", id1="none", id2="none";
+        let classes = "kotak-perlawanan";
+        if(gf) classes += " grand-final";
+        if(blueHighlight) classes += " final-loser-box";
+
+        let div = document.createElement('div'); div.className = classes; div.id = mId;
+        let p1 = "Menunggu...", p2 = "Menunggu...";
+        
         if(j==='W' && r===0) {
             let s1 = seeds[m*2], s2 = seeds[m*2+1];
-            p1 = s1<nPasukan?(teamData[s1]?.nama || `Pasukan ${s1+1}`):"BYE"; id1 = s1<nPasukan?s1:"none";
-            p2 = s2<nPasukan?(teamData[s2]?.nama || `Pasukan ${s2+1}`):"BYE"; id2 = s2<nPasukan?s2:"none";
+            p1 = s1<nPasukan?(teamData[s1]?.nama || `Pasukan ${s1+1}`):"BYE";
+            p2 = s2<nPasukan?(teamData[s2]?.nama || `Pasukan ${s2+1}`):"BYE";
         }
-        div.innerHTML = `<div class="match-no">M${mNum}</div>
-            <div class="slot-pasukan" id="${mId}_s1" data-pid="${id1}"><span class="nama-display" id="${mId}_p1">${p1}</span><input type="number" class="skor" id="${mId}_sc1" oninput="kira('${mId}')" readonly></div>
-            <div class="slot-pasukan" id="${mId}_s2" data-pid="${id2}"><span class="nama-display" id="${mId}_p2">${p2}</span><input type="number" class="skor" id="${mId}_sc2" oninput="kira('${mId}')" readonly></div>`;
-        return div;
-    }
 
-    function autoByeSystem() {
-        document.querySelectorAll('.kotak-perlawanan').forEach(m => {
-            let sc1 = document.getElementById(m.id+'_sc1'), sc2 = document.getElementById(m.id+'_sc2');
-            let p1 = document.getElementById(m.id+'_p1').innerText, p2 = document.getElementById(m.id+'_p2').innerText;
-            if(sc1.value === "" && sc2.value === "") {
-                if(p1 === "BYE" && p2 !== "BYE" && p2 !== "Menunggu...") {
-                    sc1.value = 0; sc2.value = 21; sc1.disabled = true; sc2.disabled = true; kira(m.id);
-                } else if(p2 === "BYE" && p1 !== "BYE" && p1 !== "Menunggu...") {
-                    sc1.value = 21; sc2.value = 0; sc1.disabled = true; sc2.disabled = true; kira(m.id);
-                }
-            }
-        });
+        div.innerHTML = `<div class="match-no">M${mNum}</div>
+            <div class="slot-pasukan"><span class="nama-display" id="${mId}_p1">${p1}</span><input type="number" class="skor" id="${mId}_sc1" oninput="kira('${mId}')"></div>
+            <div class="slot-pasukan"><span class="nama-display" id="${mId}_p2">${p2}</span><input type="number" class="skor" id="${mId}_sc2" oninput="kira('${mId}')"></div>`;
+        return div;
     }
 
     function kira(idMatch) {
@@ -255,39 +244,34 @@
         s1.className = v1 > v2 ? 'skor skor-menang' : 'skor skor-kalah';
         s2.className = v2 > v1 ? 'skor skor-menang' : 'skor skor-kalah';
 
-        let winP = v1>v2?document.getElementById(idMatch+'_p1').innerText : document.getElementById(idMatch+'_p2').innerText;
-        let winId = v1>v2?document.getElementById(idMatch+'_s1').getAttribute('data-pid') : document.getElementById(idMatch+'_s2').getAttribute('data-pid');
-        let losP = v1>v2?document.getElementById(idMatch+'_p2').innerText : document.getElementById(idMatch+'_p1').innerText;
-        let losId = v1>v2?document.getElementById(idMatch+'_s2').getAttribute('data-pid') : document.getElementById(idMatch+'_s1').getAttribute('data-pid');
+        let winP = v1 > v2 ? document.getElementById(idMatch+'_p1').innerText : document.getElementById(idMatch+'_p2').innerText;
+        let losP = v1 > v2 ? document.getElementById(idMatch+'_p2').innerText : document.getElementById(idMatch+'_p1').innerText;
 
-        let parts = idMatch.split('_'), j = parts[0], p = parseInt(parts[1]), m = parseInt(parts[2]);
+        let parts = idMatch.split('_'), j = parts[0], r = parseInt(parts[1]), m = parseInt(parts[2]);
         let p2_val = Math.pow(2, Math.ceil(Math.log2(nPasukan)));
 
         if(j==='W') {
-            if(p < Math.log2(p2_val)-1) hantar('W', p+1, Math.floor(m/2), (m%2)+1, winP, winId);
-            else hantar('GF', 0, 0, 1, winP, winId);
-            let nextLP = (p===0)?0:(p*2)-1; 
-            let totalM = Math.pow(2, Math.log2(p2_val)-p-1);
-            let flipM = (m < totalM/2)?(m+totalM/2):(m-totalM/2);
-            hantar('L', nextLP, (p===0)?Math.floor(flipM/2):m, (p===0)?(flipM%2)+1:2, losP, losId);
+            if(r < Math.log2(p2_val)-1) hantar('W', r+1, Math.floor(m/2), (m%2)+1, winP);
+            else hantar('GF', 0, 0, 1, winP);
+            hantar('L', r===0?0:r*2-1, m, r===0?(m%2)+1:2, losP);
         } else if(j==='L') {
             let roundsL = (Math.log2(p2_val)-1)*2;
-            if(p < roundsL - 1) hantar('L', p+1, (p%2===0)?m:Math.floor(m/2), (p%2===0)?1:(m%2)+1, winP, winId);
-            else hantar('GF', 0, 0, 2, winP, winId);
+            if(r < roundsL - 1) hantar('L', r+1, (r%2===0)?m:Math.floor(m/2), (r%2===0)?1:(m%2)+1, winP);
+            else hantar('GF', 0, 0, 2, winP);
         }
     }
 
-    function hantar(j, r, m, s, nama, pid) {
+    function hantar(j, r, m, s, nama) {
         let el = document.getElementById(`${j}_${r}_${m}_p${s}`);
-        if(el) { el.innerText = nama; document.getElementById(`${j}_${r}_${m}_s${s}`).setAttribute('data-pid', pid); }
+        if(el) { el.innerText = nama; }
     }
 
     window.onload = () => {
-        let saved = localStorage.getItem('bwf_data');
+        let saved = localStorage.getItem('bwf_teams_only');
         if(saved) {
             let parsed = JSON.parse(saved); nPasukan = parsed.n; teamData = parsed.teams;
-            jana(parsed.scores);
-        } else jana();
+        }
+        jana();
     };
 </script>
 </body>
