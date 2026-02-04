@@ -45,7 +45,6 @@
         }
         .tajuk-box p { font-size: 1.5rem; color: #888; margin-top: 10px; letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 700; }
 
-        /* NOTIFIKASI SIMPAN */
         #syncToast {
             color: var(--menang); font-weight: 800; font-size: 1rem; margin-top: 15px;
             opacity: 0; transition: 0.5s; text-transform: uppercase; letter-spacing: 2px;
@@ -63,30 +62,22 @@
         }
         .btn-action:hover { background: #fff; color: #000; }
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
-        .btn-reset-skor { border-color: #f39c12 !important; color: #f39c12 !important; }
 
-        /* TOURNAMENT LAYOUT */
-        .tournament-layout { display: flex; flex-direction: column; gap: 60px; width: 95%; max-width: 1800px; }
+        /* TOURNAMENT LAYOUT - DIBESARKAN UNTUK MUAT GF */
+        .tournament-layout { display: flex; flex-direction: column; gap: 80px; width: fit-content; padding: 0 100px; }
 
         .laluan-row { 
-            display: flex; gap: 50px; padding: 80px 50px; 
+            display: flex; gap: 50px; padding: 100px 80px; /* Padding lebih lebar untuk GF */
             border-radius: 40px; position: relative; 
-            background: rgba(255,255,255,0.01); margin-bottom: 20px;
+            background: rgba(255,255,255,0.01);
+            width: fit-content;
         }
 
-        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); }
+        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); }
         #barisW .label-bracket { background: var(--utama); color: #000; }
 
-        #barisL { border: 2px solid rgba(231, 76, 60, 0.3); }
+        #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
         #barisL .label-bracket { background: var(--kalah); color: #fff; }
-
-        /* GRAND FINAL ROW KHAS */
-        #barisGF { 
-            border: 3px solid rgba(255, 215, 0, 0.4); 
-            justify-content: center; padding: 60px;
-            box-shadow: inset 0 0 50px rgba(255, 215, 0, 0.1);
-        }
-        #barisGF .label-bracket { background: var(--emas); color: #000; }
 
         .label-bracket { 
             position: absolute; top: -20px; left: 40px; 
@@ -116,9 +107,10 @@
         .slot-pasukan.pemenang .nama-display { color: var(--menang); }
         .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); }
 
-        .grand-final { width: 400px !important; border: 3px solid #ffd700 !important; box-shadow: var(--glow-emas); }
+        /* GRAND FINAL - DUDUK DALAM ROW WINNER */
+        .grand-final { width: 380px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); margin-left: 50px; }
         .grand-final .match-no { background: var(--emas); color: #000; font-size: 14px; }
-        .grand-final .nama-display { font-size: 1.4rem; }
+        .grand-final .nama-display { font-size: 1.3rem; }
 
         .loser-final { border: 2px solid var(--kalah) !important; }
 
@@ -140,7 +132,7 @@
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
             <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 KELUAR</button>
             <button id="btnSave" class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN DATA</button>
-            <button id="btnResetSkor" class="btn-action admin-only btn-reset-skor" onclick="resetSkor()">🔄 RESET SKOR</button>
+            <button id="btnResetSkor" class="btn-action admin-only" style="border-color:#f39c12; color:#f39c12;" onclick="resetSkor()">🔄 RESET SKOR</button>
             <button id="btnResetAll" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET ALL</button>
         </div>
     </div>
@@ -152,10 +144,6 @@
 
         <div id="barisL" class="laluan-row">
             <div class="label-bracket">Loser Bracket (Lower)</div>
-        </div>
-
-        <div id="barisGF" class="laluan-row">
-            <div class="label-bracket">The Grand Finale</div>
         </div>
     </div>
 </div>
@@ -230,7 +218,7 @@
     };
 
     window.resetSkor = () => {
-        if(confirm("Reset skor sahaja?")) {
+        if(confirm("Reset semua skor sahaja?")) {
             set(dbRef, { n: 16, teams: window.teamNames, scores: {} }).then(() => location.reload());
         }
     };
@@ -244,11 +232,9 @@
     function jana(savedScores) {
         const bw = document.getElementById('barisW'); 
         const bl = document.getElementById('barisL');
-        const bgf = document.getElementById('barisGF');
 
         bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
-        bgf.innerHTML = '<div class="label-bracket">The Grand Finale</div>';
 
         // Winner rounds
         for(let r=0; r<4; r++) {
@@ -256,6 +242,12 @@
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m));
             bw.appendChild(div);
         }
+
+        // Grand Final - Added to the END of Winner Row
+        let divGF = document.createElement('div'); divGF.className = 'pusingan';
+        let gfBox = createBox('GF', 0, 0); gfBox.classList.add('grand-final');
+        divGF.appendChild(gfBox); 
+        bw.appendChild(divGF);
 
         // Loser rounds
         for(let r=0; r < 6; r++) {
@@ -268,12 +260,6 @@
             }
             bl.appendChild(div);
         }
-
-        // Grand Final - In its own row
-        let divGF = document.createElement('div'); divGF.className = 'pusingan';
-        let gfBox = createBox('GF', 0, 0); gfBox.classList.add('grand-final');
-        divGF.appendChild(gfBox); 
-        bgf.appendChild(divGF);
 
         const seeds = [0, 15, 7, 8, 3, 12, 4, 11, 1, 14, 6, 9, 2, 13, 5, 10];
         for(let m=0; m < 8; m++) {
