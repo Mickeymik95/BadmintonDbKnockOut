@@ -45,21 +45,6 @@
         }
         .tajuk-box p { font-size: 1.5rem; color: #888; margin-top: 10px; letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 700; }
 
-        /* --- TAMBAHAN GAYA PODIUM --- */
-        #podiumBorder {
-            margin-top: 30px;
-            padding: 25px;
-            border-radius: 20px;
-            border: 2px solid #ffd700;
-            background: rgba(255, 215, 0, 0.05);
-            display: none; /* Muncul bila final selesai */
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-        }
-        .podium-list { list-style: none; padding: 0; margin: 0; font-size: 1.4rem; font-weight: 900; }
-        .podium-list li { margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 15px; }
-        /* --------------------------- */
-
         #syncToast {
             color: var(--menang); font-weight: 800; font-size: 1rem; margin-top: 15px;
             opacity: 0; transition: 0.5s; text-transform: uppercase; letter-spacing: 2px;
@@ -97,11 +82,36 @@
             min-height: 200px;
         }
 
-        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); }
+        #barisW { 
+            border: 2px solid rgba(0, 210, 255, 0.3); 
+            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05);
+            padding-bottom: 120px; /* Ruang untuk podium di bawah */
+        }
         #barisW .label-bracket { background: var(--utama); color: #000; }
 
         #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
         #barisL .label-bracket { background: var(--kalah); color: #fff; }
+
+        /* --- STYLE PODIUM DI DALAM WINNER BRACKET --- */
+        #podiumFinal {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none; /* Muncul bila selesai */
+            background: rgba(26, 26, 31, 0.95);
+            border: 2px solid #ffd700;
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: var(--glow-emas);
+            z-index: 100;
+            min-width: 400px;
+        }
+        .podium-flex { display: flex; justify-content: space-around; align-items: center; gap: 30px; }
+        .podium-item { text-align: center; }
+        .pod-rank { font-size: 2rem; display: block; margin-bottom: 5px; }
+        .pod-name { font-weight: 900; font-size: 1.2rem; color: #fff; white-space: nowrap; }
+        /* ------------------------------------------- */
 
         .label-bracket { 
             position: absolute; top: -20px; left: 40px; 
@@ -157,14 +167,6 @@
             <div id="syncToast">✓ Data Berjaya Disinkron!</div>
         </div>
 
-        <div id="podiumBorder">
-            <ul class="podium-list">
-                <li style="color:#ffd700;"><span id="nama_1"></span> 🥇</li>
-                <li style="color:#c0c0c0;"><span id="nama_2"></span> 🥈</li>
-                <li style="color:#cd7f32;"><span id="nama_3"></span> 🥉</li>
-            </ul>
-        </div>
-
         <div class="header-actions-grid">
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
             <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 KELUAR</button>
@@ -177,6 +179,23 @@
     <div class="tournament-layout">
         <div id="barisW" class="laluan-row">
             <div class="label-bracket">Winner Bracket (Upper)</div>
+            
+            <div id="podiumFinal">
+                <div class="podium-flex">
+                    <div class="podium-item" style="order:2; transform: scale(1.2);">
+                        <span class="pod-rank">🥇</span>
+                        <span class="pod-name" id="res_1">-</span>
+                    </div>
+                    <div class="podium-item" style="order:1;">
+                        <span class="pod-rank">🥈</span>
+                        <span class="pod-name" id="res_2">-</span>
+                    </div>
+                    <div class="podium-item" style="order:3;">
+                        <span class="pod-rank">🥉</span>
+                        <span class="pod-name" id="res_3">-</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="barisL" class="laluan-row">
@@ -273,8 +292,15 @@
     function jana(savedScores) {
         const bw = document.getElementById('barisW'); 
         const bl = document.getElementById('barisL');
+        
+        // Simpan podium yang ada dalam barisW sebelum innerHTML dikosongkan
+        const podiumClone = document.getElementById('podiumFinal');
+        
         bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
+        
+        // Masukkan semula podium
+        bw.appendChild(podiumClone);
 
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
@@ -385,14 +411,14 @@
                 else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
             } else {
                 updateSlot('GF_0_0', 2, winN, winP);
-                // SET TEMPAT KE-3 (LOSER FINAL)
-                document.getElementById('nama_3').innerText = losN;
+                // SET PEMENANG TEMPAT KE-3
+                document.getElementById('res_3').innerText = losN;
             }
         } else if(p[0] === 'GF') {
-            // SET JUARA & NAIB JUARA (GRAND FINAL)
-            document.getElementById('nama_1').innerText = winN;
-            document.getElementById('nama_2').innerText = losN;
-            document.getElementById('podiumBorder').style.display = 'block';
+            // SET JUARA & NAIB JUARA
+            document.getElementById('res_1').innerText = winN;
+            document.getElementById('res_2').innerText = losN;
+            document.getElementById('podiumFinal').style.display = 'block';
         }
     };
 
