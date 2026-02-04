@@ -18,37 +18,43 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 100px; }
 
-        /* HEADER */
+        /* HEADER YANG DIKEMASKINI */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
-            background: rgba(255, 255, 255, 0.03); padding: 20px 40px;
-            border-radius: 40px; border: 1px solid var(--garis); margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.03); padding: 30px;
+            border-radius: 30px; border: 1px solid var(--garis); margin-bottom: 30px;
             width: 100%; max-width: 1200px; box-sizing: border-box;
+            gap: 20px;
         }
 
-        .header-top { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 25px; gap: 30px; }
-        .logo-box img { height: 100px; width: 100px; border-radius: 20px; filter: drop-shadow(0 0 10px var(--utama)); object-fit: cover; }
+        .header-top-row {
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+        }
 
-        .btn-admin-besar { 
-            height: 100px; width: 100px; border-radius: 20px; border: 3px solid var(--utama); 
+        .tajuk-box h1 { 
+            font-size: 2.2rem; margin: 0; 
+            background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            font-weight: 900; 
+        }
+
+        .btn-admin-kecil { 
+            padding: 10px 20px; border-radius: 12px; border: 2px solid var(--utama); 
             background: rgba(0, 210, 255, 0.1); color: var(--utama); cursor: pointer; 
-            font-weight: 900; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s;
+            font-weight: 800; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-admin-besar:hover { background: var(--utama); color: #000; box-shadow: 0 0 20px var(--utama); transform: scale(1.05); }
-
-        .tajuk-box h1 { font-size: 2rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #2ecc71, #e74c3c, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; }
-        .siri-tag { font-size: 1.2rem; color: var(--emas); letter-spacing: 8px; font-weight: 900; display: block; margin-top: 5px; text-align: center; }
+        .btn-admin-kecil:hover { background: var(--utama); color: #000; box-shadow: 0 0 15px var(--utama); }
 
         /* WHATSAPP GRID */
         .admin-header-grid { display: flex; justify-content: center; width: 100%; gap: 10px; flex-wrap: wrap; }
         .admin-ws-card { 
-            width: 150px; padding: 10px; 
-            background: rgba(37, 211, 102, 0.05); border: 1px solid var(--ws-hijau); border-radius: 12px; 
+            width: 160px; padding: 12px; 
+            background: rgba(37, 211, 102, 0.05); border: 1px solid var(--ws-hijau); border-radius: 15px; 
             text-decoration: none; display: flex; flex-direction: column; align-items: center; transition: 0.3s;
         }
-        .admin-ws-card:hover { background: rgba(37, 211, 102, 0.2); }
-        .ws-name { color: #fff; font-weight: 800; font-size: 0.75rem; margin: 5px 0 2px 0; }
-        .ws-role { color: var(--emas); font-size: 0.55rem; text-transform: uppercase; font-weight: bold; margin: 0; }
+        .admin-ws-card:hover { background: rgba(37, 211, 102, 0.2); transform: translateY(-3px); }
+        .ws-name { color: #fff; font-weight: 800; font-size: 0.8rem; margin: 8px 0 2px 0; }
+        .ws-role { color: var(--emas); font-size: 0.6rem; text-transform: uppercase; font-weight: bold; margin: 0; }
 
         /* BRACKET LAYOUT */
         .tournament-layout { display: flex; flex-direction: column; gap: 60px; padding: 20px; }
@@ -79,10 +85,8 @@
         .skor-menang { background: var(--menang) !important; color: #000 !important; }
         .skor-kalah { background: var(--kalah) !important; color: #fff !important; }
 
-        /* GF SPECIAL */
         .grand-final { border: 4px solid var(--emas) !important; transform: scale(1.05); }
 
-        /* ADMIN PANEL */
         #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 320px; max-height: 80vh; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 1000; padding: 20px; overflow-y: auto; box-shadow: 0 10px 40px #000; }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 8px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; }
     </style>
@@ -91,23 +95,28 @@
 
 <div class="main-wrapper">
     <div class="header-container">
-        <div class="header-top">
-            <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/130'"></div>
+        <div class="header-top-row">
             <div class="tajuk-box">
                 <h1>BWF BADMINTON FAMILY TOUR</h1>
-                <span class="siri-tag">SIRI II</span>
             </div>
-            <div class="admin-box"><button class="btn-admin-besar" onclick="toggleAdmin()">PANEL<br>ADMIN</button></div>
+            <button class="btn-admin-kecil" onclick="toggleAdmin()">PANEL ADMIN</button>
         </div>
 
         <div class="admin-header-grid">
             <a href="https://wa.me/60149236577" target="_blank" class="admin-ws-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20">
-                <p class="ws-name">Ammik</p><p class="ws-role">Teknikal</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22">
+                <p class="ws-name">Ammik</p>
+                <p class="ws-role">Teknikal</p>
             </a>
             <a href="https://wa.me/601111639636" target="_blank" class="admin-ws-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20">
-                <p class="ws-name">Anggan</p><p class="ws-role">Penganjur</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22">
+                <p class="ws-name">Anggan</p>
+                <p class="ws-role">Penganjur</p>
+            </a>
+            <a href="https://wa.me/601139058698" target="_blank" class="admin-ws-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22">
+                <p class="ws-name">Banding</p>
+                <p class="ws-role">Admin</p>
             </a>
         </div>
     </div>
@@ -125,7 +134,7 @@
 <div id="panelAdmin">
     <h3 style="color:var(--utama); margin-top:0;">Pengurusan Admin</h3>
     <input type="password" id="passInput" class="admin-input" placeholder="Kata Laluan">
-    <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:6px; cursor:pointer;">LOG MASUK</button>
+    <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:6px; cursor:pointer; font-weight: bold;">LOG MASUK</button>
 
     <div id="controlBox" style="display:none; margin-top:20px;">
         <label style="font-size:10px; color:var(--emas);">JUMLAH PASUKAN:</label>
@@ -137,6 +146,7 @@
 </div>
 
 <script>
+    /* ... (Semua fungsi JavaScript kekal sama seperti kod sebelumnya anda) ... */
     let nPasukan = 14;
     let teamData = {};
     let isAdmin = false;
@@ -247,7 +257,6 @@
             }
             bw.appendChild(divR);
         }
-        // Fill Round 1
         for(let m=0; m < p2/2; m++) {
             let s1 = seeds[m*2], s2 = seeds[m*2+1];
             updateSlot(`W_0_${m}`, 1, s1 < nPasukan ? teamData[s1]?.nama : "BYE", s1 < nPasukan ? s1 : "BYE");
@@ -272,7 +281,7 @@
     function renderGrandFinal() {
         const bw = document.getElementById('barisW');
         let divR = document.createElement('div'); divR.className = 'pusingan';
-        divR.innerHTML = `<div class="tajuk-pusingan" style="background:var(--emas); color:000;">GRAND FINAL</div>`;
+        divR.innerHTML = `<div class="tajuk-pusingan" style="background:var(--emas); color:#000;">GRAND FINAL</div>`;
         let box = createMatchBox('GF', 0, 0);
         box.classList.add('grand-final');
         divR.appendChild(box);
@@ -324,7 +333,6 @@
         let parts = mid.split('_'), j = parts[0], r = parseInt(parts[1]), m = parseInt(parts[2]);
 
         if(j === 'W') {
-            // Pergi ke pusingan pemenang seterusnya
             let nextR = r + 1;
             let nextM = Math.floor(m/2);
             let nextS = (m % 2) + 1;
@@ -333,8 +341,6 @@
             } else {
                 updateSlot(`GF_0_0`, 1, winName, winPid);
             }
-
-            // Jatuh ke Loser Bracket
             let lr = r * 2;
             let lm = m;
             updateSlot(`L_${lr}_${lm}`, 2, loseName, losePid);
@@ -359,7 +365,6 @@
             let p2 = document.getElementById(box.id + '_p2').innerText;
             let sc1 = document.getElementById(box.id + '_sc1');
             let sc2 = document.getElementById(box.id + '_sc2');
-
             if(p1 === "BYE" && p2 !== "Menunggu..." && p2 !== "BYE") {
                 sc1.value = 0; sc2.value = 21; kira(box.id);
             } else if(p2 === "BYE" && p1 !== "Menunggu..." && p1 !== "BYE") {
@@ -368,6 +373,5 @@
         });
     }
 </script>
-
 </body>
 </html>
