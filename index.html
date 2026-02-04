@@ -25,7 +25,7 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 200px; }
 
-        /* HEADER */
+        /* HEADER PREMIUM */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
             background: radial-gradient(circle at center, rgba(0, 210, 255, 0.05) 0%, rgba(0,0,0,0) 70%);
@@ -35,14 +35,20 @@
 
         .tajuk-box { text-align: center; position: relative; }
         .tajuk-box h1 { 
-            font-size: 5rem; margin: 0; font-weight: 900; text-transform: uppercase; line-height: 1;
+            font-size: 5rem; margin: 0; 
+            font-weight: 900; text-transform: uppercase; line-height: 1;
             background: linear-gradient(to right, #00d2ff 20%, #fff 40%, #fff 60%, #00d2ff 80%);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             animation: shine 4s linear infinite;
         }
         .tajuk-box p { font-size: 1.5rem; color: #888; margin-top: 10px; letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 700; }
 
-        #syncToast { color: var(--menang); font-weight: 800; font-size: 1rem; margin-top: 15px; opacity: 0; transition: 0.5s; text-transform: uppercase; }
+        #syncToast {
+            color: var(--menang); font-weight: 800; font-size: 1rem; margin-top: 15px;
+            opacity: 0; transition: 0.5s; text-transform: uppercase; letter-spacing: 2px;
+        }
 
         @keyframes shine { to { background-position: 200% center; } }
 
@@ -52,56 +58,76 @@
             height: 50px; padding: 0 30px; border-radius: 50px; border: 1px solid var(--garis); 
             background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; 
             font-weight: 700; font-size: 0.85rem; text-transform: uppercase; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-action:hover { background: #fff; color: #000; }
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
 
-        /* TOURNAMENT LAYOUT - KEKUNCI LEBAR SAMA RATA */
-        .tournament-layout { display: flex; flex-direction: column; gap: 80px; align-items: flex-start; margin-top: 40px; }
+        /* TOURNAMENT LAYOUT */
+        .tournament-layout { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 80px; 
+            padding: 0 100px;
+            align-items: flex-start; /* Pastikan border bermula dari kiri yang sama */
+        }
 
         .laluan-row { 
-            display: flex; gap: 50px; padding: 120px 80px; 
-            border-radius: 40px; position: relative; 
+            display: flex; 
+            gap: 50px; 
+            padding: 100px 80px; 
+            border-radius: 40px; 
+            position: relative; 
             background: rgba(255,255,255,0.01);
-            min-width: 2050px; /* Force lebar supaya Winner & Loser sama panjang */
+            /* Kunci lebar supaya kedua-dua row sentiasa sama lebar mengikut yang paling panjang */
+            width: max-content;
+            min-width: 2100px; 
             box-sizing: border-box;
         }
 
-        #barisW { border: 2px solid rgba(0, 210, 255, 0.4); box-shadow: inset 0 0 80px rgba(0, 210, 255, 0.05); }
+        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); }
         #barisW .label-bracket { background: var(--utama); color: #000; }
 
-        #barisL { border: 2px solid rgba(231, 76, 60, 0.4); box-shadow: inset 0 0 80px rgba(231, 76, 60, 0.05); }
+        #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
         #barisL .label-bracket { background: var(--kalah); color: #fff; }
 
         .label-bracket { 
             position: absolute; top: -20px; left: 40px; 
-            padding: 10px 40px; font-weight: 900; font-size: 1.1rem; border-radius: 50px; 
-            text-transform: uppercase; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            padding: 10px 35px; font-weight: 900; font-size: 1rem; border-radius: 50px; 
+            text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
         .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
 
-        /* BOX STYLE */
-        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: #aaa; font-size: 12px; padding: 6px 0; text-align: center; font-weight: 900; border-radius: 14px 14px 0 0; }
+        /* MATCH BOX */
+        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; }
+        .match-no { 
+            position: absolute; top: 0; width: 100%; background: #25252b; color: #aaa; 
+            font-size: 12px; padding: 6px 0; text-align: center; font-weight: 900; border-bottom: 1px solid #333; border-radius: 14px 14px 0 0;
+        }
+
         .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; }
         .slot-pasukan:last-child { border-bottom: none; }
-        .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; }
-        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; }
-        .seed-no { color: var(--kuning-pekat); font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border-radius: 4px; }
 
-        /* WINNER HIGHLIGHT */
+        .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; width: 100%; }
+        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; }
+
+        .seed-no { color: var(--kuning-pekat); font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px; }
+
+        /* HIGHLIGHT PEMENANG */
         .slot-pasukan.pemenang { background: var(--bg-pemenang); }
         .slot-pasukan.pemenang .nama-display { color: var(--menang); }
         .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); }
 
-        /* GRAND FINAL SPECIAL */
-        .grand-final-pusingan { margin-left: auto; padding-left: 100px; } /* Tolak GF ke paling kanan */
-        .grand-final { width: 400px !important; border: 3px solid #ffd700 !important; transform: scale(1.1); box-shadow: var(--glow-emas); }
+        /* GRAND FINAL - DIPERINGKATKAN KE HUJUNG */
+        .pusingan-gf { margin-left: auto; } /* Tolak Grand Final ke paling kanan baris Winner */
+        .grand-final { width: 400px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); }
         .grand-final .match-no { background: var(--emas); color: #000; font-size: 14px; }
         .grand-final .nama-display { font-size: 1.4rem; }
 
-        #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; }
+        .loser-final { border: 2px solid var(--kalah) !important; }
+
+        #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .admin-only { display: none; }
     </style>
 </head>
@@ -168,7 +194,7 @@
     window.checkPersistentAdmin = () => {
         if(localStorage.getItem('adminStatus') === 'active') {
             window.isAdminMode = true;
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
             document.getElementById('authSection').style.display = 'none';
         }
     };
@@ -205,7 +231,7 @@
     };
 
     window.resetSkor = () => {
-        if(confirm("Reset skor sahaja?")) {
+        if(confirm("Reset semua skor sahaja?")) {
             set(dbRef, { n: 16, teams: window.teamNames, scores: {} }).then(() => location.reload());
         }
     };
@@ -223,20 +249,20 @@
         bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
 
-        // Winner Rounds (4 pusingan)
+        // Winner rounds
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m));
             bw.appendChild(div);
         }
 
-        // Grand Final (Diletakkan ke pusingan terakhir baris Winner)
-        let divGF = document.createElement('div'); divGF.className = 'pusingan grand-final-pusingan';
+        // Grand Final - Diletakkan dalam div khas untuk pusingan
+        let divGF = document.createElement('div'); divGF.className = 'pusingan pusingan-gf';
         let gfBox = createBox('GF', 0, 0); gfBox.classList.add('grand-final');
         divGF.appendChild(gfBox); 
         bw.appendChild(divGF);
 
-        // Loser Rounds (6 pusingan)
+        // Loser rounds
         for(let r=0; r < 6; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             let mCount = Math.pow(2, Math.floor((5 - r) / 2));
