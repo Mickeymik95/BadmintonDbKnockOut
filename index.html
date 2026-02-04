@@ -25,7 +25,7 @@
 
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 200px; }
 
-        /* HEADER PREMIUM (TANPA LOGO) */
+        /* HEADER PREMIUM */
         .header-container {
             display: flex; flex-direction: column; align-items: center;
             background: radial-gradient(circle at center, rgba(0, 210, 255, 0.05) 0%, rgba(0,0,0,0) 70%);
@@ -34,8 +34,6 @@
         }
 
         .tajuk-box { text-align: center; position: relative; }
-
-        /* KESAN TULISAN BERKILAU (SHINE) */
         .tajuk-box h1 { 
             font-size: 4.5rem; margin: 0; 
             font-weight: 900; text-transform: uppercase; line-height: 1;
@@ -46,15 +44,9 @@
             animation: shine 4s linear infinite;
             text-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
         }
+        .tajuk-box p { font-size: 1.2rem; color: #888; margin-top: 10px; letter-spacing: 0.5rem; text-transform: uppercase; }
 
-        .tajuk-box p {
-            font-size: 1.2rem; color: #888; margin-top: 10px;
-            letter-spacing: 0.5rem; text-transform: uppercase; font-weight: 400;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
+        @keyframes shine { to { background-position: 200% center; } }
 
         /* BUTTONS */
         .header-actions-grid { display: flex; justify-content: center; gap: 15px; margin-top: 35px; }
@@ -67,22 +59,44 @@
         .btn-action:hover { background: #fff; color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
 
-        /* BRACKET STRUCTURE */
-        .tournament-layout { display: flex; flex-direction: column; gap: 100px; }
-        .laluan-row { display: flex; gap: 50px; padding: 100px 50px; border-radius: 40px; border: 1px solid #222; position: relative; }
-        .label-bracket { 
-            position: absolute; top: -18px; left: 40px; background: #fff; color: #000; 
-            padding: 6px 25px; font-weight: 900; font-size: 0.75rem; border-radius: 50px; 
-            text-transform: uppercase;
+        /* TOURNAMENT LAYOUT */
+        .tournament-layout { display: flex; flex-direction: column; gap: 80px; width: 95%; max-width: 1800px; }
+
+        /* BRACKET BOXES DENGAN BORDER BERBEZA */
+        .laluan-row { 
+            display: flex; gap: 50px; padding: 100px 50px; 
+            border-radius: 40px; position: relative; 
+            background: rgba(255,255,255,0.01);
+            transition: 0.3s;
         }
 
-        .pusingan { display: flex; flex-direction: column; width: 240px; justify-content: center; gap: 25px; }
+        /* Winner Bracket Border (Biru Neon) */
+        #barisW { 
+            border: 2px solid rgba(0, 210, 255, 0.3); 
+            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05);
+        }
+        #barisW .label-bracket { background: var(--utama); color: #000; }
+
+        /* Loser Bracket Border (Merah Neon) */
+        #barisL { 
+            border: 2px solid rgba(231, 76, 60, 0.3); 
+            box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05);
+        }
+        #barisL .label-bracket { background: var(--kalah); color: #fff; }
+
+        .label-bracket { 
+            position: absolute; top: -18px; left: 40px; 
+            padding: 8px 30px; font-weight: 900; font-size: 0.8rem; border-radius: 50px; 
+            text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .pusingan { display: flex; flex-direction: column; width: 240px; justify-content: center; gap: 30px; }
         
         /* MATCH BOX */
-        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 25px; }
+        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .match-no { 
             position: absolute; top: 0; width: 100%; background: #25252b; color: #888; 
-            font-size: 10px; padding: 5px 0; text-align: center; font-weight: 800; border-bottom: 1px solid #333;
+            font-size: 10px; padding: 5px 0; text-align: center; font-weight: 800; border-bottom: 1px solid #333; border-radius: 14px 14px 0 0;
         }
 
         .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid #25252b; }
@@ -93,7 +107,7 @@
             background: transparent; border: none; outline: none; width: 100%;
         }
 
-        .skor { width: 35px; height: 32px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; font-weight: 900; font-size: 1rem; }
+        .skor { width: 38px; height: 34px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; font-weight: 900; font-size: 1.1rem; }
         
         /* KUNING PEKAT NOMBOR */
         .seed-no { 
@@ -105,11 +119,11 @@
         /* HIGHLIGHT PEMENANG */
         .slot-pasukan.pemenang { background: var(--bg-pemenang); }
         .slot-pasukan.pemenang .nama-display { color: var(--menang); font-weight: 900; }
-        .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); }
+        .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); box-shadow: 0 0 10px rgba(46, 204, 113, 0.4); }
 
-        .grand-final { width: 320px !important; border: 2px solid #ffd700 !important; transform: scale(1.15); box-shadow: var(--glow-emas); }
+        .grand-final { width: 320px !important; border: 2px solid #ffd700 !important; transform: scale(1.1); box-shadow: var(--glow-emas); }
         .grand-final .match-no { background: var(--emas); color: #000; font-weight: 900; }
-        .loser-final { border: 2px solid var(--kalah) !important; box-shadow: 0 0 25px rgba(231, 76, 60, 0.4); }
+        .loser-final { border: 2px solid var(--kalah) !important; box-shadow: 0 0 25px rgba(231, 76, 60, 0.3); }
 
         #panelAdmin { 
             display: none; position: fixed; top: 30px; right: 30px; width: 320px; 
@@ -125,20 +139,25 @@
     <div class="header-container">
         <div class="tajuk-box">
             <h1>BADMINTON KELUARGA² SAJA'</h1>
-            <p>• SIRI 2 • 2024 •</p>
+            <p>• SIRI 2 • 2026 •</p>
         </div>
 
         <div class="header-actions-grid">
             <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
-            <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 LOG KELUAR</button>
-            <button id="btnSave" class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN & SYNC</button>
+            <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 KELUAR</button>
+            <button id="btnSave" class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN DATA</button>
             <button id="btnReset" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET</button>
         </div>
     </div>
 
     <div class="tournament-layout">
-        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket</div></div>
-        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket</div></div>
+        <div id="barisW" class="laluan-row">
+            <div class="label-bracket">Winner Bracket (Upper)</div>
+        </div>
+        
+        <div id="barisL" class="laluan-row">
+            <div class="label-bracket">Loser Bracket (Lower)</div>
+        </div>
     </div>
 </div>
 
@@ -184,7 +203,7 @@
         if(document.getElementById('passInput').value === "admin123") {
             localStorage.setItem('adminStatus', 'active');
             location.reload();
-        } else { alert("Akses Ditolak!"); }
+        } else { alert("Salah!"); }
     };
 
     window.logoutAdmin = () => { localStorage.removeItem('adminStatus'); location.reload(); };
@@ -208,7 +227,7 @@
     };
 
     window.resetTournament = () => {
-        if(confirm("Padam semua data?")) {
+        if(confirm("Reset semua?")) {
             set(dbRef, { n: 16, teams: {}, scores: {} }).then(() => location.reload());
         }
     };
@@ -239,7 +258,7 @@
         let gfBox = createBox('GF', 0, 0); gfBox.classList.add('grand-final');
         divGF.appendChild(gfBox); bw.appendChild(divGF);
 
-        const seeds = getSeeds(16);
+        const seeds = [0, 15, 7, 8, 3, 12, 4, 11, 1, 14, 6, 9, 2, 13, 5, 10];
         for(let m=0; m < 8; m++) {
             let s1 = seeds[m*2], s2 = seeds[m*2+1];
             updateSlot(`W_0_${m}`, 1, window.teamNames[s1]?.nama || "", s1);
@@ -309,16 +328,6 @@
             if(p1 === "BYE" && p2 !== "" && p2 !== "BYE" && sc1.value === "") { sc1.value=0; sc2.value=21; kira(box.id); }
             else if(p2 === "BYE" && p1 !== "" && p1 !== "BYE" && sc2.value === "") { sc1.value=21; sc2.value=0; kira(box.id); }
         });
-    }
-
-    function getSeeds(n) {
-        let s = [0, 1];
-        for (let i = 2; i < n; i <<= 1) {
-            let next = [];
-            for (let x of s) { next.push(x); next.push(2 * i - 1 - x); }
-            s = next;
-        }
-        return s;
     }
 </script>
 </body>
