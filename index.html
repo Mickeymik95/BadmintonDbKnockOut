@@ -17,7 +17,7 @@
             --glow-loser: 0 0 25px rgba(231, 76, 60, 0.3);
             --bg-pemenang: rgba(46, 204, 113, 0.15);
             
-            /* Warna Laluan Juara (Lutsinar/Soft) */
+            /* Warna Laluan Juara (Soft) */
             --soft-emas: rgba(255, 215, 0, 0.2);
             --soft-perak: rgba(192, 192, 192, 0.2);
             --soft-gangsa: rgba(205, 127, 50, 0.25);
@@ -143,7 +143,13 @@
 
         .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; width: 100%; }
         .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; }
-        .seed-no { color: var(--kuning-pekat); font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px; }
+        
+        /* Nombor Biru Terang Pusingan 1 */
+        .seed-no { 
+            color: #00fbff; font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; 
+            display: none; align-items: center; justify-content: center; 
+            background: rgba(0, 251, 255, 0.1); border: 1px solid rgba(0, 251, 255, 0.4); border-radius: 4px; 
+        }
 
         .slot-pasukan.pemenang { background: var(--bg-pemenang); }
         .slot-pasukan.pemenang .nama-display { color: var(--menang); }
@@ -312,9 +318,18 @@
                   (j === 'L' && r === 5) ? `MATCH ${matchNum} - LOSER FINAL` : 
                   `MATCH ${matchNum}`;
 
+        // Ruangan seed-no hanya akan dipaparkan jika r === 0 di Winner Bracket
         div.innerHTML = `<div class="match-no">${lbl}</div>
-            <div class="slot-pasukan" id="${id}_s1"><span class="seed-no" id="${id}_sd1"></span><input type="text" class="nama-display" id="${id}_p1" placeholder="..." readonly><input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}')"></div>
-            <div class="slot-pasukan" id="${id}_s2"><span class="seed-no" id="${id}_sd2"></span><input type="text" class="nama-display" id="${id}_p2" placeholder="..." readonly><input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}')"></div>`;
+            <div class="slot-pasukan" id="${id}_s1">
+                <span class="seed-no" id="${id}_sd1"></span>
+                <input type="text" class="nama-display" id="${id}_p1" placeholder="..." readonly>
+                <input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}')">
+            </div>
+            <div class="slot-pasukan" id="${id}_s2">
+                <span class="seed-no" id="${id}_sd2"></span>
+                <input type="text" class="nama-display" id="${id}_p2" placeholder="..." readonly>
+                <input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}')">
+            </div>`;
         return div;
     }
 
@@ -386,13 +401,16 @@
         const sdEl = document.getElementById(`${mid}_sd${slot}`);
         if(pEl) pEl.value = nama;
         if(sEl) sEl.setAttribute('data-pid', pid);
+        
+        // Hanya paparkan nombor cyan jika ia Winner Bracket Pusingan Pertama
         if(sdEl && mid.startsWith('W_0_')) {
             sdEl.innerText = (parseInt(pid) + 1).toString().padStart(2, '0');
             sdEl.style.display = "flex";
+        } else if(sdEl) {
+            sdEl.style.display = "none";
         }
     }
 
-    // Fungsi tambahan untuk pewarnaan latar lutsinar
     function updatePathSoftColors(nama, cssClass) {
         if(!nama || nama === "BYE" || nama === "...") return;
         document.querySelectorAll('.slot-pasukan').forEach(slot => {
