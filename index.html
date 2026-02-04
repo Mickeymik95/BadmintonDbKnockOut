@@ -9,10 +9,10 @@
 
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
-            /* Warna Pingat Solid untuk Laluan */
-            --emas-path: #ffd700; --emas-text: #000;
-            --perak-path: #c0c0c0; --perak-text: #000;
-            --gangsa-path: #cd7f32; --gangsa-text: #fff;
+            /* Warna Pingat Solid & Terang */
+            --emas-path: #ffd700; --emas-txt: #000;
+            --perak-path: #c0c0c0; --perak-txt: #000;
+            --gangsa-path: #cd7f32; --gangsa-txt: #fff;
             
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
@@ -28,17 +28,16 @@
         .tajuk-box h1 { font-size: 5rem; margin: 0; font-weight: 900; text-transform: uppercase; background: linear-gradient(to right, #00d2ff, #fff, #00d2ff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 4s linear infinite; }
         @keyframes shine { to { background-position: 200% center; } }
 
-        /* CSS UNTUK LALUAN PINGAT (HIGHLIGHT) */
-        .path-emas { background: var(--emas-path) !important; color: var(--emas-text) !important; font-weight: 900 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-        .path-emas .nama-display, .path-emas .skor { color: var(--emas-text) !important; font-weight: 900; }
-        
-        .path-perak { background: var(--perak-path) !important; color: var(--perak-text) !important; font-weight: 900 !important; }
-        .path-perak .nama-display, .path-perak .skor { color: var(--perak-text) !important; font-weight: 900; }
+        /* LALUAN WARNA PINGAT (SOLID) */
+        .path-emas { background: var(--emas-path) !important; color: var(--emas-txt) !important; font-weight: 900 !important; }
+        .path-emas input { color: var(--emas-txt) !important; font-weight: 900 !important; }
 
-        .path-gangsa { background: var(--gangsa-path) !important; color: var(--gangsa-text) !important; font-weight: 900 !important; }
-        .path-gangsa .nama-display, .path-gangsa .skor { color: var(--gangsa-text) !important; font-weight: 900; }
+        .path-perak { background: var(--perak-path) !important; color: var(--perak-txt) !important; font-weight: 900 !important; }
+        .path-perak input { color: var(--perak-txt) !important; font-weight: 900 !important; }
 
-        /* Bracket Styles */
+        .path-gangsa { background: var(--gangsa-path) !important; color: var(--gangsa-txt) !important; font-weight: 900 !important; }
+        .path-gangsa input { color: var(--gangsa-txt) !important; font-weight: 900 !important; }
+
         .tournament-layout { display: flex; flex-direction: column; gap: 80px; padding: 0 100px; }
         .laluan-row { display: flex; gap: 50px; padding: 100px 80px; border-radius: 40px; position: relative; background: rgba(255,255,255,0.01); width: max-content; border: 2px solid rgba(255,255,255,0.05); }
         .label-bracket { position: absolute; top: -20px; left: 40px; padding: 10px 35px; font-weight: 900; border-radius: 50px; text-transform: uppercase; z-index: 10; }
@@ -49,17 +48,17 @@
         .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; }
         .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: #aaa; font-size: 11px; padding: 6px 0; text-align: center; font-weight: 900; border-radius: 14px 14px 0 0; }
         
-        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; transition: background 0.4s; }
+        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; }
         .slot-pasukan:last-child { border-bottom: none; }
         .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; }
         .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; }
-        .seed-no { color: var(--kuning-pekat); font-weight: 900; font-size: 0.8rem; min-width: 28px; height: 22px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px; }
+        .seed-no { color: #ffcc00; font-weight: 900; font-size: 0.8rem; min-width: 28px; height: 22px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px; }
 
-        .pemenang { background: var(--bg-pemenang); }
-        .pemenang .nama-display { color: var(--menang); }
+        .slot-pasukan.pemenang { background: var(--bg-pemenang); }
+        .slot-pasukan.pemenang .nama-display { color: var(--menang); }
 
         #podiumFinal { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%); display: none; background: #1a1a1f; border: 2px solid #ffd700; padding: 30px 60px; border-radius: 30px; box-shadow: var(--glow-emas); text-align: center; min-width: 500px; }
-        .btn-action { height: 50px; padding: 0 30px; border-radius: 50px; border: 1px solid var(--garis); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .btn-action { height: 50px; padding: 0 25px; border-radius: 50px; border: 1px solid var(--garis); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 700; text-transform: uppercase; transition: 0.3s; margin: 0 5px; }
         .btn-action:hover { background: #fff; color: #000; }
         #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 300px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 25px; }
         .admin-only { display: none; }
@@ -73,12 +72,13 @@
             <h1>BADMINTON KELUARGA² SAJA'</h1>
             <p>• SIRI 2 • 2026 •</p>
         </div>
-        <div class="header-actions-grid" style="display:flex; gap:10px; margin-top:20px;">
+        <div class="header-actions-grid" style="margin-top:20px;">
             <button class="btn-action" onclick="toggleAdmin()">⚙️ ADMIN</button>
             <button class="btn-action admin-only" style="background:var(--utama); color:#000;" onclick="saveAll()">💾 SIMPAN</button>
-            <button class="btn-action admin-only" onclick="resetTournament()" style="color:var(--kalah)">⚠️ RESET</button>
+            <button class="btn-action admin-only" style="border-color:#f39c12; color:#f39c12;" onclick="resetSkor()">🔄 RESET SKOR</button>
+            <button class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET ALL</button>
         </div>
-        <div id="syncToast" style="color:var(--menang); opacity:0; transition:0.5s; margin-top:10px; font-weight:900;">✓ DATA DISIMPAN</div>
+        <div id="syncToast" style="color:var(--menang); opacity:0; transition:0.5s; margin-top:10px; font-weight:900;">✓ DISINKRONKAN</div>
     </div>
 
     <div class="tournament-layout">
@@ -87,9 +87,9 @@
             <div id="podiumFinal">
                 <div style="color:#ffd700; font-weight:900; letter-spacing:3px; margin-bottom:15px;">TOURNAMENT PODIUM</div>
                 <div style="display:flex; justify-content:center; gap:40px; align-items:flex-end;">
-                    <div>🥈<br><span id="res_2" class="path-perak" style="padding:5px 15px; border-radius:10px;">-</span></div>
-                    <div style="transform:scale(1.3);">🥇<br><span id="res_1" class="path-emas" style="padding:5px 15px; border-radius:10px;">-</span></div>
-                    <div>🥉<br><span id="res_3" class="path-gangsa" style="padding:5px 15px; border-radius:10px;">-</span></div>
+                    <div>🥈<br><span id="res_2" style="font-weight:900;">-</span></div>
+                    <div style="transform:scale(1.3);">🥇<br><span id="res_1" style="color:#ffd700; font-weight:900;">-</span></div>
+                    <div>🥉<br><span id="res_3" style="font-weight:900;">-</span></div>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
 </div>
 
 <div id="panelAdmin">
-    <input type="password" id="passInput" placeholder="Password" style="width:100%; padding:12px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #444;">
+    <input type="password" id="passInput" placeholder="Password" style="width:90%; padding:12px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #444;">
     <button onclick="checkAuth()" class="btn-action" style="width:100%">LOG MASUK</button>
 </div>
 
@@ -151,18 +151,15 @@
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
         bw.appendChild(podium);
 
-        // Winner 1-15
         let winOffsets = [1, 9, 13, 15];
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m, winOffsets[r]+m));
             bw.appendChild(div);
         }
-        // Grand Final 30
         let gfDiv = document.createElement('div'); gfDiv.className = 'pusingan';
         gfDiv.appendChild(createBox('GF', 0, 0, 30)); bw.appendChild(gfDiv);
 
-        // Loser 16-29
         let losOffsets = [16, 20, 24, 26, 28, 29];
         let losCounts = [4, 4, 2, 2, 1, 1];
         for(let r=0; r<6; r++) {
@@ -250,7 +247,6 @@
         if(!nama || nama === "BYE") return;
         document.querySelectorAll('.slot-pasukan').forEach(slot => {
             if(slot.querySelector('.nama-display').value === nama) {
-                slot.classList.remove('path-emas', 'path-perak', 'path-gangsa');
                 slot.classList.add(cssClass);
             }
         });
@@ -260,8 +256,8 @@
         document.querySelectorAll('.kotak-perlawanan').forEach(box => {
             let p1 = document.getElementById(box.id+'_p1').value, p2 = document.getElementById(box.id+'_p2').value;
             let sc1 = document.getElementById(box.id+'_sc1'), sc2 = document.getElementById(box.id+'_sc2');
-            if(p1 === "BYE" && p2 !== "" && sc1.value === "") { sc1.value=0; sc2.value=21; window.kira(box.id); }
-            else if(p2 === "BYE" && p1 !== "" && sc2.value === "") { sc1.value=21; sc2.value=0; window.kira(box.id); }
+            if(p1 === "BYE" && p2 !== "" && p2 !== "BYE" && sc1.value === "") { sc1.value=0; sc2.value=21; window.kira(box.id); }
+            else if(p2 === "BYE" && p1 !== "" && p1 !== "BYE" && sc2.value === "") { sc1.value=21; sc2.value=0; window.kira(box.id); }
         });
     }
 
@@ -285,7 +281,8 @@
         set(dbRef, { teams, scores }).then(() => { document.getElementById('syncToast').style.opacity=1; setTimeout(()=>document.getElementById('syncToast').style.opacity=0, 2000); });
     };
 
-    window.resetTournament = () => { if(confirm("Padam semua?")) set(dbRef, { teams:{}, scores:{} }).then(()=>location.reload()); };
+    window.resetSkor = () => { if(confirm("Reset skor sahaja?")) set(dbRef, { teams: window.teamNames, scores: {} }).then(() => location.reload()); };
+    window.resetTournament = () => { if(confirm("Padam semua data?")) set(dbRef, { teams: {}, scores: {} }).then(() => location.reload()); };
 </script>
 </body>
 </html>
