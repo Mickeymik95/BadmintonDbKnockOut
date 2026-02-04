@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BWF BADMINTON KELUARGA² TOUR</title>
+    <title>CARTA BADMINTON KELUARGA² TOUR</title>
     <style>
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
@@ -51,22 +51,16 @@
         .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
         .label-bracket { position: absolute; top: -15px; left: 30px; background: var(--bg); padding: 5px 20px; font-weight: 900; font-size: 0.8rem; border-radius: 50px; border: 2px solid; }
 
-        /* PUSINGAN & GARIS CONNECTOR */
+        /* PUSINGAN */
         .pusingan { display: flex; flex-direction: column; width: 220px; justify-content: center; position: relative; }
         .tajuk-pusingan { font-size: 0.7rem; font-weight: 900; text-align: center; padding: 6px; background: #000; border: 1px solid #333; border-radius: 4px; position: absolute; top: -50px; width: 100%; }
 
-        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; margin-bottom: 5px; z-index: 2; }
+        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; margin-bottom: 5px; z-index: 2; transition: 0.3s; }
 
-        /* Garis Keluar Kanan */
-        .pusingan:not(:last-child) .kotak-perlawanan::after {
-            content: ""; position: absolute; right: -62px; top: 50%; width: 62px; height: 2px; background: var(--garis); z-index: 1;
-        }
-        /* Garis Masuk Kiri (Vertical Connector) */
-        .pusingan:not(:first-child) .kotak-perlawanan::before {
-            content: ""; position: absolute; left: -62px; top: 50%; width: 2px; background: var(--garis); z-index: 1;
-        }
+        /* CONNECTOR LINES */
+        .pusingan:not(:last-child) .kotak-perlawanan::after { content: ""; position: absolute; right: -62px; top: 50%; width: 62px; height: 2px; background: var(--garis); z-index: 1; }
+        .pusingan:not(:first-child) .kotak-perlawanan::before { content: ""; position: absolute; left: -62px; top: 50%; width: 2px; background: var(--garis); z-index: 1; }
 
-        /* SUSUNAN ANAK PANAH WINNER */
         .baris-menang .pusingan-p1 { gap: 40px; }
         .baris-menang .pusingan-p2 { gap: 152px; }
         .baris-menang .pusingan-p2 .kotak-perlawanan::before { height: 184px; transform: translateY(-50%); }
@@ -75,14 +69,13 @@
         .baris-menang .pusingan-p4 { gap: 824px; }
         .baris-menang .pusingan-p4 .kotak-perlawanan::before { height: 856px; transform: translateY(-50%); }
 
-        /* HIGHLIGHT FINAL */
         .loser-final-highlight { border: 2px solid var(--kalah) !important; box-shadow: 0 0 15px rgba(231, 76, 60, 0.3); }
         .grand-final { border: 4px solid var(--emas) !important; transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 215, 0, 0.4); }
 
         .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: var(--utama); font-size: 9px; padding: 4px 0; text-align: center; font-weight: bold; border-radius: 11px 11px 0 0; }
         .slot-pasukan { display: flex; gap: 8px; align-items: center; padding: 8px 12px; height: 35px; border-bottom: 1px solid #222; }
         .slot-pasukan:last-child { border-bottom: none; }
-        .nama-display { flex: 1; font-size: 0.75rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nama-display { flex: 1; font-size: 0.75rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
         .skor { width: 35px; height: 25px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; font-size: 0.8rem; }
         .p-logo { width: 20px; height: 20px; border-radius: 4px; background: #333; }
 
@@ -90,7 +83,6 @@
         #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 350px; max-height: 85vh; background: #1a1a1f; border: 2px solid var(--utama); border-radius: 20px; z-index: 1000; padding: 25px; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .btn-close { background: none; border: none; color: #666; font-size: 24px; cursor: pointer; }
-        .btn-close:hover { color: var(--kalah); }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 8px; background: #000; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; }
         .team-row-input { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.02); padding: 5px; border-radius: 8px; }
         .seed-no { background: var(--utama); color: #000; font-weight: 900; min-width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 11px; }
@@ -124,12 +116,10 @@
         <h3 style="color:var(--utama); margin:0;">PENGURUSAN ADMIN</h3>
         <button class="btn-close" onclick="toggleAdmin()">&times;</button>
     </div>
-    
     <div id="loginSection">
         <input type="password" id="passInput" class="admin-input" placeholder="Kata Laluan">
         <button onclick="checkAuth()" style="width:100%; padding:10px; background:var(--utama); border:none; border-radius:6px; cursor:pointer; font-weight:bold;">LOG MASUK</button>
     </div>
-
     <div id="controlBox" style="display:none; margin-top:10px;">
         <label style="font-size: 11px; color: #888;">JUMLAH PASUKAN</label>
         <input type="number" id="inputNumTeams" class="admin-input" value="14" onchange="renderInputs()">
@@ -236,12 +226,12 @@
         }
         for(let m=0; m < p2/2; m++) {
             let s1 = seeds[m*2], s2 = seeds[m*2+1];
-            // Format nama: "1. Nama"
-            let name1 = s1 < nPasukan ? `${s1+1}. ${teamData[s1]?.nama || `Pasukan ${s1+1}`}` : "BYE";
-            let name2 = s2 < nPasukan ? `${s2+1}. ${teamData[s2]?.nama || `Pasukan ${s2+1}`}` : "BYE";
-            
-            updateSlot(`W_0_${m}`, 1, name1, s1 < nPasukan ? s1 : "BYE");
-            updateSlot(`W_0_${m}`, 2, name2, s2 < nPasukan ? s2 : "BYE");
+            let name1 = s1 < nPasukan ? teamData[s1]?.nama || `Pasukan ${s1+1}` : "BYE";
+            let name2 = s2 < nPasukan ? teamData[s2]?.nama || `Pasukan ${s2+1}` : "BYE";
+
+            // Tambah nombor seed hanya pada paparan pusingan pertama
+            updateSlot(`W_0_${m}`, 1, s1 < nPasukan ? `${s1+1}. ${name1}` : "BYE", s1 < nPasukan ? s1 : "BYE");
+            updateSlot(`W_0_${m}`, 2, s2 < nPasukan ? `${s2+1}. ${name2}` : "BYE", s2 < nPasukan ? s2 : "BYE");
         }
     }
 
@@ -291,11 +281,33 @@
     }
 
     function kira(mid) {
-        let sc1 = document.getElementById(mid+'_sc1').value; let sc2 = document.getElementById(mid+'_sc2').value;
-        if(sc1 === "" || sc2 === "" || parseInt(sc1) === parseInt(sc2)) return;
-        let v1 = parseInt(sc1), v2 = parseInt(sc2), winSlot = v1 > v2 ? 1 : 2, loseSlot = v1 > v2 ? 2 : 1;
-        let winName = document.getElementById(`${mid}_p${winSlot}`).innerText, winPid = document.getElementById(`${mid}_s${winSlot}`).getAttribute('data-pid');
-        let loseName = document.getElementById(`${mid}_p${loseSlot}`).innerText, losePid = document.getElementById(`${mid}_s${loseSlot}`).getAttribute('data-pid');
+        let sc1Val = document.getElementById(mid+'_sc1').value; 
+        let sc2Val = document.getElementById(mid+'_sc2').value;
+
+        // Reset highlight asal
+        document.getElementById(mid+'_p1').style.color = '#fff';
+        document.getElementById(mid+'_p1').style.fontWeight = '700';
+        document.getElementById(mid+'_p2').style.color = '#fff';
+        document.getElementById(mid+'_p2').style.fontWeight = '700';
+
+        if(sc1Val === "" || sc2Val === "" || parseInt(sc1Val) === parseInt(sc2Val)) return;
+        
+        let v1 = parseInt(sc1Val), v2 = parseInt(sc2Val);
+        let winSlot = v1 > v2 ? 1 : 2;
+        let loseSlot = v1 > v2 ? 2 : 1;
+
+        // Highlight pemenang perlawanan
+        document.getElementById(`${mid}_p${winSlot}`).style.color = 'var(--emas)';
+        document.getElementById(`${mid}_p${winSlot}`).style.fontWeight = '900';
+
+        // Bersihkan nama (buang nombor seed) untuk pusingan seterusnya
+        let cleanName = (n) => n.replace(/^\d+\.\s+/, "");
+        let winName = cleanName(document.getElementById(`${mid}_p${winSlot}`).innerText);
+        let loseName = cleanName(document.getElementById(`${mid}_p${loseSlot}`).innerText);
+        
+        let winPid = document.getElementById(`${mid}_s${winSlot}`).getAttribute('data-pid');
+        let losePid = document.getElementById(`${mid}_s${loseSlot}`).getAttribute('data-pid');
+        
         let parts = mid.split('_'), j = parts[0], r = parseInt(parts[1]), m = parseInt(parts[2]);
 
         if(j === 'W') {
@@ -316,8 +328,12 @@
     function autoBye() {
         document.querySelectorAll('.kotak-perlawanan').forEach(box => {
             let p1 = document.getElementById(box.id + '_p1').innerText, p2 = document.getElementById(box.id + '_p2').innerText;
-            if(p1 === "BYE" && p2 !== "Menunggu..." && p2 !== "BYE") { document.getElementById(box.id+'_sc1').value=0; document.getElementById(box.id+'_sc2').value=21; kira(box.id); }
-            else if(p2 === "BYE" && p1 !== "Menunggu..." && p1 !== "BYE") { document.getElementById(box.id+'_sc1').value=21; document.getElementById(box.id+'_sc2').value=0; kira(box.id); }
+            if(p1 === "BYE" && p2 !== "Menunggu..." && p2 !== "BYE") { 
+                document.getElementById(box.id+'_sc1').value=0; document.getElementById(box.id+'_sc2').value=21; kira(box.id); 
+            }
+            else if(p2 === "BYE" && p1 !== "Menunggu..." && p1 !== "BYE") { 
+                document.getElementById(box.id+'_sc1').value=21; document.getElementById(box.id+'_sc2').value=0; kira(box.id); 
+            }
         });
     }
 </script>
