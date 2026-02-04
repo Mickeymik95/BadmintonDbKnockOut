@@ -20,20 +20,44 @@
         .header-container {
             background: rgba(255, 255, 255, 0.03); padding: 30px;
             border-radius: 40px; border: 1px solid var(--garis); margin-bottom: 30px;
-            width: 100%; max-width: 1200px; text-align: center;
+            width: 100%; max-width: 1200px;
         }
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
-        .logo-box img { height: 120px; border-radius: 20px; filter: drop-shadow(0 0 15px var(--utama)); }
         
+        .header-top { 
+            display: grid; 
+            grid-template-columns: 150px 1fr 150px; 
+            align-items: center; 
+            gap: 20px; 
+            width: 100%;
+        }
+
+        .logo-box img { 
+            height: 120px; 
+            width: 120px; 
+            border-radius: 20px; 
+            object-fit: cover;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+        }
+
+        .center-group { text-align: center; }
+
         .btn-admin-akses { 
-            padding: 15px 25px; border-radius: 15px; border: 3px solid var(--utama); 
+            padding: 10px 30px; border-radius: 12px; border: 2px solid var(--utama); 
             background: rgba(0, 210, 255, 0.1); color: var(--utama); cursor: pointer; 
             font-weight: 900; text-transform: uppercase; transition: 0.3s;
+            margin-top: 15px; letter-spacing: 2px;
         }
         .btn-admin-akses:hover { background: var(--utama); color: #000; box-shadow: 0 0 20px var(--utama); }
 
-        .tajuk-box h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(130deg, #00d2ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-        .siri-tag { font-size: 1.2rem; color: var(--emas); letter-spacing: 10px; font-weight: 900; }
+        .tajuk-box h1 { 
+            font-size: 2.2rem; 
+            margin: 0; 
+            background: linear-gradient(130deg, #00d2ff, #ffd700); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-weight: 900; 
+            line-height: 1.1;
+        }
 
         /* SENARAI PENYERTAAN */
         .senarai-luar { width: 100%; max-width: 1200px; background: rgba(255,255,255,0.02); border-radius: 20px; padding: 20px; border: 1px solid var(--garis); margin-bottom: 30px; }
@@ -76,13 +100,19 @@
     <div class="header-container">
         <div class="header-top">
             <div class="logo-box"><img src="logo.jpeg" onerror="this.src='https://via.placeholder.com/120'"></div>
-            <div class="tajuk-box">
-                <h1>BWF BADMINTON FAMILY TOUR</h1>
-                <div class="siri-tag">SIRI II</div>
+            
+            <div class="center-group">
+                <div class="tajuk-box">
+                    <h1>BWF BADMINTON<br>FAMILY TOUR</h1>
+                </div>
+                <button class="btn-admin-akses" onclick="toggleAdmin()">ADMIN PANEL</button>
             </div>
-            <button class="btn-admin-akses" onclick="toggleAdmin()">ADMIN</button>
+
+            <div class="logo-box" style="text-align: right;">
+                <img src="logo2.jpg" onerror="this.src='https://via.placeholder.com/120'">
+            </div>
         </div>
-        </div>
+    </div>
 
     <div class="senarai-luar">
         <div id="displayPenyertaan" class="grid-penyertaan"></div>
@@ -127,6 +157,8 @@
             isAdmin = true;
             renderInputs();
             updateInputAccess();
+        } else {
+            alert("Kata laluan salah!");
         }
     }
 
@@ -154,7 +186,6 @@
         const seeds = [0,15,7,8,3,12,4,11,1,14,6,9,2,13,5,10];
         matchCounter = 1;
 
-        // Pemenang P1-P3
         for(let r=0; r<3; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">PUSINGAN ${r+1}</div>`;
@@ -163,7 +194,6 @@
             bw.appendChild(divR);
         }
 
-        // Recovery R1-R5
         for(let r=0; r<5; r++) {
             let divR = document.createElement('div'); divR.className = 'pusingan';
             divR.innerHTML = `<div class="tajuk-pusingan">RECOVERY P${r+1}</div>`;
@@ -172,19 +202,16 @@
             bl.appendChild(divR);
         }
 
-        // Final LB
         let divFLB = document.createElement('div'); divFLB.className = 'pusingan';
         divFLB.innerHTML = `<div class="tajuk-pusingan" style="color:var(--biru-final)">FINAL LB</div>`;
         divFLB.appendChild(createMatch('L', 5, 0, null, true));
         bl.appendChild(divFLB);
 
-        // Grand Final
         let divGF = document.createElement('div'); divGF.className = 'pusingan';
         divGF.innerHTML = `<div class="tajuk-pusingan" style="color:var(--emas)">GRAND FINAL</div>`;
         divGF.appendChild(createMatch('GF', 0, 0, null, false, true));
         bw.appendChild(divGF);
 
-        // Render Senarai Nama Pasukan di Atas
         let list = document.getElementById('displayPenyertaan');
         list.innerHTML = "";
         for(let i=0; i<nPasukan; i++) {
@@ -199,7 +226,7 @@
         let div = document.createElement('div'); 
         div.className = "kotak-perlawanan" + (isFLB?" final-lb-box":"") + (isGF?" grand-final-box":"");
         div.id = mId;
-        
+
         let p1 = "Menunggu...", p2 = "Menunggu...";
         if(j==='W' && r===0) {
             p1 = teamData[seeds[m*2]]?.nama || `Pasukan ${seeds[m*2]+1}`;
@@ -215,16 +242,12 @@
     function kira(id) {
         let s1 = document.getElementById(id+'_sc1'), s2 = document.getElementById(id+'_sc2');
         if(!s1.value || !s2.value) return;
-        
         let v1 = parseInt(s1.value), v2 = parseInt(s2.value);
         s1.className = v1 > v2 ? 'skor skor-menang' : 'skor skor-kalah';
         s2.className = v2 > v1 ? 'skor skor-menang' : 'skor skor-kalah';
-
         let win = v1 > v2 ? document.getElementById(id+'_p1').innerText : document.getElementById(id+'_p2').innerText;
         let los = v1 > v2 ? document.getElementById(id+'_p2').innerText : document.getElementById(id+'_p1').innerText;
-
         let d = id.split('_'), j = d[0], r = parseInt(d[1]), m = parseInt(d[2]);
-
         if(j==='W') {
             if(r < 2) hantar('W', r+1, Math.floor(m/2), (m%2)+1, win);
             else if(r===2) hantar('GF', 0, 0, 1, win);
