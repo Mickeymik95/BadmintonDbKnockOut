@@ -9,53 +9,53 @@
 
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
-            /* Warna Pingat Solid & Terang */
-            --emas-bg: #ffd700; --emas-text: #000;
-            --perak-bg: #c0c0c0; --perak-text: #000;
-            --gangsa-bg: #cd7f32; --gangsa-text: #fff;
-            
+            --emas-bg: #ffd700; --emas-txt: #000;
+            --perak-bg: #e0e0e0; --perak-txt: #000;
+            --gangsa-bg: #cd7f32; --gangsa-txt: #fff;
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 20px; margin: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; padding: 20px; margin: 0; letter-spacing: -0.02em; }
         .main-wrapper { display: flex; flex-direction: column; align-items: center; min-width: max-content; padding-bottom: 200px; }
 
-        .header-container { text-align: center; padding: 40px; }
-        .tajuk-box h1 { font-size: 4rem; font-weight: 900; margin: 0; text-transform: uppercase; color: var(--utama); }
+        .header-container { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; width: 100%; max-width: 1400px; }
+        .tajuk-box h1 { font-size: 5rem; font-weight: 900; text-transform: uppercase; background: linear-gradient(to right, #00d2ff, #fff, #00d2ff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 4s linear infinite; margin: 0; }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        /* KESAN LALUAN PEMENANG (PATH HIGHLIGHT) */
-        .path-emas { background-color: var(--emas-bg) !important; color: var(--emas-text) !important; font-weight: 900 !important; }
-        .path-emas input { color: var(--emas-text) !important; }
+        /* LALUAN WARNA PINGAT */
+        .path-emas { background: var(--emas-bg) !important; color: var(--emas-txt) !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+        .path-emas .nama-display, .path-emas .skor { color: var(--emas-txt) !important; font-weight: 900; }
+        
+        .path-perak { background: var(--perak-bg) !important; color: var(--perak-txt) !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+        .path-perak .nama-display, .path-perak .skor { color: var(--perak-txt) !important; font-weight: 900; }
 
-        .path-perak { background-color: var(--perak-bg) !important; color: var(--perak-text) !important; font-weight: 900 !important; }
-        .path-perak input { color: var(--perak-text) !important; }
+        .path-gangsa { background: var(--gangsa-bg) !important; color: var(--gangsa-txt) !important; box-shadow: 0 0 15px rgba(205, 127, 50, 0.4); }
+        .path-gangsa .nama-display, .path-gangsa .skor { color: var(--gangsa-txt) !important; font-weight: 900; }
 
-        .path-gangsa { background-color: var(--gangsa-bg) !important; color: var(--gangsa-text) !important; font-weight: 900 !important; }
-        .path-gangsa input { color: var(--gangsa-text) !important; }
-
-        /* Kotak Perlawanan */
-        .tournament-layout { display: flex; flex-direction: column; gap: 80px; padding: 50px; }
-        .laluan-row { display: flex; gap: 50px; padding: 60px; border-radius: 30px; position: relative; background: rgba(255,255,255,0.02); border: 1px solid #333; }
-        .label-bracket { position: absolute; top: -15px; left: 30px; padding: 8px 25px; font-weight: 900; border-radius: 50px; font-size: 0.8rem; text-transform: uppercase; }
+        /* BRACKET LAYOUT */
+        .tournament-layout { display: flex; flex-direction: column; gap: 80px; padding: 0 100px; }
+        .laluan-row { display: flex; gap: 50px; padding: 100px 80px; border-radius: 40px; position: relative; background: rgba(255,255,255,0.01); border: 2px solid rgba(255,255,255,0.05); }
+        .label-bracket { position: absolute; top: -20px; left: 40px; padding: 10px 35px; font-weight: 900; border-radius: 50px; text-transform: uppercase; z-index: 10; }
         #barisW .label-bracket { background: var(--utama); color: #000; }
         #barisL .label-bracket { background: var(--kalah); color: #fff; }
 
-        .pusingan { display: flex; flex-direction: column; width: 260px; justify-content: center; gap: 30px; }
-        .kotak-perlawanan { background: var(--kad); border: 1px solid #444; border-radius: 12px; position: relative; padding-top: 25px; overflow: hidden; transition: 0.3s; }
-        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: #888; font-size: 10px; padding: 4px 0; text-align: center; font-weight: 700; border-bottom: 1px solid #333; }
-        
-        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 10px 15px; border-bottom: 1px solid #25252b; transition: 0.5s; }
+        .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
+        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; transition: 0.3s; }
+        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: #aaa; font-size: 11px; padding: 6px 0; text-align: center; font-weight: 900; border-radius: 14px 14px 0 0; border-bottom: 1px solid #333; }
+
+        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; transition: all 0.5s ease; }
         .slot-pasukan:last-child { border-bottom: none; }
-        .nama-display { flex: 1; font-size: 0.95rem; font-weight: 700; color: #ccc; background: transparent; border: none; outline: none; pointer-events: none; }
-        .skor { width: 40px; height: 32px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; }
+        .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; }
+        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; }
+        .seed-no { color: #ffcc00; font-weight: 900; font-size: 0.8rem; min-width: 28px; height: 22px; display: flex; align-items: center; justify-content: center; background: rgba(255, 204, 0, 0.1); border: 1px solid rgba(255, 204, 0, 0.3); border-radius: 4px; }
 
-        .admin-edit .nama-display { pointer-events: auto; }
-
-        #podiumFinal { margin-top: 30px; display: none; background: #1a1a1f; border: 2px solid var(--emas-bg); padding: 20px; border-radius: 20px; text-align: center; width: 100%; max-width: 600px; }
-        .btn-action { padding: 12px 25px; border-radius: 50px; border: 1px solid #444; background: #222; color: #fff; cursor: pointer; font-weight: 700; margin: 5px; }
-        .btn-save { background: var(--menang); color: #000; border: none; }
-        #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 250px; background: #111; padding: 20px; border-radius: 15px; z-index: 1000; border: 1px solid #444; }
+        /* PODIUM & ADMIN */
+        #podiumFinal { display: none; text-align: center; margin-bottom: 40px; background: #1a1a1f; padding: 30px; border-radius: 30px; border: 2px solid var(--emas-bg); width: 100%; }
+        #panelAdmin { display: none; position: fixed; top: 20px; right: 20px; width: 280px; background: #111; padding: 25px; border-radius: 20px; z-index: 1000; border: 1px solid #444; }
+        .btn-action { padding: 12px 25px; border-radius: 50px; border: 1px solid #444; background: #222; color: #fff; cursor: pointer; font-weight: 700; margin: 5px; transition: 0.3s; }
+        .btn-action:hover { background: #fff; color: #000; }
+        .admin-only { display: none; }
     </style>
 </head>
 <body onload="checkPersistentAdmin()">
@@ -64,32 +64,34 @@
     <div class="header-container">
         <div class="tajuk-box">
             <h1>BADMINTON K²S</h1>
-            <p style="color:#888; letter-spacing:8px;">SIRI 2 • 2026</p>
+            <p style="text-align:center; color:#888; letter-spacing:5px;">SIRI 2 • 2026</p>
         </div>
+
         <div id="podiumFinal">
-            <h3 style="color:var(--emas-bg); margin-top:0;">PODIUM KEHORMAT</h3>
-            <div style="display:flex; justify-content:center; gap:20px; align-items:flex-end;">
-                <div class="path-perak" style="padding:15px; border-radius:10px; width:120px;">🥈 <br><span id="res_2">-</span></div>
-                <div class="path-emas" style="padding:25px; border-radius:10px; width:150px;">🥇 <br><span id="res_1">-</span></div>
-                <div class="path-gangsa" style="padding:15px; border-radius:10px; width:120px;">🥉 <br><span id="res_3">-</span></div>
+            <h2 style="color:var(--emas-bg); margin-bottom:20px;">PODIUM PEMENANG</h2>
+            <div style="display:flex; justify-content:center; gap:30px; align-items:flex-end;">
+                <div class="path-perak" style="padding:20px; border-radius:15px; width:140px;">🥈 PERAK<br><span id="res_2">-</span></div>
+                <div class="path-emas" style="padding:30px; border-radius:15px; width:180px; transform:translateY(-10px);">🥇 EMAS<br><span id="res_1">-</span></div>
+                <div class="path-gangsa" style="padding:20px; border-radius:15px; width:140px;">🥉 GANGSA<br><span id="res_3">-</span></div>
             </div>
         </div>
-        <div style="margin-top:20px;">
-            <button class="btn-action" onclick="toggleAdmin()">⚙️ ADMIN</button>
-            <button class="btn-action admin-only btn-save" onclick="saveAll()">💾 SIMPAN DATA</button>
+
+        <div>
+            <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
+            <button class="btn-action admin-only" onclick="saveAll()" style="background:var(--menang); color:#000;">💾 SIMPAN</button>
             <button class="btn-action admin-only" onclick="resetTournament()" style="color:var(--kalah)">⚠️ RESET</button>
         </div>
     </div>
 
     <div class="tournament-layout">
-        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket</div></div>
-        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket</div></div>
+        <div id="barisW" class="laluan-row"><div class="label-bracket">Winner Bracket (Upper)</div></div>
+        <div id="barisL" class="laluan-row"><div class="label-bracket">Loser Bracket (Lower)</div></div>
     </div>
 </div>
 
 <div id="panelAdmin">
-    <input type="password" id="passInput" placeholder="Password" style="width:90%; padding:10px; margin-bottom:10px;">
-    <button onclick="checkAuth()" style="width:100%;">LOGIN</button>
+    <input type="password" id="passInput" placeholder="Password" style="width:90%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #333;">
+    <button onclick="checkAuth()" class="btn-action" style="width:100%">LOGIN</button>
 </div>
 
 <script type="module">
@@ -112,29 +114,32 @@
     window.teamNames = {};
 
     window.checkAuth = () => { if(document.getElementById('passInput').value === "admin123") { localStorage.setItem('adminStatus', 'active'); location.reload(); } };
-    window.checkPersistentAdmin = () => { if(localStorage.getItem('adminStatus') === 'active') { window.isAdminMode = true; document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block'); document.body.classList.add('admin-edit'); } };
+    window.checkPersistentAdmin = () => { if(localStorage.getItem('adminStatus') === 'active') { window.isAdminMode = true; document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block'); } };
     window.toggleAdmin = () => { const p = document.getElementById('panelAdmin'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
 
     onValue(dbRef, (snapshot) => {
         const data = snapshot.val() || {};
         window.teamNames = data.teams || {};
-        jana(data.scores || {});
+        janaBracket(data.scores || {});
     });
 
-    function jana(savedScores) {
+    function janaBracket(savedScores) {
         const bw = document.getElementById('barisW'); const bl = document.getElementById('barisL');
-        bw.innerHTML = '<div class="label-bracket">Winner Bracket</div>'; 
-        bl.innerHTML = '<div class="label-bracket">Loser Bracket</div>';
+        bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
+        bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
 
+        // Winner: Match 1-15
         const winOffsets = [1, 9, 13, 15];
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m, winOffsets[r] + m));
             bw.appendChild(div);
         }
+        // Grand Final: Match 30
         let gfDiv = document.createElement('div'); gfDiv.className = 'pusingan';
         gfDiv.appendChild(createBox('GF', 0, 0, 30)); bw.appendChild(gfDiv);
 
+        // Loser: Match 16-29
         const losOffsets = [16, 20, 24, 26, 28, 29];
         const losCounts = [4, 4, 2, 2, 1, 1];
         for(let r=0; r<6; r++) {
@@ -143,6 +148,7 @@
             bl.appendChild(div);
         }
 
+        // Seeds 01-16
         const seeds = [0, 15, 7, 8, 3, 12, 4, 11, 1, 14, 6, 9, 2, 13, 5, 10];
         for(let m=0; m<8; m++) {
             updateSlot(`W_0_${m}`, 1, window.teamNames[seeds[m*2]]?.nama || "", seeds[m*2]);
@@ -154,6 +160,7 @@
         const flow = ['W_0','W_1','W_2','W_3','L_0','L_1','L_2','L_3','L_4','L_5','GF_0'];
         flow.forEach(f => { document.querySelectorAll(`[id^="${f}_"]`).forEach(box => { if(box.classList.contains('kotak-perlawanan')) window.kira(box.id); }); });
 
+        autoBye(); penyelarasanLebar();
         document.querySelectorAll('.skor, .nama-display').forEach(el => {
             const isR1 = el.id.startsWith('W_0_');
             el.readOnly = el.classList.contains('nama-display') ? !(window.isAdminMode && isR1) : !window.isAdminMode;
@@ -164,15 +171,20 @@
         let id = `${j}_${r}_${m}`;
         let div = document.createElement('div'); div.className = 'kotak-perlawanan'; div.id = id;
         div.innerHTML = `<div class="match-no">MATCH ${num}</div>
-            <div class="slot-pasukan" id="${id}_s1"><input type="text" class="nama-display" id="${id}_p1"><input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}')"></div>
-            <div class="slot-pasukan" id="${id}_s2"><input type="text" class="nama-display" id="${id}_p2"><input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}')"></div>`;
+            <div class="slot-pasukan" id="${id}_s1"><span class="seed-no" id="${id}_sd1"></span><input type="text" class="nama-display" id="${id}_p1"><input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}')"></div>
+            <div class="slot-pasukan" id="${id}_s2"><span class="seed-no" id="${id}_sd2"></span><input type="text" class="nama-display" id="${id}_p2"><input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}')"></div>`;
         return div;
     }
 
     function updateSlot(mid, slot, nama, pid) {
         const pEl = document.getElementById(`${mid}_p${slot}`);
         const sEl = document.getElementById(`${mid}_s${slot}`);
-        if(pEl) pEl.value = nama; if(sEl) sEl.setAttribute('data-pid', pid);
+        const sdEl = document.getElementById(`${mid}_sd${slot}`);
+        if(pEl) pEl.value = nama;
+        if(sEl) sEl.setAttribute('data-pid', pid);
+        if(sdEl && mid.startsWith('W_0_')) {
+            sdEl.innerText = (parseInt(pid) + 1).toString().padStart(2, '0');
+        }
     }
 
     window.kira = (id) => {
@@ -182,42 +194,59 @@
         let los = win === 1 ? 2 : 1;
         let winN = document.getElementById(`${id}_p${win}`).value, winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
         let losN = document.getElementById(`${id}_p${los}`).value, losP = document.getElementById(`${id}_s${los}`).getAttribute('data-pid');
-        let parts = id.split('_'), r = parseInt(parts[1]), m = parseInt(parts[2]);
+        let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
-        if(parts[0] === 'W') {
+        if(p[0] === 'W') {
             if(r < 3) updateSlot(`W_${r+1}_${Math.floor(m/2)}`, (m%2)+1, winN, winP);
             else if(r === 3) updateSlot('GF_0_0', 1, winN, winP);
             if(r === 0) updateSlot(`L_0_${Math.floor(m/2)}`, (m%2)+1, losN, losP);
             else if(r === 1) updateSlot(`L_1_${3-m}`, 2, losN, losP);
             else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
             else if(r === 3) updateSlot(`L_5_0`, 2, losN, losP);
-        } else if(parts[0] === 'L') {
+        } else if(p[0] === 'L') {
             if(r < 5) {
                 if(r % 2 === 0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
                 else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m%2)+1, winN, winP);
             } else {
                 updateSlot('GF_0_0', 2, winN, winP);
                 document.getElementById('res_3').innerText = losN;
-                highlightPath(losN, 'gangsa');
+                updatePathColors(losN, 'path-gangsa');
             }
-        } else if(parts[0] === 'GF') {
+        } else if(p[0] === 'GF') {
             document.getElementById('res_1').innerText = winN;
             document.getElementById('res_2').innerText = losN;
             document.getElementById('podiumFinal').style.display = 'block';
-            highlightPath(winN, 'emas');
-            highlightPath(losN, 'perak');
+            updatePathColors(winN, 'path-emas');
+            updatePathColors(losN, 'path-perak');
         }
     };
 
-    function highlightPath(nama, rank) {
+    function updatePathColors(nama, cssClass) {
         if(!nama || nama === "BYE") return;
         document.querySelectorAll('.slot-pasukan').forEach(slot => {
-            const input = slot.querySelector('.nama-display');
-            if(input && input.value === nama) {
+            if(slot.querySelector('.nama-display').value === nama) {
                 slot.classList.remove('path-emas', 'path-perak', 'path-gangsa');
-                slot.classList.add(`path-${rank}`);
+                slot.classList.add(cssClass);
             }
         });
+    }
+
+    function autoBye() {
+        document.querySelectorAll('.kotak-perlawanan').forEach(box => {
+            let p1 = document.getElementById(box.id+'_p1').value, p2 = document.getElementById(box.id+'_p2').value;
+            let sc1 = document.getElementById(box.id+'_sc1'), sc2 = document.getElementById(box.id+'_sc2');
+            if(p1 === "BYE" && p2 !== "" && p2 !== "BYE" && sc1.value === "") { sc1.value=0; sc2.value=21; window.kira(box.id); }
+            else if(p2 === "BYE" && p1 !== "" && p1 !== "BYE" && sc2.value === "") { sc1.value=21; sc2.value=0; window.kira(box.id); }
+        });
+    }
+
+    function penyelarasanLebar() {
+        setTimeout(() => {
+            const bw = document.getElementById('barisW'), bl = document.getElementById('barisL');
+            bw.style.minWidth = "0"; bl.style.minWidth = "0";
+            const max = Math.max(bw.scrollWidth, bl.scrollWidth);            
+            bw.style.minWidth = max + "px"; bl.style.minWidth = max + "px";
+        }, 100);
     }
 
     window.saveAll = () => {
@@ -228,10 +257,10 @@
             teams[id1] = { nama: n1 || "BYE" }; teams[id2] = { nama: n2 || "BYE" };
         }
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
-        set(dbRef, { teams, scores }).then(() => alert("Data Disimpan!"));
+        set(dbRef, { teams, scores }).then(() => alert("Data Cloud Berjaya Dikemaskini!"));
     };
 
-    window.resetTournament = () => { if(confirm("Padam semua?")) set(dbRef, { teams: {}, scores: {} }).then(() => location.reload()); };
+    window.resetTournament = () => { if(confirm("Padam semua data?")) set(dbRef, { teams: {}, scores: {} }).then(() => location.reload()); };
 </script>
 </body>
 </html>
