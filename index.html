@@ -12,6 +12,7 @@
             --biru-nombor: rgba(0, 229, 255, 0.5); 
             --bg-menang: rgba(0, 210, 255, 0.04);
             --bg-kalah: rgba(231, 76, 60, 0.04);
+            --garis-lebar: 20px; /* Lebar ruang garis antara pusingan */
         }
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #fff; padding: 20px; margin: 0; }
@@ -62,7 +63,7 @@
             display: flex; gap: 40px; padding: 60px 30px; border-radius: 30px; 
             border: 2px solid #222; position: relative; min-width: 100%;
         }
-        .baris-menang { background: var(--bg-menang); border-color: var(--utama); align-items: flex-start; }
+        .baris-menang { background: var(--bg-menang); border-color: var(--utama); align-items: stretch; }
         .baris-kalah { background: var(--bg-kalah); border-color: var(--kalah); }
 
         .label-bracket { 
@@ -70,18 +71,32 @@
             padding: 5px 20px; font-weight: 900; font-size: 0.8rem; border-radius: 50px; border: 2px solid; 
         }
 
-        .pusingan { display: flex; flex-direction: column; gap: 30px; width: 220px; justify-content: space-around; }
+        .pusingan { display: flex; flex-direction: column; width: 220px; justify-content: center; gap: 30px; position: relative; }
+        .tajuk-pusingan { font-size: 0.7rem; font-weight: 900; text-align: center; padding: 6px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 10px; position: absolute; top: -45px; width: 100%; }
+
+        /* GAP DINAMIK UNTUK ANAK PANAH */
+        .pusingan-p1 { gap: 30px; }
+        .pusingan-p2 { gap: 130px; }
+        .pusingan-p3 { gap: 330px; }
+        .pusingan-p4 { gap: 730px; }
+
+        /* GARIS CONNECTOR */
+        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; overflow: visible; margin-bottom: 5px; z-index: 2; }
         
-        /* RAPATKAN GF KE TENGAH SECARA VERTIKAL */
-        .pusingan-gf-container { 
-            justify-content: center !important; 
-            margin-top: 35px; /* Adjust based on title height */
+        /* Garis Keluar ke Kanan */
+        .baris-menang .pusingan:not(:last-child) .kotak-perlawanan::after {
+            content: ""; position: absolute; right: -42px; top: 50%; width: 42px; height: 2px; background: var(--garis); z-index: 1;
         }
+        /* Garis Menegak (Connector) */
+        .baris-menang .pusingan:not(:first-child):not(.pusingan-gf-container) .kotak-perlawanan::before {
+            content: ""; position: absolute; left: -42px; top: 50%; width: 2px; height: calc(100% + 130px); background: var(--garis); transform: translateY(-50%); z-index: 1;
+        }
+        /* Laraskan ketinggian garis ikut pusingan */
+        .pusingan-p2 .kotak-perlawanan::before { height: 130px !important; }
+        .pusingan-p3 .kotak-perlawanan::before { height: 330px !important; }
+        .pusingan-p4 .kotak-perlawanan::before { height: 730px !important; }
 
-        .tajuk-pusingan { font-size: 0.7rem; font-weight: 900; text-align: center; padding: 6px; background: #000; border: 1px solid #333; border-radius: 4px; margin-bottom: 10px; }
-
-        .kotak-perlawanan { background: var(--kad); border: 1px solid var(--garis); border-radius: 12px; position: relative; padding-top: 20px; overflow: hidden; margin-bottom: 5px; }
-        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: var(--utama); font-size: 9px; padding: 4px 0; text-align: center; font-weight: bold; letter-spacing: 1px; }
+        .match-no { position: absolute; top: 0; width: 100%; background: #25252b; color: var(--utama); font-size: 9px; padding: 4px 0; text-align: center; font-weight: bold; border-radius: 11px 11px 0 0; }
 
         .slot-pasukan { display: flex; gap: 8px; align-items: center; padding: 8px 12px; height: 35px; border-bottom: 1px solid #222; }
         .slot-pasukan:last-child { border-bottom: none; }
@@ -90,7 +105,6 @@
 
         .skor { width: 35px; height: 25px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-weight: 900; font-size: 0.8rem; }
         
-        /* HIGHLIGHTS */
         .grand-final { border: 4px solid var(--emas) !important; transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
         .final-loser-highlight { border: 3px solid var(--kalah) !important; box-shadow: 0 0 15px rgba(231, 76, 60, 0.3); }
 
@@ -231,7 +245,8 @@
     function renderWinnerBracket(rounds, seeds, p2) {
         const bw = document.getElementById('barisW');
         for(let r=0; r<rounds; r++) {
-            let divR = document.createElement('div'); divR.className = 'pusingan';
+            let divR = document.createElement('div'); 
+            divR.className = `pusingan pusingan-p${r+1}`;
             divR.innerHTML = `<div class="tajuk-pusingan">W-P${r+1}</div>`;
             let matches = Math.pow(2, rounds-r-1);
             for(let m=0; m<matches; m++) { divR.appendChild(createMatchBox('W', r, m)); }
@@ -251,7 +266,7 @@
             let divR = document.createElement('div'); divR.className = 'pusingan';
             let matches = Math.pow(2, Math.floor(((totalLRounds - 1) - r) / 2));
             let isFinalLoser = (r === totalLRounds - 1);
-            divR.innerHTML = `<div class="tajuk-pusingan">${isFinalLoser ? 'FINAL LOSER BRACKET' : 'L-P'+(r+1)}</div>`;
+            divR.innerHTML = `<div class="tajuk-pusingan" style="position:static;">${isFinalLoser ? 'FINAL LOSER BRACKET' : 'L-P'+(r+1)}</div>`;
             for(let m=0; m<matches; m++) {
                 let box = createMatchBox('L', r, m);
                 if(isFinalLoser) box.classList.add('final-loser-highlight');
@@ -264,7 +279,7 @@
     function renderGrandFinal() {
         const bw = document.getElementById('barisW');
         let divR = document.createElement('div'); divR.className = 'pusingan pusingan-gf-container';
-        divR.innerHTML = `<div class="tajuk-pusingan" style="background:var(--emas); color:#000;">GRAND FINAL</div>`;
+        divR.innerHTML = `<div class="tajuk-pusingan">GRAND FINAL</div>`;
         let box = createMatchBox('GF', 0, 0);
         box.classList.add('grand-final');
         divR.appendChild(box);
@@ -276,11 +291,8 @@
         let div = document.createElement('div');
         div.className = 'kotak-perlawanan';
         div.id = mid;
-        
-        // Guna nama "Perlawanan X" untuk paparan sahaja
         let labelMatch = `PERLAWANAN ${matchCounter++}`;
         if(j === 'GF') labelMatch = "PENENTU JUARA";
-
         div.innerHTML = `
             <div class="match-no">${labelMatch}</div>
             <div class="slot-pasukan" id="${mid}_s1" data-pid="">
