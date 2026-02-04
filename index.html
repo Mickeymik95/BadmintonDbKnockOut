@@ -15,7 +15,7 @@
             --glow-emas: 0 0 40px rgba(255, 215, 0, 0.5);
             --glow-loser: 0 0 25px rgba(231, 76, 60, 0.3);
             
-            /* Warna Laluan Juara (Soft) */
+            /* Warna Laluan Juara (Soft) - Hanya untuk Top 3 */
             --soft-emas: rgba(255, 215, 0, 0.2);
             --soft-perak: rgba(192, 192, 192, 0.2);
             --soft-gangsa: rgba(205, 127, 50, 0.25);
@@ -66,55 +66,27 @@
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
 
         .tournament-layout { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 80px; 
-            padding: 0 100px;
-            align-items: flex-start;
+            display: flex; flex-direction: column; gap: 80px; padding: 0 100px; align-items: flex-start;
         }
 
         .laluan-row { 
-            display: flex; 
-            gap: 50px; 
-            padding: 100px 80px; 
-            border-radius: 40px; 
-            position: relative; 
-            background: rgba(255,255,255,0.01);
-            width: max-content; 
-            box-sizing: border-box;
-            min-height: 200px;
+            display: flex; gap: 50px; padding: 100px 80px; border-radius: 40px; position: relative; 
+            background: rgba(255,255,255,0.01); width: max-content; box-sizing: border-box; min-height: 200px;
         }
 
-        #barisW { 
-            border: 2px solid rgba(0, 210, 255, 0.3); 
-            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05);
-            padding-bottom: 180px;
-        }
+        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); padding-bottom: 180px; }
         #barisW .label-bracket { background: var(--utama); color: #000; }
 
         #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
         #barisL .label-bracket { background: var(--kalah); color: #fff; }
 
         #podiumFinal {
-            position: absolute;
-            bottom: 45px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            background: linear-gradient(180deg, #1a1a1f 0%, #0b0b0d 100%);
-            border: 2px solid #ffd700;
-            padding: 30px 60px;
-            border-radius: 30px;
-            box-shadow: var(--glow-emas);
-            z-index: 100;
-            min-width: 500px;
-            text-align: center;
+            position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%); display: none;
+            background: linear-gradient(180deg, #1a1a1f 0%, #0b0b0d 100%); border: 2px solid #ffd700;
+            padding: 30px 60px; border-radius: 30px; box-shadow: var(--glow-emas); z-index: 100;
+            min-width: 500px; text-align: center;
         }
-        .podium-title { 
-            font-size: 0.8rem; color: #ffd700; font-weight: 900; 
-            text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px;
-            opacity: 0.8;
-        }
+        .podium-title { font-size: 0.8rem; color: #ffd700; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; opacity: 0.8; }
         .podium-flex { display: flex; justify-content: center; align-items: flex-end; gap: 40px; }
         .podium-item { display: flex; flex-direction: column; align-items: center; }
         .pod-rank { font-size: 3rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
@@ -122,10 +94,8 @@
         .pod-label { font-size: 0.7rem; color: #888; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
 
         .label-bracket { 
-            position: absolute; top: -20px; left: 40px; 
-            padding: 10px 35px; font-weight: 900; font-size: 1rem; border-radius: 50px; 
-            text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            z-index: 10;
+            position: absolute; top: -20px; left: 40px; padding: 10px 35px; font-weight: 900; 
+            font-size: 1rem; border-radius: 50px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 10;
         }
 
         .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
@@ -151,10 +121,7 @@
             background: rgba(0, 251, 255, 0.1); border: 1px solid rgba(0, 251, 255, 0.4); border-radius: 4px; 
         }
 
-        /* PEMENANG PERLAWANAN - Baris nama kekal bersih */
-        .slot-pasukan.pemenang .nama-display { color: var(--menang); }
-        
-        /* SKOR PEMENANG SAHAJA JADI HIJAU */
+        /* SKOR PEMENANG SAHAJA JADI HIJAU (NAMA KEKAL BIASA) */
         .slot-pasukan.pemenang .skor { 
             background: var(--menang) !important; 
             color: #000 !important; 
@@ -162,7 +129,7 @@
             box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
         }
 
-        /* LALUAN PINGAT LEMBUT (SOFT) */
+        /* LALUAN PINGAT TOP 3 (NAMA BERWARNA DISINI SAHAJA) */
         .path-emas { background: var(--soft-emas) !important; border-left: 4px solid #ffd700; }
         .path-emas .nama-display { color: #ffd700 !important; }
         
