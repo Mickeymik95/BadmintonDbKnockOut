@@ -78,6 +78,7 @@
             background: rgba(255,255,255,0.01);
             width: max-content; 
             box-sizing: border-box;
+            min-height: 200px;
         }
 
         #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); }
@@ -90,6 +91,7 @@
             position: absolute; top: -20px; left: 40px; 
             padding: 10px 35px; font-weight: 900; font-size: 1rem; border-radius: 50px; 
             text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
         .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
@@ -111,7 +113,7 @@
         .slot-pasukan.pemenang .nama-display { color: var(--menang); }
         .slot-pasukan.pemenang .skor { background: var(--menang); color: #000; border-color: var(--menang); box-shadow: 0 0 15px rgba(46, 204, 113, 0.5); }
 
-        .grand-final { width: 420px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); }
+        .grand-final { width: 320px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); z-index: 5; }
         .grand-final .match-no { background: var(--emas); color: #000; font-size: 14px; }
 
         #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
@@ -204,9 +206,14 @@
 
     window.saveAll = () => {
         let teams = {};
-        for(let i=0; i<16; i++) {
-            const input = document.querySelector(`[data-seed-id="${i}"]`);
-            teams[i] = { nama: input && input.value.trim() !== "" ? input.value : "BYE" };
+        // Membaca nama pasukan terus daripada Winner Bracket Round 1
+        for(let m=0; m<8; m++) {
+            const p1 = document.getElementById(`W_0_${m}_p1`).value.trim();
+            const p2 = document.getElementById(`W_0_${m}_p2`).value.trim();
+            const pid1 = document.getElementById(`W_0_${m}_s1`).getAttribute('data-pid');
+            const pid2 = document.getElementById(`W_0_${m}_s2`).getAttribute('data-pid');
+            teams[pid1] = { nama: p1 !== "" ? p1 : "BYE" };
+            teams[pid2] = { nama: p2 !== "" ? p2 : "BYE" };
         }
         let scores = {};
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
@@ -235,19 +242,18 @@
         bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
 
-        // Winner Rounds
+        // Winner Bracket
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
             for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m));
             bw.appendChild(div);
         }
-
-        // Grand Final
+        // Grand Final (Dimasukkan ke dalam pusingan baru dalam Winner Bracket)
         let divGF = document.createElement('div'); divGF.className = 'pusingan';
         divGF.appendChild(createBox('GF', 0, 0)); 
         bw.appendChild(divGF);
 
-        // Loser Rounds (L0 to L5)
+        // Loser Bracket
         const loserMatches = [4, 4, 2, 2, 1, 1];
         for(let r=0; r < 6; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
@@ -255,33 +261,44 @@
             bl.appendChild(div);
         }
 
-        // Initial Seeds
         const seeds = [0, 15, 7, 8, 3, 12, 4, 11, 1, 14, 6, 9, 2, 13, 5, 10];
         for(let m=0; m < 8; m++) {
             updateSlot(`W_0_${m}`, 1, window.teamNames[seeds[m*2]]?.nama || "", seeds[m*2]);
             updateSlot(`W_0_${m}`, 2, window.teamNames[seeds[m*2+1]]?.nama || "", seeds[m*2+1]);
         }
 
-        // Apply Scores
         for(let id in savedScores) {
             const input = document.getElementById(id);
             if(input) input.value = savedScores[id];
         }
 
-        // Recalculate all matches in order
-        const allBrackets = ['W_0', 'W_1', 'W_2', 'W_3', 'L_0', 'L_1', 'L_2', 'L_3', 'L_4', 'L_5', 'GF_0'];
-        allBrackets.forEach(prefix => {
-            document.querySelectorAll(`[id^="${prefix}_"]`).forEach(box => {
+        // Kira semula semua
+        const flow = ['W_0','W_1','W_2','W_3','L_0','L_1','L_2','L_3','L_4','L_5','GF_0'];
+        flow.forEach(f => {
+            document.querySelectorAll(`[id^="${f}_"]`).forEach(box => {
                 if(box.classList.contains('kotak-perlawanan')) window.kira(box.id);
             });
         });
 
         autoBye();
-        
+        penyelarasanLebar();
+
         document.querySelectorAll('.skor, .nama-display').forEach(el => {
             const isRound1 = el.id.startsWith('W_0_');
             el.readOnly = el.classList.contains('nama-display') ? !(window.isAdminMode && isRound1) : !window.isAdminMode;
         });
+    }
+
+    function penyelarasanLebar() {
+        setTimeout(() => {
+            const bw = document.getElementById('barisW');
+            const bl = document.getElementById('barisL');
+            bw.style.minWidth = "0"; 
+            bl.style.minWidth = "0";
+            const max = Math.max(bw.scrollWidth, bl.scrollWidth);
+            bw.style.minWidth = max + "px";
+            bl.style.minWidth = max + "px";
+        }, 100);
     }
 
     function createBox(j, r, m) {
@@ -321,27 +338,19 @@
         let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
         if(p[0] === 'W') {
-            // Winner moves forward
             let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
             if(r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
             else if(r === 3) updateSlot('GF_0_0', 1, winN, winP);
 
-            // Loser drops to LB
             if(r === 0) updateSlot(`L_0_${Math.floor(m/2)}`, (m % 2) + 1, losN, losP);
             else if(r === 1) updateSlot(`L_1_${3-m}`, 2, losN, losP);
             else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
             else if(r === 3) updateSlot(`L_5_0`, 2, losN, losP);
-
         } else if(p[0] === 'L') {
             if(r < 5) {
-                if(r % 2 === 0) { // L0, L2, L4 -> Pemenang masuk slot 1 pusingan seterusnya
-                    updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
-                } else { // L1, L3 -> Pemenang bertarung sesama loser (slot 1 atau 2)
-                    updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
-                }
-            } else { // Winner of Loser Final
-                updateSlot('GF_0_0', 2, winN, winP);
-            }
+                if(r % 2 === 0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
+                else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
+            } else updateSlot('GF_0_0', 2, winN, winP);
         }
     };
 
