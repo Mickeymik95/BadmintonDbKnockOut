@@ -10,12 +10,10 @@
         :root { 
             --menang: #2ecc71; --kalah: #e74c3c; --utama: #00d2ff; 
             --emas: linear-gradient(135deg, #ffd700, #b8860b);
-            --kuning-pekat: #ffcc00; 
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
             --glow-emas: 0 0 40px rgba(255, 215, 0, 0.5);
             --glow-loser: 0 0 25px rgba(231, 76, 60, 0.3);
-            --bg-pemenang: rgba(46, 204, 113, 0.15);
             
             /* Warna Laluan Juara (Soft) */
             --soft-emas: rgba(255, 215, 0, 0.2);
@@ -142,7 +140,9 @@
         .slot-pasukan:last-child { border-bottom: none; }
 
         .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; width: 100%; }
-        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; }
+        
+        /* SKOR ASAL */
+        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; transition: 0.3s; outline: none; }
         
         /* Nombor Biru Terang Pusingan 1 */
         .seed-no { 
@@ -151,8 +151,16 @@
             background: rgba(0, 251, 255, 0.1); border: 1px solid rgba(0, 251, 255, 0.4); border-radius: 4px; 
         }
 
-        .slot-pasukan.pemenang { background: var(--bg-pemenang); }
+        /* PEMENANG PERLAWANAN - Baris nama kekal bersih */
         .slot-pasukan.pemenang .nama-display { color: var(--menang); }
+        
+        /* SKOR PEMENANG SAHAJA JADI HIJAU */
+        .slot-pasukan.pemenang .skor { 
+            background: var(--menang) !important; 
+            color: #000 !important; 
+            border-color: var(--menang) !important;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
 
         /* LALUAN PINGAT LEMBUT (SOFT) */
         .path-emas { background: var(--soft-emas) !important; border-left: 4px solid #ffd700; }
@@ -318,7 +326,6 @@
                   (j === 'L' && r === 5) ? `MATCH ${matchNum} - LOSER FINAL` : 
                   `MATCH ${matchNum}`;
 
-        // Ruangan seed-no hanya akan dipaparkan jika r === 0 di Winner Bracket
         div.innerHTML = `<div class="match-no">${lbl}</div>
             <div class="slot-pasukan" id="${id}_s1">
                 <span class="seed-no" id="${id}_sd1"></span>
@@ -402,7 +409,6 @@
         if(pEl) pEl.value = nama;
         if(sEl) sEl.setAttribute('data-pid', pid);
         
-        // Hanya paparkan nombor cyan jika ia Winner Bracket Pusingan Pertama
         if(sdEl && mid.startsWith('W_0_')) {
             sdEl.innerText = (parseInt(pid) + 1).toString().padStart(2, '0');
             sdEl.style.display = "flex";
