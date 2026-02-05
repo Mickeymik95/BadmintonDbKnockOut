@@ -13,11 +13,10 @@
             --bg: #0b0b0d; --kad: #1a1a1f; 
             --garis: #333; 
             --glow-emas: 0 0 40px rgba(255, 215, 0, 0.5);
-            
-            /* Warna Terang untuk Label Match */
-            --match-pink: #ff007f;
-            --match-orange: #ff9f43;
+            --glow-loser: 0 0 25px rgba(231, 76, 60, 0.3);
+            --pink-terang: #ff007f; /* Warna Pink Terang Baru */
 
+            /* Warna Laluan Juara (Soft) - Hanya untuk Top 3 */
             --soft-emas: rgba(255, 215, 0, 0.2);
             --soft-perak: rgba(192, 192, 192, 0.2);
             --soft-gangsa: rgba(205, 127, 50, 0.25);
@@ -67,18 +66,33 @@
         .btn-action:hover { background: #fff; color: #000; }
         .btn-save { background: var(--utama) !important; color: #000 !important; border: none !important; }
 
-        .tournament-layout { display: flex; flex-direction: column; gap: 80px; padding: 0 100px; align-items: flex-start; }
+        .tournament-layout { 
+            display: flex; flex-direction: column; gap: 80px; padding: 0 100px; align-items: flex-start;
+        }
 
         .laluan-row { 
             display: flex; gap: 50px; padding: 100px 80px; border-radius: 40px; position: relative; 
             background: rgba(255,255,255,0.01); width: max-content; box-sizing: border-box; min-height: 200px;
         }
 
-        #barisW { border: 2px solid rgba(0, 210, 255, 0.2); padding-bottom: 180px; }
+        #barisW { border: 2px solid rgba(0, 210, 255, 0.3); box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05); padding-bottom: 180px; }
         #barisW .label-bracket { background: var(--utama); color: #000; }
 
-        #barisL { border: 2px solid rgba(255, 255, 255, 0.1); }
-        #barisL .label-bracket { background: #444; color: #fff; }
+        #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
+        #barisL .label-bracket { background: var(--kalah); color: #fff; }
+
+        #podiumFinal {
+            position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%); display: none;
+            background: linear-gradient(180deg, #1a1a1f 0%, #0b0b0d 100%); border: 2px solid #ffd700;
+            padding: 30px 60px; border-radius: 30px; box-shadow: var(--glow-emas); z-index: 100;
+            min-width: 500px; text-align: center;
+        }
+        .podium-title { font-size: 0.8rem; color: #ffd700; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; opacity: 0.8; }
+        .podium-flex { display: flex; justify-content: center; align-items: flex-end; gap: 40px; }
+        .podium-item { display: flex; flex-direction: column; align-items: center; }
+        .pod-rank { font-size: 3rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
+        .pod-name { font-weight: 900; font-size: 1.5rem; color: #fff; text-transform: uppercase; }
+        .pod-label { font-size: 0.7rem; color: #888; font-weight: 700; margin-top: 5px; text-transform: uppercase; }
 
         .label-bracket { 
             position: absolute; top: -20px; left: 40px; padding: 10px 35px; font-weight: 900; 
@@ -87,47 +101,55 @@
 
         .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
 
-        /* KOTAK MATCH ASAL */
         .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; }
         
-        /* GAYA TULISAN MATCH 1 - 28 (PINK/ORANGE) */
+        /* BAHAGIAN TULISAN PINK TERANG */
         .match-no { 
-            position: absolute; top: 0; width: 100%; 
-            background: #25252b; 
-            color: #aaa; /* Default */
-            font-size: 12px; padding: 6px 0; text-align: center; font-weight: 900; border-bottom: 1px solid #333; border-radius: 14px 14px 0 0;
+            position: absolute; top: 0; width: 100%; background: #25252b; 
+            color: var(--pink-terang) !important; /* MENGUBAH TULISAN MATCH KE PINK TERANG */
+            font-size: 12px; padding: 6px 0; text-align: center; font-weight: 900; 
+            border-bottom: 1px solid #333; border-radius: 14px 14px 0 0;
+            text-shadow: 0 0 5px rgba(255, 0, 127, 0.3);
         }
 
-        /* Kelas Khas untuk Match 1-28 */
-        .match-terang .match-no {
-            background: transparent;
-            color: var(--match-orange); /* Anda boleh tukar ke --match-pink jika mahu */
-            font-size: 14px;
-            text-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
-            border-bottom: 1px solid rgba(255, 159, 67, 0.2);
-        }
-
-        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; }
+        .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; transition: all 0.4s ease; }
         .slot-pasukan:last-child { border-bottom: none; }
+
         .nama-display { flex: 1; font-size: 1.1rem; font-weight: 800; color: #eee; background: transparent; border: none; outline: none; width: 100%; }
-        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; outline: none; }
 
-        .seed-no { color: #00fbff; font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; display: none; align-items: center; justify-content: center; background: rgba(0, 251, 255, 0.1); border: 1px solid rgba(0, 251, 255, 0.4); border-radius: 4px; }
-        .slot-pasukan.pemenang .skor { background: var(--menang) !important; color: #000 !important; border-color: var(--menang) !important; }
+        .skor { width: 45px; height: 40px; text-align: center; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; font-weight: 900; font-size: 1.3rem; transition: 0.3s; outline: none; }
 
-        /* KHAS UNTUK 29 & 30 (Kekal gaya asal) */
+        .seed-no { 
+            color: #00fbff; font-weight: 900; font-size: 0.9rem; min-width: 32px; height: 24px; 
+            display: none; align-items: center; justify-content: center; 
+            background: rgba(0, 251, 255, 0.1); border: 1px solid rgba(0, 251, 255, 0.4); border-radius: 4px; 
+        }
+
+        .slot-pasukan.pemenang .skor { 
+            background: var(--menang) !important; 
+            color: #000 !important; 
+            border-color: var(--menang) !important;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+        }
+
+        .path-emas { background: var(--soft-emas) !important; border-left: 4px solid #ffd700; }
+        .path-emas .nama-display { color: #ffd700 !important; }
+
+        .path-perak { background: var(--soft-perak) !important; border-left: 4px solid #c0c0c0; }
+        .path-perak .nama-display { color: #c0c0c0 !important; }
+
+        .path-gangsa { background: var(--soft-gangsa) !important; border-left: 4px solid #cd7f32; }
+        .path-gangsa .nama-display { color: #ff9f43 !important; }
+
         .grand-final { width: 320px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); z-index: 5; }
-        .grand-final .match-no { background: var(--emas) !important; color: #000 !important; border-bottom: none; }
+        /* Memastikan warna Match Grand Final kekal Pink Terang */
+        .grand-final .match-no { color: var(--pink-terang) !important; font-size: 14px; }
 
-        .loser-final-highlight { border: 3px solid var(--kalah) !important; transform: scale(1.02); }
-        .loser-final-highlight .match-no { background: var(--kalah) !important; color: #fff !important; border-bottom: none; }
+        .loser-final-highlight { border: 3px solid var(--kalah) !important; box-shadow: var(--glow-loser); transform: scale(1.02); }
+        /* Memastikan warna Match Loser Final kekal Pink Terang */
+        .loser-final-highlight .match-no { color: var(--pink-terang) !important; }
 
-        /* PODIUM */
-        #podiumFinal { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%); display: none; background: #1a1a1f; border: 2px solid #ffd700; padding: 30px 60px; border-radius: 30px; box-shadow: var(--glow-emas); z-index: 100; min-width: 500px; text-align: center; }
-        .pod-rank { font-size: 3rem; }
-        .pod-name { font-weight: 900; font-size: 1.5rem; text-transform: uppercase; }
-
-        #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; }
+        #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .admin-only { display: none; }
     </style>
 </head>
@@ -154,13 +176,27 @@
         <div id="barisW" class="laluan-row">
             <div class="label-bracket">Winner Bracket (Upper)</div>
             <div id="podiumFinal">
+                <div class="podium-title">Official Tournament Results</div>
                 <div class="podium-flex">
-                    <div class="podium-item" style="order:1;">🥈 <span id="res_2">-</span></div>
-                    <div class="podium-item" style="order:2; transform: scale(1.2);">🥇 <span id="res_1" style="color:#ffd700;">-</span></div>
-                    <div class="podium-item" style="order:3;">🥉 <span id="res_3">-</span></div>
+                    <div class="podium-item" style="order:1;">
+                        <span class="pod-rank">🥈</span>
+                        <span class="pod-name" id="res_2">-</span>
+                        <span class="pod-label">Runner Up</span>
+                    </div>
+                    <div class="podium-item" style="order:2; transform: translateY(-15px) scale(1.2);">
+                        <span class="pod-rank">🥇</span>
+                        <span class="pod-name" id="res_1" style="color:#ffd700;">-</span>
+                        <span class="pod-label" style="color:#ffd700;">Champion</span>
+                    </div>
+                    <div class="podium-item" style="order:3;">
+                        <span class="pod-rank">🥉</span>
+                        <span class="pod-name" id="res_3">-</span>
+                        <span class="pod-label">3rd Place</span>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div id="barisL" class="laluan-row">
             <div class="label-bracket">Loser Bracket (Lower)</div>
         </div>
@@ -168,8 +204,14 @@
 </div>
 
 <div id="panelAdmin">
-    <input type="password" id="passInput" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px;">
-    <button onclick="checkAuth()" class="btn-action" style="width:100%">LOGIN</button>
+    <h2 style="margin-top:0; font-size:1.2rem; color:var(--utama);">ADMIN ACCESS</h2>
+    <div id="authSection">
+        <input type="password" id="passInput" style="width:100%; padding:15px; background:#000; color:#fff; border:1px solid #333; border-radius:10px; margin-bottom:15px;" placeholder="Password">
+                <button onclick="checkAuth()" class="btn-action" style="width:100%">LOG MASUK</button>
+    </div>
+    <div id="adminStatus" class="admin-only">
+        <p style="color:var(--menang); font-size:0.8rem; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF</p>
+    </div>
 </div>
 
 <script type="module">
@@ -195,6 +237,7 @@
         if(localStorage.getItem('adminStatus') === 'active') {
             window.isAdminMode = true;
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
+            document.getElementById('authSection').style.display = 'none';
         }
     };
 
@@ -202,7 +245,7 @@
         if(document.getElementById('passInput').value === "admin123") {
             localStorage.setItem('adminStatus', 'active');
             location.reload();
-        }
+        } else { alert("Salah!"); }
     };
 
     window.logoutAdmin = () => { localStorage.removeItem('adminStatus'); location.reload(); };
@@ -226,17 +269,28 @@
         }
         let scores = {};
         document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
-        set(dbRef, { n: 16, teams, scores });
+        set(dbRef, { n: 16, teams, scores }).then(() => {
+            const toast = document.getElementById('syncToast');
+            toast.style.opacity = "1";
+            setTimeout(() => { toast.style.opacity = "0"; }, 3000);
+        });
+    };
+
+    window.resetSkor = () => {
+        if(confirm("Reset semua skor sahaja?")) {
+            set(dbRef, { n: 16, teams: window.teamNames, scores: {} }).then(() => location.reload());
+        }
+    };
+
+    window.resetTournament = () => {
+        if(confirm("Reset semua data?")) {
+            set(dbRef, { n: 16, teams: {}, scores: {} }).then(() => location.reload());
+        }
     };
 
     function createBox(j, r, m, matchNum) {
         let id = `${j}_${r}_${m}`;
-        let div = document.createElement('div'); 
-        div.className = 'kotak-perlawanan'; 
-        div.id = id;
-        
-        // Tambah kelas match-terang jika match 1-28
-        if(matchNum <= 28) div.classList.add('match-terang');
+        let div = document.createElement('div'); div.className = 'kotak-perlawanan'; div.id = id;
         if(j==='GF') div.classList.add('grand-final');
 
         let lbl = (j === 'GF') ? `MATCH ${matchNum} - GRAND FINAL` : 
@@ -258,84 +312,149 @@
     }
 
     function jana(savedScores) {
-        const bw = document.getElementById('barisW'); const bl = document.getElementById('barisL');
-        const pod = document.getElementById('podiumFinal');
+        const bw = document.getElementById('barisW'); 
+        const bl = document.getElementById('barisL');
+        const podiumClone = document.getElementById('podiumFinal');
+
         bw.innerHTML = '<div class="label-bracket">Winner Bracket (Upper)</div>'; 
         bl.innerHTML = '<div class="label-bracket">Loser Bracket (Lower)</div>';
-        bw.appendChild(pod);
+        bw.appendChild(podiumClone);
 
-        let winOffsets = [1, 9, 13, 15]; 
+        let winMatchOffsets = [1, 9, 13, 15]; 
         for(let r=0; r<4; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
-            for(let m=0; m<Math.pow(2, 3-r); m++) div.appendChild(createBox('W', r, m, winOffsets[r] + m));
+            for(let m=0; m<Math.pow(2, 3-r); m++) {
+                div.appendChild(createBox('W', r, m, winMatchOffsets[r] + m));
+            }
             bw.appendChild(div);
         }
-        let divGF = document.createElement('div'); divGF.className = 'pusingan';
-        divGF.appendChild(createBox('GF', 0, 0, 30)); bw.appendChild(divGF);
 
-        let losOffsets = [16, 20, 24, 26, 28, 29];
-        let losCounts = [4, 4, 2, 2, 1, 1];
-        for(let r=0; r<6; r++) {
+        let divGF = document.createElement('div'); divGF.className = 'pusingan';
+        divGF.appendChild(createBox('GF', 0, 0, 30)); 
+        bw.appendChild(divGF);
+
+        const loserMatchesCount = [4, 4, 2, 2, 1, 1];
+        let losMatchOffsets = [16, 20, 24, 26, 28, 29];
+        for(let r=0; r < 6; r++) {
             let div = document.createElement('div'); div.className = 'pusingan';
-            for(let m=0; m<losCounts[r]; m++) {
-                let box = createBox('L', r, m, losOffsets[r] + m);
-                if(r===5) box.classList.add('loser-final-highlight');
+            for(let m=0; m < loserMatchesCount[r]; m++) {
+                let matchNum = losMatchOffsets[r] + m;
+                let box = createBox('L', r, m, matchNum);
+                if(r === 5) box.classList.add('loser-final-highlight');
                 div.appendChild(box);
             }
             bl.appendChild(div);
         }
 
         const seeds = [0, 15, 7, 8, 3, 12, 4, 11, 1, 14, 6, 9, 2, 13, 5, 10];
-        for(let m=0; m<8; m++) {
+        for(let m=0; m < 8; m++) {
             updateSlot(`W_0_${m}`, 1, window.teamNames[seeds[m*2]]?.nama || "", seeds[m*2]);
             updateSlot(`W_0_${m}`, 2, window.teamNames[seeds[m*2+1]]?.nama || "", seeds[m*2+1]);
         }
-        for(let id in savedScores) if(document.getElementById(id)) document.getElementById(id).value = savedScores[id];
 
-        ['W_0','W_1','W_2','W_3','L_0','L_1','L_2','L_3','L_4','L_5','GF_0'].forEach(f => {
-            document.querySelectorAll(`[id^="${f}_"]`).forEach(box => { if(box.id && box.id.split('_').length===3) window.kira(box.id); });
+        for(let id in savedScores) {
+            const input = document.getElementById(id);
+            if(input) input.value = savedScores[id];
+        }
+
+        const flow = ['W_0','W_1','W_2','W_3','L_0','L_1','L_2','L_3','L_4','L_5','GF_0'];
+        flow.forEach(f => {
+            document.querySelectorAll(`[id^="${f}_"]`).forEach(box => {
+                if(box.classList.contains('kotak-perlawanan')) window.kira(box.id);
+            });
         });
+
+        autoBye();
         penyelarasanLebar();
+
+        document.querySelectorAll('.skor, .nama-display').forEach(el => {
+            const isRound1 = el.id.startsWith('W_0_');
+            el.readOnly = el.classList.contains('nama-display') ? !(window.isAdminMode && isRound1) : !window.isAdminMode;
+        });
     }
 
     function updateSlot(mid, slot, nama, pid) {
         const pEl = document.getElementById(`${mid}_p${slot}`);
         const sEl = document.getElementById(`${mid}_s${slot}`);
+        const sdEl = document.getElementById(`${mid}_sd${slot}`);
         if(pEl) pEl.value = nama;
         if(sEl) sEl.setAttribute('data-pid', pid);
+
+        if(sdEl && mid.startsWith('W_0_')) {
+            sdEl.innerText = (parseInt(pid) + 1).toString().padStart(2, '0');
+            sdEl.style.display = "flex";
+        } else if(sdEl) {
+            sdEl.style.display = "none";
+        }
+    }
+
+    function updatePathSoftColors(nama, cssClass) {
+        if(!nama || nama === "BYE" || nama === "...") return;
+        document.querySelectorAll('.slot-pasukan').forEach(slot => {
+            if(slot.querySelector('.nama-display').value === nama) {
+                slot.classList.remove('path-emas', 'path-perak', 'path-gangsa');
+                slot.classList.add(cssClass);
+            }
+        });
     }
 
     window.kira = (id) => {
         let sc1 = document.getElementById(id+'_sc1').value, sc2 = document.getElementById(id+'_sc2').value;
+        const sl1 = document.getElementById(id+'_s1'), sl2 = document.getElementById(id+'_s2');
         if(sc1 === "" || sc2 === "" || sc1 === sc2) return;
+
         let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
+        sl1.classList.toggle('pemenang', win === 1); sl2.classList.toggle('pemenang', win === 2);
+
         let winN = document.getElementById(`${id}_p${win}`).value, winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
         let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, losP = document.getElementById(`${id}_s${win===1?2:1}`).getAttribute('data-pid');
+
         let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
         if(p[0] === 'W') {
-            if(r < 3) updateSlot(`W_${r+1}_${Math.floor(m/2)}`, (m%2)+1, winN, winP);
+            let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
+            if(r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
             else if(r === 3) updateSlot('GF_0_0', 1, winN, winP);
-            if(r === 0) updateSlot(`L_0_${Math.floor(m/2)}`, (m%2)+1, losN, losP);
+
+            if(r === 0) updateSlot(`L_0_${Math.floor(m/2)}`, (m % 2) + 1, losN, losP);
             else if(r === 1) updateSlot(`L_1_${3-m}`, 2, losN, losP);
             else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
             else if(r === 3) updateSlot(`L_5_0`, 2, losN, losP);
         } else if(p[0] === 'L') {
             if(r < 5) {
-                if(r%2===0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
-                else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m%2)+1, winN, winP);
-            } else { updateSlot('GF_0_0', 2, winN, winP); document.getElementById('res_3').innerText = losN; }
+                if(r % 2 === 0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
+                else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
+            } else {
+                updateSlot('GF_0_0', 2, winN, winP);
+                document.getElementById('res_3').innerText = losN;
+                updatePathSoftColors(losN, 'path-gangsa');
+            }
         } else if(p[0] === 'GF') {
-            document.getElementById('res_1').innerText = winN; document.getElementById('res_2').innerText = losN;
+            document.getElementById('res_1').innerText = winN;
+            document.getElementById('res_2').innerText = losN;
             document.getElementById('podiumFinal').style.display = 'block';
+            updatePathSoftColors(winN, 'path-emas');
+            updatePathSoftColors(losN, 'path-perak');
         }
     };
 
+    function autoBye() {
+        document.querySelectorAll('.kotak-perlawanan').forEach(box => {
+            let p1 = document.getElementById(box.id+'_p1').value, p2 = document.getElementById(box.id+'_p2').value;
+            let sc1 = document.getElementById(box.id+'_sc1'), sc2 = document.getElementById(box.id+'_sc2');
+            if(p1 === "BYE" && p2 !== "" && p2 !== "BYE" && sc1.value === "") { sc1.value=0; sc2.value=21; window.kira(box.id); }
+            else if(p2 === "BYE" && p1 !== "" && p1 !== "BYE" && sc2.value === "") { sc1.value=21; sc2.value=0; window.kira(box.id); }
+        });
+    }
+
     function penyelarasanLebar() {
         setTimeout(() => {
-            const bw = document.getElementById('barisW'), bl = document.getElementById('barisL');
+            const bw = document.getElementById('barisW');
+            const bl = document.getElementById('barisL');
+            bw.style.minWidth = "0"; bl.style.minWidth = "0";
             const max = Math.max(bw.scrollWidth, bl.scrollWidth);            
-            bw.style.minWidth = bl.style.minWidth = max + "px";
+            bw.style.minWidth = max + "px";
+            bl.style.minWidth = max + "px";
         }, 100);
     }
 </script>
