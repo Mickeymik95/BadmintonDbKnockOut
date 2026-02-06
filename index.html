@@ -100,42 +100,22 @@
 
         .pusingan { display: flex; flex-direction: column; width: 280px; justify-content: center; gap: 40px; }
 
-        .kotak-perlawanan { 
-    background: var(--kad); 
-    border: 1px solid #333; 
-    border-radius: 14px; 
-    position: relative; 
-    padding-top: 35px; /* Selaraskan dengan tinggi .match-no */
-}
+        .kotak-perlawanan { background: var(--kad); border: 1px solid #333; border-radius: 14px; position: relative; padding-top: 30px; }
+
         .match-no { 
-    position: absolute; 
-    top: 0; 
-    width: 100%; 
-    background: #25252b; 
-    color: #04f217 !important; 
-    height: 35px; /* Tambah tinggi sikit */
-    text-align: center; 
-    font-weight: 900; 
-    border-bottom: 1px solid #333; 
-    border-radius: 14px 14px 0 0;
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-}
+            position: absolute; top: 0; width: 100%; background: #25252b; 
+            color: var(--pink-terang) !important; 
+            font-size: 15px; padding: 8px 0; text-align: center; font-weight: 500; 
+            border-bottom: 1px solid #333; border-radius: 14px 14px 0 0;
+            text-shadow: 0 0 5px rgba(255, 0, 127, 0.3);
+            display: flex; justify-content: center; align-items: center;
+        }
 
         .match-input {
-    background: transparent; 
-    border: none; 
-    color: inherit; 
-    font-family: inherit; 
-    font-weight: 900; 
-    text-align: center; 
-    width: 100%; 
-    outline: none; 
-    text-transform: uppercase;
-    font-size: 1.1rem; /* Besarkan saiz dari 12px ke 1.1rem */
-    letter-spacing: 1px;
-}
+            background: transparent; border: none; color: inherit; 
+            font-family: inherit; font-weight: 900; text-align: center; 
+            width: 100%; outline: none; text-transform: uppercase;
+        }
 
         .slot-pasukan { display: flex; gap: 10px; align-items: center; padding: 15px 18px; border-bottom: 1px solid #25252b; transition: all 0.4s ease; }
         .slot-pasukan:last-child { border-bottom: none; }
@@ -166,35 +146,11 @@
         .path-gangsa { background: var(--soft-gangsa) !important; border-left: 4px solid #cd7f32; }
         .path-gangsa .nama-display { color: #ff9f43 !important; }
 
-        .grand-final { 
-    width: 350px !important; /* Lebarkan sedikit lagi */
-    border: 6px solid #ffd700 !important; /* Border sangat tebal */
-    transform: scale(1.1); /* Besarkan saiz kotak */
-    box-shadow: 0 0 50px rgba(255, 215, 0, 0.6); /* Glow emas lebih kuat */
-    z-index: 10;
-    margin: 20px 0;
-}   .grand-final .match-no {
-    height: 45px; /* Header lebih tinggi */
-    background: #ffd700; /* Tukar background header jadi emas */
-    color: #000 !important; /* Tulisan MATCH jadi hitam supaya kontras */
-}
-/* --- LOSER FINAL (Merah & Garang) --- */
-.loser-final-highlight { 
-    border: 6px solid #e74c3c !important; /* Border tebal merah */
-    box-shadow: 0 0 40px rgba(231, 76, 60, 0.5); /* Glow merah */
-    transform: scale(1.05); /* Besar sikit dari kotak biasa */
-    z-index: 5;
-}
+        .grand-final { width: 320px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); box-shadow: var(--glow-emas); z-index: 5; }
+        .grand-final .match-no { font-size: 14px; }
 
-.loser-final-highlight .match-no {
-    height: 40px;
-    border-bottom: 2px solid #e74c3c;
-}
+        .loser-final-highlight { border: 3px solid var(--kalah) !important; box-shadow: var(--glow-loser); transform: scale(1.02); }
 
-.loser-final-highlight .match-input {
-    color: #ff4d4d !important;
-    font-size: 1.2rem;
-}
         #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .admin-only { display: none; }
         /* Kesan untuk pemain yang kalah (Garis Merah) */
