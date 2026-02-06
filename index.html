@@ -153,6 +153,22 @@
 
         #panelAdmin { display: none; position: fixed; top: 30px; right: 30px; width: 320px; background: #111; border: 1px solid #444; border-radius: 20px; z-index: 1000; padding: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         .admin-only { display: none; }
+        /* Kesan untuk pemain yang kalah (Garis Merah) */
+.slot-pasukan:not(.pemenang) {
+    border-left: 4px solid transparent; /* Standby border */
+}
+
+/* Hanya aktifkan merah jika skor sudah diisi dan pemain itu kalah */
+.kotak-perlawanan:has(.pemenang) .slot-pasukan:not(.pemenang) {
+    border-left: 4px solid var(--kalah) !important;
+    background: rgba(231, 76, 60, 0.1); /* Merah samar supaya nampak beza */
+    transition: all 0.3s ease;
+}
+
+/* Memastikan nama pemain kalah nampak sedikit pudar (optional) */
+.kotak-perlawanan:has(.pemenang) .slot-pasukan:not(.pemenang) .nama-display {
+    color: #888 !important;
+}
     </style>
 </head>
 <body onload="checkPersistentAdmin()">
