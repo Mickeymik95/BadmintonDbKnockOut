@@ -33,48 +33,30 @@ function populatePesertaInputs() {
     const section = document.getElementById('pesertaInputSection');
     if(!section) return;
     
+    // Simpan nilai lama supaya tak hilang masa render
+    let oldValues = [];
+    for(let i=0; i<16; i++) {
+        oldValues.push({
+            n: document.getElementById(`admin_p${i}`)?.value || "",
+            a: document.getElementById(`admin_av${i}`)?.value || ""
+        });
+    }
+
     section.innerHTML = '';
     
-    // Create grid layout untuk 16 pemain (2 kolom)
     for(let i = 0; i < 16; i++) {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'peserta-input-group';
-        groupDiv.setAttribute('data-seed', i);
         
-        const playerLabel = document.createElement('label');
-        playerLabel.innerText = `PEMAIN ${i + 1}`;  // Player 1 - Player 16
-        groupDiv.appendChild(playerLabel);
+        let valNama = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].nama : (oldValues[i]?.n || "");
+        let valAv = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].avatar : (oldValues[i]?.a || "");
 
-        // Seed number input (1-16)
-        const seedInput = document.createElement('input');
-        seedInput.type = 'number';
-        seedInput.min = 1;
-        seedInput.max = 16;
-        seedInput.id = `admin_seed${i}`;
-        seedInput.style.width = '100%';
-        seedInput.placeholder = 'Seed (1-16)';
-        seedInput.value = (window.teamNames && window.teamNames[i]) ? (parseInt(i)+1) : (i+1);
-        seedInput.oninput = function() { /* no-op: value read on save */ };
-        groupDiv.appendChild(seedInput);
-
-        // Player Name Input
-        const pInput = document.createElement('input');
-        pInput.type = 'text';
-        pInput.id = `admin_p${i}`;
-        pInput.placeholder = `Nama Pemain`;
-        pInput.value = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].nama : '';
-        pInput.oninput = function() { syncPesertaInput(i, this.value, 'nama'); };
-        groupDiv.appendChild(pInput);
-
-        // Player Avatar Link
-        const pAvatarInput = document.createElement('input');
-        pAvatarInput.type = 'text';
-        pAvatarInput.id = `admin_av${i}`;
-        pAvatarInput.placeholder = `Avatar URL`;
-        pAvatarInput.value = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].avatar || '' : '';
-        pAvatarInput.oninput = function() { syncPesertaInput(i, this.value, 'avatar'); };
-        groupDiv.appendChild(pAvatarInput);
-        
+        groupDiv.innerHTML = `
+            <label>SLOT ${i + 1}</label>
+            <input type="number" id="admin_seed${i}" value="${i+1}" min="1" max="16" placeholder="No Seed">
+            <input type="text" id="admin_p${i}" value="${valNama === 'BYE' ? '' : valNama}" placeholder="Nama Pasukan">
+            <input type="text" id="admin_av${i}" value="${valAv}" placeholder="Link Avatar">
+        `;
         section.appendChild(groupDiv);
     }
 }
@@ -124,35 +106,40 @@ onValue(dbRef, (snapshot) => {
 });
 
 window.saveAll = () => {
-    let teams = {};
-    
-    // Ambil data dari 16 pemain inputs (tidak lagi dari 8 matches)
+    let tempArray = [];
+
+    // 1. Ambil semua data dari input admin
     for(let i = 0; i < 16; i++) {
         const pInput = document.getElementById(`admin_p${i}`);
         const pAvatarInput = document.getElementById(`admin_av${i}`);
         const seedInput = document.getElementById(`admin_seed${i}`);
 
-        const p = pInput ? pInput.value.trim() : '';
-        const pAvatar = pAvatarInput ? pAvatarInput.value.trim() : '';
-        let seedIndex = i;
-        if(seedInput) {
-            const val = parseInt(seedInput.value);
-            if(!isNaN(val) && val >= 1 && val <= 16) seedIndex = val - 1;
-        }
-
-        teams[seedIndex] = { 
-            nama: p !== "" ? p : "BYE",
-            avatar: pAvatar
-        };
+        tempArray.push({
+            nama: pInput ? pInput.value.trim() : "",
+            avatar: pAvatarInput ? pAvatarInput.value.trim() : "",
+            seed: seedInput ? parseInt(seedInput.value) : (i + 1)
+        });
     }
+
+    // 2. Susun mengikut nombor Seed (1-16)
+    tempArray.sort((a, b) => a.seed - b.seed);
+
+    // 3. Tukar ke format 'teams' untuk Firebase (0-15)
+    let teams = {};
+    tempArray.forEach((item, index) => {
+        teams[index] = { 
+            nama: item.nama === "" ? "BYE" : item.nama, 
+            avatar: item.avatar 
+        };
+    });
     
     let scores = {};
     document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
 
-    // collect match-top labels
     let matchLabels = {};
     document.querySelectorAll('.match-top-input').forEach(mi => { if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim(); });
 
+    // 4. Simpan. Nota: Kita buang location.reload() supaya input tak hilang!
     set(dbRef, { n: 16, teams, scores, matchLabels }).then(() => {
         const toast = document.getElementById('syncToast');
         toast.style.opacity = "1";
@@ -485,3 +472,19 @@ function penyelarasanLebar() {
         bl.style.minWidth = max + "px";
     }, 100);
 }
+// Fungsi untuk swap nombor secara automatik jika ada yang sama
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.id.startsWith('admin_seed')) {
+        let currentInput = e.target;
+        let newValue = parseInt(currentInput.value);
+        let oldValue = parseInt(currentInput.defaultValue) || (parseInt(currentInput.id.replace('admin_seed', '')) + 1);
+
+        document.querySelectorAll('input[id^="admin_seed"]').forEach(input => {
+            if (input !== currentInput && parseInt(input.value) === newValue) {
+                input.value = oldValue; // Tukar nombor yang bertindih tadi ke nombor asal input ini
+                input.defaultValue = oldValue;
+            }
+        });
+        currentInput.defaultValue = newValue;
+    }
+});
