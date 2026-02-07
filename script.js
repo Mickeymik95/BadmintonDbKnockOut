@@ -31,31 +31,23 @@ window.checkPersistentAdmin = () => {
 // Modified: Admin panel sekarang menampilkan 16 pemain individually (1-16), bukan 8 matches
 function populatePesertaInputs() {
     const section = document.getElementById('pesertaInputSection');
-    if(!section) return;
+    if(!section || section.children.length > 0) return; // Jika dah ada input, jangan overwrite
     
-    // Simpan nilai lama supaya tak hilang masa render
-    let oldValues = [];
-    for(let i=0; i<16; i++) {
-        oldValues.push({
-            n: document.getElementById(`admin_p${i}`)?.value || "",
-            a: document.getElementById(`admin_av${i}`)?.value || ""
-        });
-    }
-
     section.innerHTML = '';
     
     for(let i = 0; i < 16; i++) {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'peserta-input-group';
         
-        let valNama = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].nama : (oldValues[i]?.n || "");
-        let valAv = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].avatar : (oldValues[i]?.a || "");
+        // Kita hanya ambil data awal dari Firebase jika ada
+        let initialNama = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].nama : "";
+        let initialAv = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].avatar : "";
 
         groupDiv.innerHTML = `
-            <label>SLOT ${i + 1}</label>
+            <label>INPUT SLOT ${i + 1}</label>
             <input type="number" id="admin_seed${i}" value="${i+1}" min="1" max="16" placeholder="No Seed">
-            <input type="text" id="admin_p${i}" value="${valNama === 'BYE' ? '' : valNama}" placeholder="Nama Pasukan">
-            <input type="text" id="admin_av${i}" value="${valAv}" placeholder="Link Avatar">
+            <input type="text" id="admin_p${i}" value="${initialNama === 'BYE' ? '' : initialNama}" placeholder="Nama Pasukan">
+            <input type="text" id="admin_av${i}" value="${initialAv}" placeholder="Link Avatar URL">
         `;
         section.appendChild(groupDiv);
     }
@@ -96,54 +88,57 @@ window.toggleAdmin = () => { const p = document.getElementById('panelAdmin'); p.
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
     window.teamNames = data.teams || {};
+    
+    // Jana bracket sahaja
     jana(data.scores || {}, data.matchLabels || {});
     
-    // Update peserta inputs jika admin mode aktif
-    if(window.isAdminMode) {
-        populatePesertaInputs();
-        updatePesertaInputDisplay();
-    }
+    // JANGAN panggil populatePesertaInputs() di sini secara automatik 
+    // supaya susunan input dalam panel admin kekal seperti yang anda tulis.
 });
 
 window.saveAll = () => {
-    let tempArray = [];
-
-    // 1. Ambil semua data dari input admin
-    for(let i = 0; i < 16; i++) {
-        const pInput = document.getElementById(`admin_p${i}`);
-        const pAvatarInput = document.getElementById(`admin_av${i}`);
-        const seedInput = document.getElementById(`admin_seed${i}`);
-
-        tempArray.push({
-            nama: pInput ? pInput.value.trim() : "",
-            avatar: pAvatarInput ? pAvatarInput.value.trim() : "",
-            seed: seedInput ? parseInt(seedInput.value) : (i + 1)
-        });
+    let teams = {};
+    
+    // 1. Ambil data dari 16 input secara "Direct Mapping"
+    // Kita cari input mana yang ada nombor seed tertentu
+    for(let seedTarget = 1; seedTarget <= 16; seedTarget++) {
+        let found = false;
+        
+        for(let i = 0; i < 16; i++) {
+            const seedInput = document.getElementById(`admin_seed${i}`);
+            const pInput = document.getElementById(`admin_p${i}`);
+            const pAvatarInput = document.getElementById(`admin_av${i}`);
+            
+            if(seedInput && parseInt(seedInput.value) === seedTarget) {
+                // Simpan ke dalam index bracket (0-15) mengikut Target Seed
+                teams[seedTarget - 1] = {
+                    nama: pInput.value.trim() === "" ? "BYE" : pInput.value.trim(),
+                    avatar: pAvatarInput.value.trim()
+                };
+                found = true;
+                break;
+            }
+        }
+        
+        // Jika nombor seed itu tak wujud/tertinggal, letak BYE
+        if(!found) {
+            teams[seedTarget - 1] = { nama: "BYE", avatar: "" };
+        }
     }
 
-    // 2. Susun mengikut nombor Seed (1-16)
-    tempArray.sort((a, b) => a.seed - b.seed);
-
-    // 3. Tukar ke format 'teams' untuk Firebase (0-15)
-    let teams = {};
-    tempArray.forEach((item, index) => {
-        teams[index] = { 
-            nama: item.nama === "" ? "BYE" : item.nama, 
-            avatar: item.avatar 
-        };
-    });
-    
     let scores = {};
     document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
 
     let matchLabels = {};
     document.querySelectorAll('.match-top-input').forEach(mi => { if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim(); });
 
-    // 4. Simpan. Nota: Kita buang location.reload() supaya input tak hilang!
+    // SIMPAN KE FIREBASE
     set(dbRef, { n: 16, teams, scores, matchLabels }).then(() => {
         const toast = document.getElementById('syncToast');
         toast.style.opacity = "1";
         setTimeout(() => { toast.style.opacity = "0"; }, 3000);
+        // PENTING: Jangan panggil populatePesertaInputs() di sini supaya 
+        // kedudukan input nama/link dalam panel admin tidak berubah (kekal statik).
     });
 };
 
