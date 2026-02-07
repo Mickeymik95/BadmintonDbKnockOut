@@ -54,16 +54,27 @@ function populatePesertaInputs() {
 }
 
 function updatePesertaInputDisplay() {
+    // Kita tidak mahu overwrite nombor seed yang sedang ditaip oleh admin
+    if (document.activeElement.id.startsWith('admin_seed')) return;
+
     for(let i = 0; i < 16; i++) {
         const pInput = document.getElementById(`admin_p${i}`);
         const pAvatarInput = document.getElementById(`admin_av${i}`);
         const seedInput = document.getElementById(`admin_seed${i}`);
         
-        if(pInput) pInput.value = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].nama : '';
-        if(pAvatarInput) pAvatarInput.value = (window.teamNames && window.teamNames[i]) ? window.teamNames[i].avatar || '' : '';
-        if(seedInput) seedInput.value = i + 1;
+        // Kita kekalkan nilai sedia ada dalam input jika sedang aktif
+        if (pInput && document.activeElement !== pInput) {
+            // Logik paparan kekal mengikut slot fizikal input tersebut
+            // Data pasukan akan diambil berdasarkan nilai seed yang ada dalam input itu sekarang
+            const currentSeed = parseInt(seedInput.value);
+            if (!isNaN(currentSeed)) {
+                const teamData = window.teamNames[currentSeed - 1] || { nama: 'BYE', avatar: '' };
+                pInput.value = (teamData.nama === 'BYE') ? '' : teamData.nama;
+                pAvatarInput.value = teamData.avatar || '';
+            }
+        }
     }
-}
+}   
 
 window.syncPesertaInput = (seedIndex, value, field) => {
     if(!window.teamNames[seedIndex]) {
@@ -87,70 +98,94 @@ window.toggleAdmin = () => { const p = document.getElementById('panelAdmin'); p.
 
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
-    if (!data || !data.teams) return; // Jika database kosong, jangan buat apa-apa
+    if (!data || !data.teams) return;
 
     window.teamNames = data.teams;
     
-    // Jana bracket
+    // Jana bracket (visual)
     jana(data.scores || {}, data.matchLabels || {});
     
-    // Hanya update display input jika admin tengah buka panel
+    // Hanya update display input jika admin mode DAN user tidak sedang menaip
     if(window.isAdminMode) {
-        updatePesertaInputDisplay();
+        const sedangMenaip = document.activeElement.tagName === 'INPUT';
+        if (!sedangMenaip) {
+            updatePesertaInputDisplay();
+        }
     }
 });
 
 window.saveAll = () => {
-    // 1. Semak jika panel admin wujud dan sudah diisi
     const inputSection = document.getElementById('pesertaInputSection');
-    if(!inputSection || inputSection.children.length === 0) {
-        alert("AMARAN: Panel input belum dimuatkan sepenuhnya. Simpanan dibatalkan untuk mengelakkan data hilang.");
-        return;
-    }
+    if(!inputSection || inputSection.children.length === 0) return;
 
     let teams = {};
-    let hasData = false;
+    let usedSeeds = new Set();
+    let hasConflict = false;
 
-    for(let seedTarget = 1; seedTarget <= 16; seedTarget++) {
-        let found = false;
-        for(let i = 0; i < 16; i++) {
-            const seedInput = document.getElementById(`admin_seed${i}`);
-            const pInput = document.getElementById(`admin_p${i}`);
-            const pAvatarInput = document.getElementById(`admin_av${i}`);
-            
-            if(seedInput && parseInt(seedInput.value) === seedTarget) {
-                const namaValue = pInput.value.trim();
-                // Jika ada sekurang-kurangnya satu nama yang bukan kosong
-                if(namaValue !== "") hasData = true; 
+    // 1. Kumpul data dan semak pertindihan nombor
+    for(let i = 0; i < 16; i++) {
+        const seedInput = document.getElementById(`admin_seed${i}`);
+        const pInput = document.getElementById(`admin_p${i}`);
+        const pAvatarInput = document.getElementById(`admin_av${i}`);
 
-                teams[seedTarget - 1] = {
-                    nama: namaValue === "" ? "BYE" : namaValue,
-                    avatar: pAvatarInput.value.trim()
-                };
-                found = true;
-                break;
+        if (seedInput) {
+            const seedValue = seedInput.value.trim();
+            if (seedValue === "") continue;
+
+            const seedNum = parseInt(seedValue);
+
+            // Amaran jika nombor seed luar julat 1-16
+            if (seedNum < 1 || seedNum > 16) {
+                alert(`Slot ${i+1}: Sila guna nombor seed antara 1-16.`);
+                seedInput.value = "";
+                continue;
             }
+
+            // Semak jika nombor seed sudah digunakan oleh input lain
+            if (usedSeeds.has(seedNum)) {
+                alert(`Ralat: Nombor Seed ${seedNum} sudah digunakan! Sila guna nombor lain.`);
+                seedInput.value = ""; // Padam nombor yang bertindih
+                hasConflict = true;
+                continue;
+            }
+
+            usedSeeds.add(seedNum);
+            const namaValue = pInput.value.trim();
+
+            // Simpan ke dalam objek mengikut nombor seed (index 0-15)
+            teams[seedNum - 1] = {
+                nama: namaValue === "" ? "BYE" : namaValue,
+                avatar: pAvatarInput.value.trim()
+            };
         }
-        if(!found) teams[seedTarget - 1] = { nama: "BYE", avatar: "" };
     }
 
-    // 2. Pengesahan kedua: Jangan simpan jika SEMUA slot adalah kosong/BYE 
-    // kecuali admin memang sengaja mahu kosongkan.
-    if(!hasData && !confirm("Semua nama kosong. Anda pasti mahu mengosongkan database?")) {
-        return;
+    if (hasConflict) return; // Berhenti jika ada ralat
+
+    // 2. Isi slot yang tidak dipilih dengan "BYE"
+    for(let j = 0; j < 16; j++) {
+        if(!teams[j]) {
+            teams[j] = { nama: "BYE", avatar: "" };
+        }
     }
 
     let scores = {};
-    document.querySelectorAll('.skor').forEach(s => { if(s.value !== "") scores[s.id] = s.value; });
+    document.querySelectorAll('.skor').forEach(s => { 
+        if(s.value !== "") scores[s.id] = s.value; 
+    });
 
     let matchLabels = {};
-    document.querySelectorAll('.match-top-input').forEach(mi => { if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim(); });
+    document.querySelectorAll('.match-top-input').forEach(mi => { 
+        if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim(); 
+    });
 
-    // 3. Gunakan update() berbanding set() untuk lebih selamat jika perlu
+    // 3. Simpan ke Firebase
     set(dbRef, { n: 16, teams, scores, matchLabels }).then(() => {
         const toast = document.getElementById('syncToast');
-        toast.style.opacity = "1";
-        setTimeout(() => { toast.style.opacity = "0"; }, 3000);
+        if(toast) {
+            toast.style.opacity = "1";
+            setTimeout(() => { toast.style.opacity = "0"; }, 2000);
+        }
     }).catch(err => alert("Gagal simpan: " + err));
 };
 
@@ -406,6 +441,8 @@ function updatePathSoftColors(nama, cssClass) {
 window.kira = (id) => {
     let sc1 = document.getElementById(id+'_sc1').value, sc2 = document.getElementById(id+'_sc2').value;
     const sl1 = document.getElementById(id+'_s1'), sl2 = document.getElementById(id+'_s2');
+    
+    // Keluar jika skor tidak lengkap atau seri
     if(sc1 === "" || sc2 === "" || sc1 === sc2) return;
 
     let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
@@ -419,6 +456,7 @@ window.kira = (id) => {
 
     let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
+    // LOGIK WINNER BRACKET
     if(p[0] === 'W') {
         let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
         if(r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
@@ -428,7 +466,9 @@ window.kira = (id) => {
         else if(r === 1) updateSlot(`L_1_${3-m}`, 2, losN, losP);
         else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
         else if(r === 3) updateSlot(`L_5_0`, 2, losN, losP);
-    } else if(p[0] === 'L') {
+    } 
+    // LOGIK LOSER BRACKET
+    else if(p[0] === 'L') {
         if(r < 5) {
             if(r % 2 === 0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
             else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
@@ -439,7 +479,9 @@ window.kira = (id) => {
             updateAvatar('pod', 3, losN, losAvatar);
             updatePathSoftColors(losN, 'path-gangsa');
         }
-    } else if(p[0] === 'GF') {
+    } 
+    // LOGIK GRAND FINAL
+    else if(p[0] === 'GF') {
         document.getElementById('res_1').innerText = winN;
         document.getElementById('res_2').innerText = losN;
         const winAvatar = (window.teamNames && window.teamNames[winP]) ? window.teamNames[winP].avatar || '' : '';
@@ -450,23 +492,43 @@ window.kira = (id) => {
         updatePathSoftColors(winN, 'path-emas');
         updatePathSoftColors(losN, 'path-perak');
     }
-};
 
+    // PENTING: Jalankan auto-bye selepas setiap kiraan untuk kesan pemenang baru yang lawan BYE
+    autoBye(); 
+};
+ // --- 1. FUNGSI AUTO-BYE (WAJIB ADA ISI) ---
 function autoBye() {
-    document.querySelectorAll('.kotak-perlawanan').forEach(box => {
-        let p1 = document.getElementById(box.id+'_p1').value, 
-            p2 = document.getElementById(box.id+'_p2').value;
-        let sc1 = document.getElementById(box.id+'_sc1'), 
-            sc2 = document.getElementById(box.id+'_sc2');
-        if(p1 === "BYE" && p2 !== "" && p2 !== "BYE" && sc1.value === "") { 
-            sc1.value=0; sc2.value=21; window.kira(box.id); 
-        }
-        else if(p2 === "BYE" && p1 !== "" && p1 !== "BYE" && sc2.value === "") { 
-            sc1.value=21; sc2.value=0; window.kira(box.id); 
-        }
+    // Senarai pusingan yang perlu disemak
+    const brackets = ['W', 'L', 'GF'];
+    
+    brackets.forEach(type => {
+        document.querySelectorAll(`[id^="${type}_"].kotak-perlawanan`).forEach(box => {
+            const id = box.id;
+            const p1 = document.getElementById(id + '_p1').value;
+            const p2 = document.getElementById(id + '_p2').value;
+            const sc1 = document.getElementById(id + '_sc1');
+            const sc2 = document.getElementById(id + '_sc2');
+
+            // Hanya proses jika skor masih kosong
+            if (sc1.value === "" && sc2.value === "") {
+                // Jika slot 1 BYE, slot 2 menang 21-0
+                if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
+                    sc1.value = 0; 
+                    sc2.value = 21; 
+                    window.kira(id);
+                } 
+                // Jika slot 2 BYE, slot 1 menang 21-0
+                else if (p2 === "BYE" && p1 !== "" && p1 !== "BYE" && p1 !== "...") {
+                    sc1.value = 21; 
+                    sc2.value = 0; 
+                    window.kira(id);
+                }
+            }
+        });
     });
 }
 
+// --- 2. PENYELARASAN LEBAR BRACKET ---
 function penyelarasanLebar() {
     setTimeout(() => {
         const bw = document.getElementById('barisW');
@@ -479,7 +541,8 @@ function penyelarasanLebar() {
         bl.style.minWidth = max + "px";
     }, 100);
 }
-// Fungsi untuk swap nombor secara automatik jika ada yang sama
+
+// --- 3. SWAP NOMBOR SEED (ADMIN PANEL) ---
 document.addEventListener('change', function(e) {
     if (e.target && e.target.id.startsWith('admin_seed')) {
         let currentInput = e.target;
@@ -488,10 +551,34 @@ document.addEventListener('change', function(e) {
 
         document.querySelectorAll('input[id^="admin_seed"]').forEach(input => {
             if (input !== currentInput && parseInt(input.value) === newValue) {
-                input.value = oldValue; // Tukar nombor yang bertindih tadi ke nombor asal input ini
+                input.value = oldValue;
                 input.defaultValue = oldValue;
             }
         });
         currentInput.defaultValue = newValue;
+    }
+});
+
+// --- 4. SISTEM AUTO-SAVE (SATU SAHAJA) ---
+const handleAutoSave = (e) => {
+    if (!window.isAdminMode) return;
+
+    // Simpan jika yang berubah adalah skor, input admin, atau label match
+    if (e.target.classList.contains('skor') || 
+        e.target.closest('#pesertaInputSection') || 
+        e.target.classList.contains('match-top-input')) {
+        
+        console.log("Auto-saving data...");
+        window.saveAll();
+    }
+};
+
+// Kesan perubahan input
+document.addEventListener('change', handleAutoSave);
+
+// Kesan tekan Enter
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+        e.target.blur(); // Trigger 'change' event di atas
     }
 });
