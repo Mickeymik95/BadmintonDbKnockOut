@@ -385,18 +385,22 @@ body {
     text-decoration: none !important;
 }
 
-/* 1. HANYA PUDARKAN NAMA PASUKAN YANG KALAH */
-/* Syarat: Kotak perlawanan mesti sudah ada pemenang */
-.kotak-perlawanan:has(.pemenang) .slot-pasukan:not(.pemenang) .nama-display {
-    color: #555 !important; /* Warna kelabu gelap/pudar */
-    opacity: 0.9;
+/* 1. PUDARKAN SEDIKIT PASUKAN YANG KALAH (Masih boleh dibaca) */
+.kotak-perlawanan:has(.pemenang) .slot-pasukan:not(.pemenang) {
+    opacity: 0.4; /* Pudar 40%, nampak beza ketara dengan pemenang */
+    filter: grayscale(0.5); /* Kurangkan warna sikit supaya tidak mengganggu mata */
     transition: all 0.3s ease;
 }
 
-/* 2. KEKALKAN NAMA BYE SUPAYA JELAS SIKIT (OPSYENAL) */
-.slot-pasukan:has(.nama-display[value="BYE"]) .nama-display {
-    color: #777 !important;
+/* 2. KEKALKAN PEMENANG SUPAYA "MENYALA" */
+.slot-pasukan.pemenang {
+    opacity: 1 !important;
+    filter: grayscale(0) !important;
+    transform: scale(1.02); /* Besarkan sikit pemenang untuk nampak lebih jelas */
 }
 
-/* 3. JANGAN PUDARKAN JIKA TIADA PEMENANG (BELUM ADA SKOR) */
-/* CSS secara automatik tidak akan laksanakan rule #1 jika class .pemenang belum wujud */
+/* 3. KHAS UNTUK BYE (Bagi nampak lebih pudar dari pemain sebenar) */
+.nama-display[value="BYE"] {
+    color: rgba(255, 255, 255, 0.3) !important; /* Putih yang sangat pudar */
+    font-style: italic;
+}
