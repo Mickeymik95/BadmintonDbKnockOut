@@ -384,3 +384,30 @@ body {
 .pemenang .nama-display {
     text-decoration: none !important;
 }
+
+/* --- KESAN UNTUK PASUKAN KALAH & BYE --- */
+
+/* 1. Pudarkan pasukan yang kalah dalam kotak perlawanan */
+.kotak-perlawanan:has(.pemenang) .slot-pasukan:not(.pemenang) {
+    opacity: 0.45; /* Pudar supaya tidak menyerlah */
+    filter: grayscale(1); /* Hilangkan warna avatar */
+    transition: all 0.3s ease;
+}
+
+/* 2. Pudarkan pasukan BYE atau slot kosong */
+.slot-pasukan:has(.nama-display[value="BYE"]),
+.slot-pasukan:has(.nama-display[value=""]) {
+    opacity: 0.3;
+    filter: grayscale(1);
+}
+
+/* 3. Pastikan pemenang tetap terang dan menyerlah */
+.slot-pasukan.pemenang {
+    opacity: 1 !important;
+    filter: grayscale(0) !important;
+}
+
+/* 4. Tukar warna teks pudar untuk yang kalah */
+.slot-pasukan:not(.pemenang) .nama-display {
+    color: #666 !important;
+}
