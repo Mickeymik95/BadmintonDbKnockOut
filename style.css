@@ -101,13 +101,23 @@ body {
     display: block;
 }
 
-/* 3. ITEM PEMENANG (SUSUNAN) */
 .podium-flex {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 25px; /* Rapatkan sikit jarak antara 1st, 2nd, 3rd */
+    display: flex;             /* Tukar jadi mode flex */
+    flex-direction: row;      /* Susun secara melintang (horizontal) */
+    justify-content: center;   /* Letak di tengah-tengah kotak */
+    align-items: flex-end;     /* Pastikan pemenang tempat ke-2 & ke-3 nampak lebih rendah */
+    gap: 40px;                 /* Jarak antara setiap pemenang */
+    width: 100%;
 }
+
+.podium-item {
+    display: flex;
+    flex-direction: column;    /* Item di DALAM (avatar, nama) tetap vertikal */
+    align-items: center;
+    flex: 1;                   /* Bahagi ruang secara adil */
+    min-width: 150px;          /* Elakkan item jadi terlalu sempit */
+}
+
 
 /* 4. SAIZ ITEM (MANUAL, BUKAN SCALE) */
 .pod-rank { 
