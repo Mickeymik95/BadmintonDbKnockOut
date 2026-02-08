@@ -498,7 +498,7 @@ window.kira = (id) => {
 };
  function autoBye() {
     const brackets = ['W', 'L', 'GF'];
-    let adaPerubahan = false; // Penanda untuk semak jika ada pemenang baru
+    let adaPerubahan = false;
 
     brackets.forEach(type => {
         document.querySelectorAll(`[id^="${type}_"].kotak-perlawanan`).forEach(box => {
@@ -508,24 +508,24 @@ window.kira = (id) => {
             const sc1 = document.getElementById(id + '_sc1');
             const sc2 = document.getElementById(id + '_sc2');
 
-            // Hanya proses jika skor masih kosong
+            // Hanya proses jika skor masih kosong (belum ada pemenang)
             if (sc1.value === "" && sc2.value === "") {
                 
-                // KES 1: Slot 1 adalah BYE (Slot 2 menang)
-                if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
-                    sc1.value = 0; 
-                    sc2.value = 21; 
-                    window.kira(id);
-                    adaPerubahan = true;
-                } 
-                // KES 2: Slot 2 adalah BYE (Slot 1 menang)
-                else if (p2 === "BYE" && p1 !== "" && p1 !== "BYE" && p1 !== "...") {
+                // KES 1: Pemain Sebenar vs BYE (Pemain Sebenar Menang)
+                if (p1 !== "" && p1 !== "BYE" && p1 !== "..." && p2 === "BYE") {
                     sc1.value = 21; 
                     sc2.value = 0; 
                     window.kira(id);
                     adaPerubahan = true;
+                } 
+                // KES 2: BYE vs Pemain Sebenar (Pemain Sebenar Menang)
+                else if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
+                    sc1.value = 0; 
+                    sc2.value = 21; 
+                    window.kira(id);
+                    adaPerubahan = true;
                 }
-                // KES EXTRA: Jika kedua-duanya BYE (penting untuk Loser Bracket)
+                // KES 3: BYE vs BYE (BYE "Menang" untuk teruskan bracket)
                 else if (p1 === "BYE" && p2 === "BYE") {
                     sc1.value = 0;
                     sc2.value = 0;
@@ -536,8 +536,8 @@ window.kira = (id) => {
         });
     });
 
-    // Jika ada pemain yang baru menang, jalankan semula autoBye 
-    // untuk semak jika pusingan seterusnya juga adalah BYE
+    // PENTING: Jika ada perubahan, panggil semula secara rekursif 
+    // untuk tolak pemain ke pusingan seterusnya jika ada BYE lagi.
     if (adaPerubahan) {
         setTimeout(() => autoBye(), 50); 
     }
