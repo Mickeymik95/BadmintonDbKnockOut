@@ -591,109 +591,149 @@ function updatePathSoftColors(nama, cssClass) {
   });
 }
 
+// Flag untuk elak recursive calls
+let isProcessingKira = false;
+
 window.kira = (id) => {
-  let sc1 = document.getElementById(id + "_sc1").value;
-  let sc2 = document.getElementById(id + "_sc2").value;
-  const sl1 = document.getElementById(id + "_s1");
-  const sl2 = document.getElementById(id + "_s2");
-  const box = document.getElementById(id); // Ambil elemen kotak perlawanan
+  // Elak recursive calls
+  if (isProcessingKira) return;
+  isProcessingKira = true;
+  
+  try {
+    let sc1 = document.getElementById(id + "_sc1").value;
+    let sc2 = document.getElementById(id + "_sc2").value;
+    const sl1 = document.getElementById(id + "_s1");
+    const sl2 = document.getElementById(id + "_s2");
+    const box = document.getElementById(id); // Ambil elemen kotak perlawanan
 
-  const p1 = document.getElementById(id + "_p1").value;
-  const p2 = document.getElementById(id + "_p2").value;
+    const p1 = document.getElementById(id + "_p1").value;
+    const p2 = document.getElementById(id + "_p2").value;
 
-  // --- LOGIK MERAH BERKELIP (EFEK BELUM SELESAI) ---
-  // Jika skor kosong ATAU kedua-duanya 0, tambah class merah.
-  // Kecuali jika kedua-duanya BYE (biasanya auto-complete).
-  if (
-    (sc1 === "" ||
-      sc2 === "" ||
-      (parseInt(sc1) === 0 && parseInt(sc2) === 0)) &&
-    !(p1 === "BYE" && p2 === "BYE")
-  ) {
-    box.classList.add("kotak-belum-selesai");
-  } else {
-    box.classList.remove("kotak-belum-selesai");
-  }
-
-  // 1. Validasi Input
-  if (sc1 === "" || sc2 === "") return;
-  if (sc1 === sc2 && !(p1 === "BYE" && p2 === "BYE")) return;
-
-  // 2. Tentukan Pemenang
-  let win =
-    p1 === "BYE" && p2 === "BYE" ? 1 : parseInt(sc1) > parseInt(sc2) ? 1 : 2;
-
-  sl1.classList.toggle("pemenang", win === 1);
-  sl2.classList.toggle("pemenang", win === 2);
-
-  let winN = document.getElementById(`${id}_p${win}`).value;
-  let winP = document.getElementById(`${id}_s${win}`).getAttribute("data-pid");
-  let losN = document.getElementById(`${id}_p${win === 1 ? 2 : 1}`).value;
-  let losP = document
-    .getElementById(`${id}_s${win === 1 ? 2 : 1}`)
-    .getAttribute("data-pid");
-
-  let p = id.split("_"),
-    r = parseInt(p[1]),
-    m = parseInt(p[2]);
-
-  // 3. Logik Pergerakan Bracket (Winner & Loser)
-  if (p[0] === "W") {
-    let nextR = r + 1,
-      nextM = Math.floor(m / 2),
-      nextS = (m % 2) + 1;
-    if (r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
-    else if (r === 3) updateSlot("GF_0_0", 1, winN, winP);
-
-    if (r === 0)
-      updateSlot(`L_0_${Math.floor(m / 2)}`, (m % 2) + 1, losN, losP);
-    else if (r === 1) updateSlot(`L_1_${3 - m}`, 2, losN, losP);
-    else if (r === 2) updateSlot(`L_3_${1 - m}`, 2, losN, losP);
-    else if (r === 3) updateSlot(`L_5_0`, 2, losN, losP);
-  } else if (p[0] === "L") {
-    if (r < 5) {
-      if (r % 2 === 0) updateSlot(`L_${r + 1}_${m}`, 1, winN, winP);
-      else
-        updateSlot(`L_${r + 1}_${Math.floor(m / 2)}`, (m % 2) + 1, winN, winP);
+    // --- LOGIK MERAH BERKELIP (EFEK BELUM SELESAI) ---
+    // Jika skor kosong ATAU kedua-duanya 0, tambah class merah.
+    // Kecuali jika kedua-duanya BYE (biasanya auto-complete).
+    if (
+      (sc1 === "" ||
+        sc2 === "" ||
+        (parseInt(sc1) === 0 && parseInt(sc2) === 0)) &&
+      !(p1 === "BYE" && p2 === "BYE")
+    ) {
+      box.classList.add("kotak-belum-selesai");
     } else {
-      updateSlot("GF_0_0", 2, winN, winP);
+      box.classList.remove("kotak-belum-selesai");
     }
-  }
-  // 4. LOGIK PODIUM (GF)
-  else if (p[0] === "GF") {
-    const podium = document.getElementById("podiumFinal");
-    if (podium) {
-      podium.style.display = "block";
-      const res1 = document.getElementById("res_1");
-      if (res1) res1.innerText = winN;
-      updateAvatar("pod", 1, winN, window.teamNames[winP]?.avatar || "");
 
-      const res2 = document.getElementById("res_2");
-      if (res2) res2.innerText = losN;
-      updateAvatar("pod", 2, losN, window.teamNames[losP]?.avatar || "");
+    // 1. Validasi Input
+    if (sc1 === "" || sc2 === "") return;
+    if (sc1 === sc2 && !(p1 === "BYE" && p2 === "BYE")) return;
 
+    // 2. Tentukan Pemenang
+    let win =
+      p1 === "BYE" && p2 === "BYE" ? 1 : parseInt(sc1) > parseInt(sc2) ? 1 : 2;
+
+    sl1.classList.toggle("pemenang", win === 1);
+    sl2.classList.toggle("pemenang", win === 2);
+
+    let winN = document.getElementById(`${id}_p${win}`).value;
+    let winP = document.getElementById(`${id}_s${win}`).getAttribute("data-pid");
+    let losN = document.getElementById(`${id}_p${win === 1 ? 2 : 1}`).value;
+    let losP = document
+      .getElementById(`${id}_s${win === 1 ? 2 : 1}`)
+      .getAttribute("data-pid");
+
+    let p = id.split("_"),
+      r = parseInt(p[1]),
+      m = parseInt(p[2]);
+
+    // 3. Logik Pergerakan Bracket (Winner & Loser)
+    if (p[0] === "W") {
+      let nextR = r + 1,
+        nextM = Math.floor(m / 2),
+        nextS = (m % 2) + 1;
+      if (r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
+      else if (r === 3) updateSlot("GF_0_0", 1, winN, winP);
+
+      if (r === 0)
+        updateSlot(`L_0_${Math.floor(m / 2)}`, (m % 2) + 1, losN, losP);
+      else if (r === 1) updateSlot(`L_1_${3 - m}`, 2, losN, losP);
+      else if (r === 2) updateSlot(`L_3_${1 - m}`, 2, losN, losP);
+      else if (r === 3) updateSlot("L_5_0", 2, losN, losP);
+    } else if (p[0] === "L") {
+      if (r < 5) {
+        if (r % 2 === 0) updateSlot(`L_${r + 1}_${m}`, 1, winN, winP);
+        else
+          updateSlot(`L_${r + 1}_${Math.floor(m / 2)}`, (m % 2) + 1, winN, winP);
+      } else {
+        updateSlot("GF_0_0", 2, winN, winP);
+      }
+    }
+    // 4. LOGIK PODIUM (GF) - HANYA UPDATE JIKA TOURNAMENT SELESAI
+    else if (p[0] === "GF") {
+      // Check jika tournament benar-benar selesai
+      const w3Box = document.getElementById("W_3_0");
       const l5Box = document.getElementById("L_5_0");
-      if (l5Box) {
-        const sL1 = document.getElementById("L_5_0_sc1").value;
-        const sL2 = document.getElementById("L_5_0_sc2").value;
-        if (sL1 !== "" && sL2 !== "") {
-          const isWin1 = parseInt(sL1) > parseInt(sL2);
-          const t3Nama = isWin1
-            ? document.getElementById("L_5_0_p2").value
-            : document.getElementById("L_5_0_p1").value;
-          const t3Pid = isWin1
-            ? document.getElementById("L_5_0_s2").getAttribute("data-pid")
-            : document.getElementById("L_5_0_s1").getAttribute("data-pid");
-          const res3 = document.getElementById("res_3");
-          if (res3) res3.innerText = t3Nama;
-          updateAvatar("pod", 3, t3Nama, window.teamNames[t3Pid]?.avatar || "");
+      
+      let tournamentSelesai = false;
+      
+      // Check jika final match ada skor
+      const gfSc1 = document.getElementById("GF_0_0_sc1")?.value || "";
+      const gfSc2 = document.getElementById("GF_0_0_sc2")?.value || "";
+      
+      if (gfSc1 !== "" && gfSc2 !== "" && gfSc1 !== gfSc2) {
+        // Final selesai, check 3rd place match
+        if (l5Box) {
+          const l5Sc1 = document.getElementById("L_5_0_sc1")?.value || "";
+          const l5Sc2 = document.getElementById("L_5_0_sc2")?.value || "";
+          
+          if (l5Sc1 !== "" && l5Sc2 !== "" && l5Sc1 !== l5Sc2) {
+            tournamentSelesai = true;
+          }
+        } else {
+          // Jika tiada 3rd place match, final saja cukup
+          tournamentSelesai = true;
+        }
+      }
+      
+      // Update podium hanya jika tournament selesai
+      if (tournamentSelesai) {
+        const podium = document.getElementById("podiumFinal");
+        if (podium) {
+          podium.style.display = "block";
+          const res1 = document.getElementById("res_1");
+          if (res1) res1.innerText = winN;
+          updateAvatar("pod", 1, winN, window.teamNames[winP]?.avatar || "");
+
+          const res2 = document.getElementById("res_2");
+          if (res2) res2.innerText = losN;
+          updateAvatar("pod", 2, losN, window.teamNames[losP]?.avatar || "");
+
+          // Update 3rd place
+          if (l5Box) {
+            const sL1 = document.getElementById("L_5_0_sc1").value;
+            const sL2 = document.getElementById("L_5_0_sc2").value;
+            if (sL1 !== "" && sL2 !== "") {
+              const isWin1 = parseInt(sL1) > parseInt(sL2);
+              const t3Nama = isWin1
+                ? document.getElementById("L_5_0_p2").value
+                : document.getElementById("L_5_0_p1").value;
+              const t3Pid = isWin1
+                ? document.getElementById("L_5_0_s2").getAttribute("data-pid")
+                : document.getElementById("L_5_0_s1").getAttribute("data-pid");
+              const res3 = document.getElementById("res_3");
+              if (res3) res3.innerText = t3Nama;
+              updateAvatar("pod", 3, t3Nama, window.teamNames[t3Pid]?.avatar || "");
+            }
+          }
         }
       }
     }
-  }
 
-  autoBye();
-  window.updateMatchHighlights();
+    autoBye();
+    window.updateMatchHighlights();
+  } finally {
+    // Reset flag
+    isProcessingKira = false;
+  }
 };
 
 function autoBye() {
@@ -716,21 +756,21 @@ function autoBye() {
           if (p1 !== "" && p1 !== "BYE" && p1 !== "..." && p2 === "BYE") {
             sc1.value = 21;
             sc2.value = 0;
-            window.kira(id);
+            // JANGAN panggil kira() dulu - tunggu pusingan selesai
             adaPerubahan = true;
           }
           // KES 2: BYE vs Pemain (Auto win hanya jika lawan BYE)
           else if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
             sc1.value = 0;
             sc2.value = 21;
-            window.kira(id);
+            // JANGAN panggil kira() dulu - tunggu pusingan selesai
             adaPerubahan = true;
           }
           // KES 3: BYE vs BYE (Auto draw)
           else if (p1 === "BYE" && p2 === "BYE") {
             sc1.value = 0;
             sc2.value = 0;
-            window.kira(id);
+            // JANGAN panggil kira() dulu - tunggu pusingan selesai
             adaPerubahan = true;
           }
           // JIKA LAWAN BELUM ADA → JANGAN AUTO-WIN
@@ -739,11 +779,56 @@ function autoBye() {
       });
   });
 
-  // Jika ada yang menang secara automatik, sistem akan semak semula 
-  // pusingan seterusnya untuk kesan "double BYE"
+  // Jika ada perubahan, check jika pusingan selesai baru proses
   if (adaPerubahan) {
-    setTimeout(() => autoBye(), 100);
+    setTimeout(() => {
+      // Check semua match dalam pusingan aktif
+      checkDanProsesPusinganSelesai();
+    }, 100);
   }
+}
+
+// Fungsi baru: Check dan proses pusingan selesai
+function checkDanProsesPusinganSelesai() {
+  // Dapatkan pusingan aktif dari round sequence
+  get(ref(db, "tournament_data/roundSequence")).then((snapshot) => {
+    const sequences = snapshot.val() || {};
+    
+    // Susun pusingan ikut nombor
+    const sortedRounds = Object.entries(sequences)
+      .filter(([id, val]) => val !== "" && val !== null)
+      .sort((a, b) => parseInt(a[1]) - parseInt(b[1]));
+
+    for (let [roundId, seqNo] of sortedRounds) {
+      const matchesInRound = document.querySelectorAll(
+        `[id^="${roundId}_"].kotak-perlawanan`,
+      );
+      
+      let pusinganSelesai = true;
+      let matchIdsToProcess = [];
+
+      matchesInRound.forEach((box) => {
+        const sc1 = document.getElementById(box.id + "_sc1")?.value || "";
+        const sc2 = document.getElementById(box.id + "_sc2")?.value || "";
+        
+        // Check jika match ada skor (termasuk auto-win)
+        if (sc1 !== "" && sc2 !== "") {
+          matchIdsToProcess.push(box.id);
+        } else {
+          // Masih ada match belum selesai
+          pusinganSelesai = false;
+        }
+      });
+
+      // Jika pusingan ini selesai, proses semua match
+      if (pusinganSelesai && matchIdsToProcess.length > 0) {
+        matchIdsToProcess.forEach(matchId => {
+          window.kira(matchId);
+        });
+        break; // Proses satu pusingan pada satu masa
+      }
+    }
+  });
 }
 
 // --- 2. PENYELARASAN LEBAR BRACKET ---
@@ -760,8 +845,9 @@ function penyelarasanLebar() {
   }, 100);
 }
 
-// --- 3. SWAP NOMBOR SEED (ADMIN PANEL) ---
+// --- 3. SWAP NOMBOR SEED & AUTO-SAVE (GABUNG) ---
 document.addEventListener("change", function (e) {
+  // 1. Seed swap logic
   if (e.target && e.target.id.startsWith("admin_seed")) {
     let currentInput = e.target;
     let newValue = parseInt(currentInput.value);
@@ -777,25 +863,23 @@ document.addEventListener("change", function (e) {
     });
     currentInput.defaultValue = newValue;
   }
-});
-
-// --- 4. SISTEM AUTO-SAVE (SATU SAHAJA) ---
-const handleAutoSave = (e) => {
+  
+  // 2. Auto-save logic (handleAutoSave)
   if (!window.isAdminMode) return;
 
   // Simpan jika yang berubah adalah skor, input admin, atau label match
   if (
     e.target.classList.contains("skor") ||
-    e.target.closest("#pesertaInputSection") ||
+    e.target.classList.contains("admin-input") ||
     e.target.classList.contains("match-top-input")
   ) {
-    console.log("Auto-saving data...");
-    window.saveAll();
+    // Tangguh save untuk tunggu proses kira selesai
+    setTimeout(() => {
+      console.log("Auto-saving data...");
+      window.saveAll();
+    }, 500); // Tangguh 500ms
   }
-};
-
-// Kesan perubahan input
-document.addEventListener("change", handleAutoSave);
+});
 
 // Kesan tekan Enter
 document.addEventListener("keypress", (e) => {
