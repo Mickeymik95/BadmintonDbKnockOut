@@ -439,13 +439,23 @@ function updatePathSoftColors(nama, cssClass) {
 }
 
 window.kira = (id) => {
-    let sc1 = document.getElementById(id+'_sc1').value, sc2 = document.getElementById(id+'_sc2').value;
-    const sl1 = document.getElementById(id+'_s1'), sl2 = document.getElementById(id+'_s2');
+    let sc1 = document.getElementById(id+'_sc1').value;
+    let sc2 = document.getElementById(id+'_sc2').value;
+    const sl1 = document.getElementById(id+'_s1');
+    const sl2 = document.getElementById(id+'_s2');
     
-    // Keluar jika skor tidak lengkap atau seri
-    if(sc1 === "" || sc2 === "" || sc1 === sc2) return;
+    const p1 = document.getElementById(id + '_p1').value;
+    const p2 = document.getElementById(id + '_p2').value;
 
-    let win = parseInt(sc1) > parseInt(sc2) ? 1 : 2;
+    // 1. Jika kotak skor masih kosong, jangan buat apa-apa
+    if(sc1 === "" || sc2 === "") return;
+    
+    // 2. Benarkan skor 0-0 diproses HANYA jika ia adalah BYE lawan BYE
+    if(sc1 === sc2 && !(p1 === "BYE" && p2 === "BYE")) return;
+
+    // 3. Tentukan pemenang. Jika BYE lawan BYE, sistem pilih slot 1 sebagai pemenang automatik
+    let win = (p1 === "BYE" && p2 === "BYE") ? 1 : (parseInt(sc1) > parseInt(sc2) ? 1 : 2);
+    
     sl1.classList.toggle('pemenang', win === 1); 
     sl2.classList.toggle('pemenang', win === 2);
 
@@ -456,7 +466,7 @@ window.kira = (id) => {
 
     let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
-    // LOGIK WINNER BRACKET
+    // LOGIK WINNER BRACKET (Sama seperti kod asal anda tetapi ditambah autoBye)
     if(p[0] === 'W') {
         let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
         if(r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
@@ -474,28 +484,17 @@ window.kira = (id) => {
             else updateSlot(`L_${r+1}_${Math.floor(m/2)}`, (m % 2) + 1, winN, winP);
         } else {
             updateSlot('GF_0_0', 2, winN, winP);
-            document.getElementById('res_3').innerText = losN;
-            const losAvatar = (window.teamNames && window.teamNames[losP]) ? window.teamNames[losP].avatar || '' : '';
-            updateAvatar('pod', 3, losN, losAvatar);
-            updatePathSoftColors(losN, 'path-gangsa');
         }
     } 
     // LOGIK GRAND FINAL
     else if(p[0] === 'GF') {
-        document.getElementById('res_1').innerText = winN;
-        document.getElementById('res_2').innerText = losN;
-        const winAvatar = (window.teamNames && window.teamNames[winP]) ? window.teamNames[winP].avatar || '' : '';
-        const losAvatar = (window.teamNames && window.teamNames[losP]) ? window.teamNames[losP].avatar || '' : '';
-        updateAvatar('pod', 1, winN, winAvatar);
-        updateAvatar('pod', 2, losN, losAvatar);
         document.getElementById('podiumFinal').style.display = 'block';
-        updatePathSoftColors(winN, 'path-emas');
-        updatePathSoftColors(losN, 'path-perak');
     }
 
-    // PENTING: Jalankan auto-bye selepas setiap kiraan untuk kesan pemenang baru yang lawan BYE
+    // PENTING: Panggil fungsi autoBye supaya jika pusingan depan ada BYE, ia terus menang lagi
     autoBye(); 
 };
+
  function autoBye() {
     const brackets = ['W', 'L', 'GF'];
     let adaPerubahan = false;
@@ -508,27 +507,24 @@ window.kira = (id) => {
             const sc1 = document.getElementById(id + '_sc1');
             const sc2 = document.getElementById(id + '_sc2');
 
-            // Hanya proses jika skor masih kosong (belum ada pemenang)
+            // Proses hanya jika skor masih kosong
             if (sc1.value === "" && sc2.value === "") {
                 
-                // KES 1: Pemain Sebenar vs BYE (Pemain Sebenar Menang)
+                // Kes: Pemain vs BYE
                 if (p1 !== "" && p1 !== "BYE" && p1 !== "..." && p2 === "BYE") {
-                    sc1.value = 21; 
-                    sc2.value = 0; 
+                    sc1.value = 21; sc2.value = 0;
                     window.kira(id);
                     adaPerubahan = true;
                 } 
-                // KES 2: BYE vs Pemain Sebenar (Pemain Sebenar Menang)
+                // Kes: BYE vs Pemain
                 else if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
-                    sc1.value = 0; 
-                    sc2.value = 21; 
+                    sc1.value = 0; sc2.value = 21;
                     window.kira(id);
                     adaPerubahan = true;
                 }
-                // KES 3: BYE vs BYE (BYE "Menang" untuk teruskan bracket)
+                // Kes: BYE vs BYE (Sering berlaku di Loser Bracket)
                 else if (p1 === "BYE" && p2 === "BYE") {
-                    sc1.value = 0;
-                    sc2.value = 0;
+                    sc1.value = 0; sc2.value = 0;
                     window.kira(id);
                     adaPerubahan = true;
                 }
@@ -536,12 +532,13 @@ window.kira = (id) => {
         });
     });
 
-    // PENTING: Jika ada perubahan, panggil semula secara rekursif 
-    // untuk tolak pemain ke pusingan seterusnya jika ada BYE lagi.
+    // Jika ada yang menang secara automatik, sistem akan semak semula 
+    // pusingan seterusnya untuk kesan "double BYE"
     if (adaPerubahan) {
-        setTimeout(() => autoBye(), 50); 
+        setTimeout(() => autoBye(), 100);
     }
 }
+
 
 
 // --- 2. PENYELARASAN LEBAR BRACKET ---
