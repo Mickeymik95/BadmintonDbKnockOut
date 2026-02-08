@@ -443,30 +443,28 @@ window.kira = (id) => {
     let sc2 = document.getElementById(id+'_sc2').value;
     const sl1 = document.getElementById(id+'_s1');
     const sl2 = document.getElementById(id+'_s2');
-    
+
     const p1 = document.getElementById(id + '_p1').value;
     const p2 = document.getElementById(id + '_p2').value;
 
-    // 1. Jika kotak skor masih kosong, jangan buat apa-apa
+    // 1. Validasi Skor
     if(sc1 === "" || sc2 === "") return;
-    
-    // 2. Benarkan skor 0-0 diproses HANYA jika ia adalah BYE lawan BYE
     if(sc1 === sc2 && !(p1 === "BYE" && p2 === "BYE")) return;
 
-    // 3. Tentukan pemenang. Jika BYE lawan BYE, sistem pilih slot 1 sebagai pemenang automatik
+    // 2. Tentukan Pemenang
     let win = (p1 === "BYE" && p2 === "BYE") ? 1 : (parseInt(sc1) > parseInt(sc2) ? 1 : 2);
-    
+
     sl1.classList.toggle('pemenang', win === 1); 
     sl2.classList.toggle('pemenang', win === 2);
 
-    let winN = document.getElementById(`${id}_p${win}`).value, 
-        winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
-    let losN = document.getElementById(`${id}_p${win===1?2:1}`).value, 
-        losP = document.getElementById(`${id}_s${win===1?2:1}`).getAttribute('data-pid');
+    let winN = document.getElementById(`${id}_p${win}`).value;
+    let winP = document.getElementById(`${id}_s${win}`).getAttribute('data-pid');
+    let losN = document.getElementById(`${id}_p${win===1?2:1}`).value;
+    let losP = document.getElementById(`${id}_s${win===1?2:1}`).getAttribute('data-pid');
 
     let p = id.split('_'), r = parseInt(p[1]), m = parseInt(p[2]);
 
-    // LOGIK WINNER BRACKET (Sama seperti kod asal anda tetapi ditambah autoBye)
+    // 3. Logik Pergerakan Bracket
     if(p[0] === 'W') {
         let nextR = r + 1, nextM = Math.floor(m/2), nextS = (m % 2) + 1;
         if(r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
@@ -474,10 +472,9 @@ window.kira = (id) => {
 
         if(r === 0) updateSlot(`L_0_${Math.floor(m/2)}`, (m % 2) + 1, losN, losP);
         else if(r === 1) updateSlot(`L_1_${3-m}`, 2, losN, losP);
-        else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
+                else if(r === 2) updateSlot(`L_3_${1-m}`, 2, losN, losP);
         else if(r === 3) updateSlot(`L_5_0`, 2, losN, losP);
     } 
-    // LOGIK LOSER BRACKET
     else if(p[0] === 'L') {
         if(r < 5) {
             if(r % 2 === 0) updateSlot(`L_${r+1}_${m}`, 1, winN, winP);
@@ -486,14 +483,43 @@ window.kira = (id) => {
             updateSlot('GF_0_0', 2, winN, winP);
         }
     } 
-    // LOGIK GRAND FINAL
+    // --- BAHAGIAN YANG ANDA TERLEPAS (DIBAIKI) ---
     else if(p[0] === 'GF') {
-        document.getElementById('podiumFinal').style.display = 'block';
+        const podium = document.getElementById('podiumFinal');
+        if(podium) {
+            podium.style.display = 'block';
+            
+            // Masukkan Nama Juara (Pemenang GF)
+            const pName1 = document.getElementById('pod_name1');
+            if(pName1) pName1.innerText = winN;
+            updateAvatar('pod', 1, winN, (window.teamNames[winP]?.avatar || ''));
+
+            // Masukkan Nama Naib Juara (Kalah GF)
+            const pName2 = document.getElementById('pod_name2');
+            if(pName2) pName2.innerText = losN;
+            updateAvatar('pod', 2, losN, (window.teamNames[losP]?.avatar || ''));
+
+            // Masukkan Nama Tempat Ke-3 (Kalah di Loser Final L_5_0)
+            const finalLoser = document.getElementById('L_5_0');
+            if(finalLoser) {
+                const sL1 = document.getElementById('L_5_0_sc1').value;
+                const sL2 = document.getElementById('L_5_0_sc2').value;
+                if(sL1 !== "" && sL2 !== "") {
+                    const isWin1 = parseInt(sL1) > parseInt(sL2);
+                    const t3Nama = isWin1 ? document.getElementById('L_5_0_p2').value : document.getElementById('L_5_0_p1').value;
+                    const t3Pid = isWin1 ? document.getElementById('L_5_0_s2').getAttribute('data-pid') : document.getElementById('L_5_0_s1').getAttribute('data-pid');
+                    
+                    const pName3 = document.getElementById('pod_name3');
+                    if(pName3) pName3.innerText = t3Nama;
+                    updateAvatar('pod', 3, t3Nama, (window.teamNames[t3Pid]?.avatar || ''));
+                }
+            }
+        }
     }
 
-    // PENTING: Panggil fungsi autoBye supaya jika pusingan depan ada BYE, ia terus menang lagi
     autoBye(); 
 };
+
 
  function autoBye() {
     const brackets = ['W', 'L', 'GF'];
