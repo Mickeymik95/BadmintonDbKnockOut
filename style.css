@@ -319,8 +319,14 @@ body {
 .path-gangsa { background: var(--soft-gangsa) !important; border-left: 4px solid #cd7f32; }
 .path-gangsa .nama-display { color: #ff9f43 !important; }
 
-.grand-final { width: 320px !important; border: 3px solid #ffd700 !important; transform: scale(1.05); 
-    box-shadow: var(--glow-emas); z-index: 5; }
+.grand-final { 
+    width: 320px !important; 
+    border: 3px solid #00d2ff !important; /* Biru Cyan */
+    transform: scale(1.05); 
+    box-shadow: 0 0 40px rgba(0, 210, 255, 0.6); /* Glow Biru */
+    z-index: 5; 
+}
+
 
 .loser-final-highlight { transform: scale(1.02); }
 .loser-final-highlight .kotak-perlawanan {
