@@ -74,65 +74,64 @@ body {
 #barisL { border: 2px solid rgba(231, 76, 60, 0.3); box-shadow: inset 0 0 50px rgba(231, 76, 60, 0.05); }
 #barisL .label-bracket { background: var(--kalah); color: #fff; }
 
+/* 1. KOD UTAMA PODIUM (SAIZ SEIMBANG) */
 #podiumFinal {
     position: absolute; 
     bottom: 50px; 
-    left: 70%; /* Tolak ke kanan (adjust antara 65% - 75%) */
-    transform: translateX(-50%) scale(1.8); /* Besarkan lagi sedikit */
+    left: 70%; 
+    /* Kecilkan skala ke 1.2 supaya tidak tutup 70% skrin */
+    transform: translateX(-50%) scale(1.2); 
     display: block; 
     background: linear-gradient(180deg, #1a1a1f 0%, #0b0b0d 100%); 
-    border: 5px solid #ffd700; /* Tebalkan border emas */
-    padding: 60px 100px; 
-    border-radius: 60px; 
-    box-shadow: 0 0 100px rgba(255, 215, 0, 0.8); /* Glow lebih padu */
+    border: 3px solid #ffd700;
+    padding: 30px 50px; 
+    border-radius: 35px; 
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); 
     z-index: 200;
-    min-width: 900px; 
+    min-width: 550px; 
     text-align: center;
 }
 
-
+/* 2. TAJUK (ELAK BERTINDIH DENGAN MEDAL) */
 .podium-title { 
-    font-size: 1.4rem !important; 
+    font-size: 1rem !important; 
     color: #ffd700; 
     font-weight: 900; 
     text-transform: uppercase; 
-    letter-spacing: 6px; 
-    /* Tambah padding-top supaya teks ada ruang atas */
-    padding-top: 20px;
-    /* Tambah margin-bottom yang sangat besar supaya ikon rank tak tutup teks */
-    margin-bottom: 100px !important; 
+    letter-spacing: 4px; 
+    /* Jarak bawah 90px supaya medal ada ruang di tengah */
+    margin-bottom: 90px !important; 
     opacity: 0.9;
     display: block;
-    position: relative;
 }
 
-
+/* 3. SAIZ ITEM DALAM (OPTIMUM) */
 .pod-rank { 
-    font-size: 5rem !important; /* Ikon 1,2,3 jadi lebih besar */
-    margin-bottom: 15px !important; 
+    font-size: 3.5rem !important; /* Saiz medal sederhana besar */
+    margin-bottom: 10px !important; 
 }
 
 .pod-avatar { 
-    width: 130px !important; /* Bulatan gambar lebih besar */
-    height: 130px !important; 
-    font-size: 2.5rem !important; 
-    margin-bottom: 20px !important;
-    border: 4px solid rgba(255,215,0,0.5);
+    width: 85px !important; 
+    height: 85px !important; 
+    font-size: 1.5rem !important; 
+    margin-bottom: 15px !important;
+    border: 2px solid rgba(255,215,0,0.3);
 }
 
 .pod-name { 
-    font-weight: 950; 
-    font-size: 2.5rem !important; /* Nama paling jelas */
+    font-weight: 900; 
+    font-size: 1.8rem !important; /* Nama jelas tapi tak melampau */
     color: #fff; 
     text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(255,255,255,0.3);
 }
 
 .pod-label { 
-    font-size: 1.1rem !important; 
-    margin-top: 10px;
-    color: #ccc;
+    font-size: 0.85rem !important; 
+    color: #bbb;
+    margin-top: 5px;
 }
+
 
 
 
