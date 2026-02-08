@@ -212,30 +212,33 @@ window.saveAll = () => {
 };  
 
 window.resetSkor = async () => {
-    if(confirm("Reset semua skor sahaja? Nama, Nombor Match & Pusingan (P) akan dikekalkan.")) {
+    // Mesej amaran yang lebih jelas
+    if(confirm("Reset semua skor sahaja? Nama Peserta, Nombor Match dan Sequence (P) akan DIKEKALKAN.")) {
         try {
+            // 1. Ambil data terkini dari Firebase dahulu
             const snapshot = await get(dbRef);
             const data = snapshot.val() || {};
-            
-            // Kita bina objek baru dengan mengambil data lama yang penting
-            const dataBaru = {
-                n: data.n || 16,
-                teams: data.teams || {},
-                matchNumbers: data.matchNumbers || {},
-                roundSequence: data.roundSequence || {}, // Kekalkan P1, P2...
-                matchLabels: data.matchLabels || {},      // Kekalkan label
-                scores: {} // HANYA skor sahaja yang kita kosongkan
-            };
 
-            await set(dbRef, dataBaru);
-            alert("Skor telah di-reset!");
+            // 2. Hantar semula data, tetapi kosongkan bahagian 'scores' sahaja
+            // Kita kekalkan teams, matchNumbers, dan roundSequence
+            await set(dbRef, { 
+                n: 16, 
+                teams: data.teams || {}, 
+                matchNumbers: data.matchNumbers || {},
+                roundSequence: data.roundSequence || {}, // Ini untuk kekalkan P1, P2 dsb
+                scores: {}, // Skor disetkan kepada kosong
+                matchLabels: data.matchLabels || {}
+            });
+
+            alert("Skor berjaya di-reset. Data lain dikekalkan.");
             location.reload();
         } catch (error) {
-            console.error(error);
-            alert("Gagal reset data.");
+            console.error("Ralat reset skor:", error);
+            alert("Gagal reset skor. Sila semak sambungan internet atau console.");
         }
     }
 };
+
 window.resetTournament = () => {
     if(confirm("Reset semua data? Ini akan memadam SEMUA Nama, Skor dan Nombor Match.")) {
         set(dbRef, { n: 16, teams: {}, scores: {}, matchNumbers: {} }).then(() => location.reload());
