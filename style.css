@@ -88,7 +88,6 @@ body {
     box-shadow: 0 0 60px rgba(255, 215, 0, 0.6); 
     z-index: 200;
     width: 950px; /* Lebarkan gila-gila (asal 650px) */
-    max-width: 95vw; 
     text-align: center;
 }
 
