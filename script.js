@@ -590,11 +590,27 @@ function jana(savedScores, savedMatchLabels, savedRoundSequence) {
 
 // Modified: Seed-no now positioned OUTSIDE the slot-pasukan container (via CSS positioning)
 function updateSlot(mid, slot, nama, pid) {
+  console.log(`🔄 updateSlot: ${mid} slot ${slot} → ${nama} (PID: ${pid})`);
+  
   const pEl = document.getElementById(`${mid}_p${slot}`);
   const sEl = document.getElementById(`${mid}_s${slot}`);
   const sdEl = document.getElementById(`${mid}_sd${slot}`);
-  if (pEl) pEl.value = nama;
-  if (sEl) sEl.setAttribute("data-pid", pid);
+  
+  if (pEl) {
+    pEl.value = nama;
+    console.log(`✅ Updated ${mid}_p${slot} with: ${nama}`);
+  }
+  
+  if (sEl) {
+    sEl.setAttribute("data-pid", pid);
+    console.log(`✅ Set ${mid}_s${slot} PID: ${pid}`);
+  }
+
+  if (sdEl) {
+    sdEl.textContent = pid;
+    sdEl.style.display = "";
+    console.log(`✅ Updated ${mid}_sd${slot} seed: ${pid}`);
+  }
 
   const avatarUrl =
     window.teamNames && window.teamNames[pid]
@@ -687,20 +703,44 @@ window.kira = (id) => {
       let nextR = r + 1,
         nextM = Math.floor(m / 2),
         nextS = (m % 2) + 1;
+      
+      console.log(`🏆 Winner bracket: ${winN} from ${id} → W_${nextR}_${nextM} slot ${nextS}`);
+      
       if (r < 3) updateSlot(`W_${nextR}_${nextM}`, nextS, winN, winP);
-      else if (r === 3) updateSlot("GF_0_0", 1, winN, winP);
+      else if (r === 3) {
+        console.log(`🏆 Grand Final: ${winN} → GF_0_0 slot 1`);
+        updateSlot("GF_0_0", 1, winN, winP);
+      }
 
-      if (r === 0)
+      // Loser bracket movement
+      if (r === 0) {
+        console.log(`⬇️ Loser bracket: ${losN} from ${id} → L_0_${Math.floor(m / 2)} slot ${(m % 2) + 1}`);
         updateSlot(`L_0_${Math.floor(m / 2)}`, (m % 2) + 1, losN, losP);
-      else if (r === 1) updateSlot(`L_1_${3 - m}`, 2, losN, losP);
-      else if (r === 2) updateSlot(`L_3_${1 - m}`, 2, losN, losP);
-      else if (r === 3) updateSlot("L_5_0", 2, losN, losP);
+      }
+      else if (r === 1) {
+        console.log(`⬇️ Loser bracket: ${losN} from ${id} → L_1_${3 - m} slot 2`);
+        updateSlot(`L_1_${3 - m}`, 2, losN, losP);
+      }
+      else if (r === 2) {
+        console.log(`⬇️ Loser bracket: ${losN} from ${id} → L_3_${1 - m} slot 2`);
+        updateSlot(`L_3_${1 - m}`, 2, losN, losP);
+      }
+      else if (r === 3) {
+        console.log(`⬇️ Loser bracket: ${losN} from ${id} → L_5_0 slot 2`);
+        updateSlot("L_5_0", 2, losN, losP);
+      }
     } else if (p[0] === "L") {
       if (r < 5) {
-        if (r % 2 === 0) updateSlot(`L_${r + 1}_${m}`, 1, winN, winP);
-        else
+        if (r % 2 === 0) {
+          console.log(`🏆 Loser bracket: ${winN} from ${id} → L_${r + 1}_${m} slot 1`);
+          updateSlot(`L_${r + 1}_${m}`, 1, winN, winP);
+        }
+        else {
+          console.log(`🏆 Loser bracket: ${winN} from ${id} → L_${r + 1}_${Math.floor(m / 2)} slot ${(m % 2) + 1}`);
           updateSlot(`L_${r + 1}_${Math.floor(m / 2)}`, (m % 2) + 1, winN, winP);
+        }
       } else {
+        console.log(`🏆 Grand Final: ${winN} from ${id} → GF_0_0 slot 2`);
         updateSlot("GF_0_0", 2, winN, winP);
       }
     }
