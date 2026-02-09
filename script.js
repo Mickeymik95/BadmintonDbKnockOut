@@ -142,60 +142,72 @@ onValue(dbRef, (snapshot) => {
   if (!sedangFokus) {
     // Hantar data kosong ( {} ) jika data belum wujud di Firebase
     jana(data.scores || {}, data.matchLabels || {}, data.roundSequence || {});
+    
+    // Trigger autoBye selepas bracket siap
+    setTimeout(() => {
+      autoBye();
+    }, 500);
   }
 
   window.updateMatchHighlights();
 });
 
 window.saveAll = () => {
-  const inputSection = document.getElementById("pesertaInputSection");
-  if (!inputSection || inputSection.children.length === 0) return;
-
   console.log("🔄 saveAll() called - collecting admin data...");
   
   let teams = {};
   let usedSeeds = new Set();
   let hasConflict = false;
 
-  // 1. Kumpul data Peserta/Team
-  for (let i = 0; i < 16; i++) {
-    const seedInput = document.getElementById(`admin_seed${i}`);
-    const pInput = document.getElementById(`admin_p${i}`);
-    const pAvatarInput = document.getElementById(`admin_av${i}`);
+  // 1. Kumpul data Peserta/Team - JANGAN RETURN jika inputSection kosong
+  const inputSection = document.getElementById("pesertaInputSection");
+  
+  if (inputSection && inputSection.children.length > 0) {
+    // Normal flow - kumpil dari admin inputs
+    for (let i = 0; i < 16; i++) {
+      const seedInput = document.getElementById(`admin_seed${i}`);
+      const pInput = document.getElementById(`admin_p${i}`);
+      const pAvatarInput = document.getElementById(`admin_av${i}`);
 
-    if (seedInput) {
-      const seedValue = seedInput.value.trim();
-      if (seedValue === "") continue;
+      if (seedInput) {
+        const seedValue = seedInput.value.trim();
+        if (seedValue === "") continue;
 
-      const seedNum = parseInt(seedValue);
+        const seedNum = parseInt(seedValue);
 
-      if (seedNum < 1 || seedNum > 16) {
-        alert(`Slot ${i + 1}: Sila guna nombor seed antara 1-16.`);
-        seedInput.value = "";
-        continue;
+        if (seedNum < 1 || seedNum > 16) {
+          alert(`Slot ${i + 1}: Sila guna nombor seed antara 1-16.`);
+          seedInput.value = "";
+          continue;
+        }
+
+        if (usedSeeds.has(seedNum)) {
+          alert(
+            `Ralat: Nombor Seed ${seedNum} sudah digunakan! Sila guna nombor lain.`,
+          );
+          seedInput.value = "";
+          hasConflict = true;
+          continue;
+        }
+
+        usedSeeds.add(seedNum);
+        const namaValue = pInput.value.trim();
+
+        teams[seedNum - 1] = {
+          nama: namaValue === "" ? "BYE" : namaValue,
+          avatar: pAvatarInput.value.trim(),
+        };
       }
-
-      if (usedSeeds.has(seedNum)) {
-        alert(
-          `Ralat: Nombor Seed ${seedNum} sudah digunakan! Sila guna nombor lain.`,
-        );
-        seedInput.value = "";
-        hasConflict = true;
-        continue;
-      }
-
-      usedSeeds.add(seedNum);
-      const namaValue = pInput.value.trim();
-
-      teams[seedNum - 1] = {
-        nama: namaValue === "" ? "BYE" : namaValue,
-        avatar: pAvatarInput.value.trim(),
-      };
     }
+
+    if (hasConflict) return;
+  } else {
+    // Backup flow - gunakan window.teamNames yang sedia ada
+    console.log("📋 Using backup data from window.teamNames");
+    teams = window.teamNames || {};
   }
 
-  if (hasConflict) return;
-
+  // Pastikan semua 16 slots ada data
   for (let j = 0; j < 16; j++) {
     if (!teams[j]) teams[j] = { nama: "BYE", avatar: "" };
   }
@@ -251,6 +263,8 @@ window.saveAll = () => {
       }
       // Selepas simpan, terus update highlight
       window.updateMatchHighlights();
+      // Trigger autoBye untuk process BYE matches
+      autoBye();
       console.log("✅ Save successful!");
     })
     .catch((err) => {
@@ -760,6 +774,7 @@ window.kira = (id) => {
 };
 
 function autoBye() {
+  console.log("🏆 autoBye() called - checking BYE matches...");
   const brackets = ["W", "L", "GF"];
   let adaPerubahan = false;
 
@@ -777,6 +792,7 @@ function autoBye() {
         if (sc1.value === "" && sc2.value === "") {
           // KES 1: Pemain vs BYE (Auto win hanya jika lawan BYE)
           if (p1 !== "" && p1 !== "BYE" && p1 !== "..." && p2 === "BYE") {
+            console.log(`🎯 Auto-win BYE: ${p1} vs BYE → 21-0`);
             sc1.value = 21;
             sc2.value = 0;
             // JANGAN panggil kira() dulu - tunggu pusingan selesai
@@ -784,6 +800,7 @@ function autoBye() {
           }
           // KES 2: BYE vs Pemain (Auto win hanya jika lawan BYE)
           else if (p1 === "BYE" && p2 !== "" && p2 !== "BYE" && p2 !== "...") {
+            console.log(`🎯 Auto-win BYE: BYE vs ${p2} → 0-21`);
             sc1.value = 0;
             sc2.value = 21;
             // JANGAN panggil kira() dulu - tunggu pusingan selesai
@@ -791,6 +808,7 @@ function autoBye() {
           }
           // KES 3: BYE vs BYE (Auto draw)
           else if (p1 === "BYE" && p2 === "BYE") {
+            console.log(`🤝 Auto-draw BYE: BYE vs BYE → 0-0`);
             sc1.value = 0;
             sc2.value = 0;
             // JANGAN panggil kira() dulu - tunggu pusingan selesai
@@ -804,10 +822,13 @@ function autoBye() {
 
   // Jika ada perubahan, check jika pusingan selesai baru proses
   if (adaPerubahan) {
+    console.log("🔄 BYE matches updated, checking round completion...");
     setTimeout(() => {
       // Check semua match dalam pusingan aktif
       checkDanProsesPusinganSelesai();
     }, 100);
+  } else {
+    console.log("📋 No BYE matches to process");
   }
 }
 
