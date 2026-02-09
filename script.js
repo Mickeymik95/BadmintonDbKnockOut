@@ -56,9 +56,9 @@ function populatePesertaInputs() {
 
     groupDiv.innerHTML = `
             <label>INPUT SLOT ${i + 1}</label>
-            <input type="number" id="admin_seed${i}" value="${i + 1}" min="1" max="16" placeholder="No Seed">
-            <input type="text" id="admin_p${i}" value="${initialNama === "BYE" ? "" : initialNama}" placeholder="Nama Pasukan">
-            <input type="text" id="admin_av${i}" value="${initialAv}" placeholder="Link Avatar URL">
+            <input type="number" id="admin_seed${i}" value="${i + 1}" min="1" max="16" placeholder="No Seed" class="admin-input">
+            <input type="text" id="admin_p${i}" value="${initialNama === "BYE" ? "" : initialNama}" placeholder="Nama Pasukan" class="admin-input">
+            <input type="text" id="admin_av${i}" value="${initialAv}" placeholder="Link Avatar URL" class="admin-input">
         `;
     section.appendChild(groupDiv);
   }
@@ -151,6 +151,8 @@ window.saveAll = () => {
   const inputSection = document.getElementById("pesertaInputSection");
   if (!inputSection || inputSection.children.length === 0) return;
 
+  console.log("🔄 saveAll() called - collecting admin data...");
+  
   let teams = {};
   let usedSeeds = new Set();
   let hasConflict = false;
@@ -198,6 +200,8 @@ window.saveAll = () => {
     if (!teams[j]) teams[j] = { nama: "BYE", avatar: "" };
   }
 
+  console.log("📊 Teams data collected:", teams);
+
   // 2. Kumpul data Skor
   let scores = {};
   document.querySelectorAll(".skor").forEach((s) => {
@@ -221,14 +225,22 @@ window.saveAll = () => {
     }
   });
 
+  console.log("🏆 Match labels:", matchLabels);
+  console.log("🔄 Round sequence:", roundSequence);
+  console.log("📈 Scores:", scores);
+
   // 4. Simpan SEMUA ke Firebase (Termasuk roundSequence)
-  set(dbRef, {
+  const dataToSave = {
     n: 16,
     teams: teams,
     scores: scores,
     matchLabels: matchLabels,
     roundSequence: roundSequence, // Simpan nombor highlight di sini
-  })
+  };
+
+  console.log("💾 Saving to Firebase:", dataToSave);
+
+  set(dbRef, dataToSave)
     .then(() => {
       const toast = document.getElementById("syncToast");
       if (toast) {
@@ -239,8 +251,12 @@ window.saveAll = () => {
       }
       // Selepas simpan, terus update highlight
       window.updateMatchHighlights();
+      console.log("✅ Save successful!");
     })
-    .catch((err) => alert("Gagal simpan: " + err));
+    .catch((err) => {
+      console.error("❌ Save failed:", err);
+      alert("Gagal simpan: " + err);
+    });
 };
 
 window.resetSkor = async () => {
