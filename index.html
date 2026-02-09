@@ -1,76 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BADMINTON KELUARGA² SAJA' - SIRI 2</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body onload="checkPersistentAdmin()">
-
-<div class="main-wrapper">
-    <div class="header-container">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body onload="checkPersistentAdmin()">
+    <div class="main-wrapper">
+      <div class="header-container">
         <div class="tajuk-box">
-            <h1>KEJOHANAN BADMINTON KELUARGA²</h1>
-            <p>• SIRI 2 • 15 FEBRUARI 2026 •</p>
-            <div id="syncToast">✓ Data Berjaya diKemaskini</div>
+          <h1>KEJOHANAN BADMINTON KELUARGA²</h1>
+          <p>• SIRI 2 • 15 FEBRUARI 2026 •</p>
+          <div id="syncToast">✓ Data Berjaya diKemaskini</div>
         </div>
 
         <div class="header-actions-grid">
-            <button class="btn-action" onclick="toggleAdmin()">⚙️ PANEL ADMIN</button>
-            <button id="btnLogout" class="btn-action admin-only" onclick="logoutAdmin()">🚪 KELUAR</button>
-            <button id="btnResetSkor" class="btn-action admin-only" style="border-color:#f39c12; color:#f39c12;" onclick="resetSkor()">🔄 RESET SKOR</button>
-            <button id="btnResetAll" class="btn-action admin-only" style="border-color:var(--kalah); color:var(--kalah);" onclick="resetTournament()">⚠️ RESET ALL</button>
+          <button class="btn-action" onclick="toggleAdmin()">
+            ⚙️ PANEL ADMIN
+          </button>
+          <button
+            id="btnLogout"
+            class="btn-action admin-only"
+            onclick="logoutAdmin()"
+          >
+            🚪 KELUAR
+          </button>
+          <button
+            id="btnResetSkor"
+            class="btn-action admin-only"
+            style="border-color: #f39c12; color: #f39c12"
+            onclick="resetSkor()"
+          >
+            🔄 RESET SKOR
+          </button>
+          <button
+            id="btnResetAll"
+            class="btn-action admin-only"
+            style="border-color: var(--kalah); color: var(--kalah)"
+            onclick="resetTournament()"
+          >
+            ⚠️ RESET ALL
+          </button>
+          <button
+            class="btn-action"
+            style="border-color: #e74c3c; color: #e74c3c"
+            onclick="recoverData()"
+          >
+            🚨 RECOVER DATA
+          </button>
         </div>
-    </div>
+      </div>
 
-    <div class="tournament-layout">
+      <div class="tournament-layout">
         <div id="barisW" class="laluan-row">
-            <div class="label-bracket">Winner Bracket (Upper)</div>
-            <div id="podiumFinal">
-                <div class="podium-title">KEPUTUSAN RASMI</div>
-                <div class="podium-flex">
-                    <div class="podium-item" style="order:1;">
-                        <span class="pod-rank">🥈</span>
-                        <div class="pod-avatar" id="pod_av2"></div>
-                        <span class="pod-name" id="res_2">-</span>
-                        <span class="pod-label">NAIB JUARA</span>
-                    </div>
-                    <div class="podium-item" style="order:2; transform: translateY(-15px) scale(1.2);">
-                        <span class="pod-rank">🥇</span>
-                        <div class="pod-avatar" id="pod_av1"></div>
-                        <span class="pod-name" id="res_1" style="color:#ffd700;">-</span>
-                        <span class="pod-label" style="color:#ffd700;">JUARA</span>
-                    </div>
-                    <div class="podium-item" style="order:3;">
-                        <span class="pod-rank">🥉</span>
-                        <div class="pod-avatar" id="pod_av3"></div>
-                        <span class="pod-name" id="res_3">-</span>
-                        <span class="pod-label">TEMKAT KE TIGA</span>
-                    </div>
-                </div>
+          <div class="label-bracket">Winner Bracket (Upper)</div>
+          <div id="podiumFinal">
+            <div class="podium-title">KEPUTUSAN RASMI</div>
+            <div class="podium-flex">
+              <div class="podium-item" style="order: 1">
+                <span class="pod-rank">🥈</span>
+                <div class="pod-avatar" id="pod_av2"></div>
+                <span class="pod-name" id="res_2">-</span>
+                <span class="pod-label">NAIB JUARA</span>
+              </div>
+              <div
+                class="podium-item"
+                style="order: 2; transform: translateY(-15px) scale(1.2)"
+              >
+                <span class="pod-rank">🥇</span>
+                <div class="pod-avatar" id="pod_av1"></div>
+                <span class="pod-name" id="res_1" style="color: #ffd700"
+                  >-</span
+                >
+                <span class="pod-label" style="color: #ffd700">JUARA</span>
+              </div>
+              <div class="podium-item" style="order: 3">
+                <span class="pod-rank">🥉</span>
+                <div class="pod-avatar" id="pod_av3"></div>
+                <span class="pod-name" id="res_3">-</span>
+                <span class="pod-label">TEMKAT KE TIGA</span>
+              </div>
             </div>
+          </div>
         </div>
 
         <div id="barisL" class="laluan-row">
-            <div class="label-bracket">Loser Bracket (Lower)</div>
+          <div class="label-bracket">Loser Bracket (Lower)</div>
         </div>
+      </div>
     </div>
-</div>
-<div id="panelAdmin">
-    <h2 style="margin-top:0; font-size:1.2rem; color:var(--utama);">ADMIN ACCESS</h2>
-    <button id="closePanelBtn" class="btn-action" style="position:absolute; top:14px; right:14px; width:36px; height:36px; padding:0; display:flex; align-items:center; justify-content:center;" onclick="toggleAdmin()">✕</button>
-    <div id="authSection">
-        <input type="password" id="passInput" style="width:100%; padding:15px; background:#000; color:#fff; border:1px solid #333; border-radius:10px; margin-bottom:15px;" placeholder="Password">
-        <button onclick="checkAuth()" class="btn-action" style="width:100%">LOG MASUK</button>
-    </div>
-    <div id="adminStatus" class="admin-only">
-        <p style="color:var(--menang); font-size:0.8rem; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;">✔ MOD ADMIN AKTIF</p>
-        <h3 style="margin-top:20px; color:var(--utama); font-size:1rem;">INPUT PESERTA (16 PEMAIN)</h3>
+    <div id="panelAdmin">
+      <h2 style="margin-top: 0; font-size: 1.2rem; color: var(--utama)">
+        ADMIN ACCESS
+      </h2>
+      <button
+        id="closePanelBtn"
+        class="btn-action"
+        style="
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+        onclick="toggleAdmin()"
+      >
+        ✕
+      </button>
+      <div id="authSection">
+        <input
+          type="password"
+          id="passInput"
+          style="
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 10px;
+            margin-bottom: 15px;
+          "
+          placeholder="Password"
+        />
+        <button onclick="checkAuth()" class="btn-action" style="width: 100%">
+          LOG MASUK
+        </button>
+      </div>
+      <div id="adminStatus" class="admin-only">
+        <p
+          style="
+            color: var(--menang);
+            font-size: 0.8rem;
+            background: rgba(46, 204, 113, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+          "
+        >
+          ✔ MOD ADMIN AKTIF
+        </p>
+        <h3 style="margin-top: 20px; color: var(--utama); font-size: 1rem">
+          INPUT PESERTA (16 PEMAIN)
+        </h3>
         <div id="pesertaInputSection"></div>
+      </div>
     </div>
-</div>
 
     <script type="module" src="script.js"></script>
-</body>
+  </body>
 </html>

@@ -132,15 +132,27 @@ window.toggleAdmin = () => {
 onValue(dbRef, (snapshot) => {
   const data = snapshot.val() || {}; // Gunakan objek kosong jika data null
 
-  // Pastikan teamNames sentiasa ada data asas
-  window.teamNames = data.teams || {};
+  // JANGAN OVERWRITE JIKA DATA KOSONG - PASTIKAN DATA ASAL KEKAL
+  if (!data || !data.teams || Object.keys(data.teams).length === 0) {
+    console.log("⚠️ Firebase data is empty, keeping current data");
+    return; // JANGAN lukis semula jika data kosong
+  }
+
+  // BACKUP PROTECTION - JANGAN OVERWRITE DENGAN DATA KOSONG
+  if (window.teamNames && Object.keys(window.teamNames).length > 0) {
+    console.log("🛡️ Protecting existing team data from overwrite");
+    // Jangan overwrite window.teamNames jika sudah ada data
+  } else {
+    console.log("📋 Loading teams from Firebase");
+    window.teamNames = data.teams || {};
+  }
 
   // SEMAK: Adakah kursor sedang berada dalam kotak input?
   const sedangFokus = document.activeElement.tagName === "INPUT";
 
-  // Lukis semula bracket walaupun data.teams kosong
+  // Lukis semula bracket hanya jika data ada
   if (!sedangFokus) {
-    // Hantar data kosong ( {} ) jika data belum wujud di Firebase
+    console.log("🔄 Drawing bracket with data:", data);
     jana(data.scores || {}, data.matchLabels || {}, data.roundSequence || {});
     
     // Trigger autoBye selepas bracket siap
@@ -151,6 +163,38 @@ onValue(dbRef, (snapshot) => {
 
   window.updateMatchHighlights();
 });
+
+window.recoverData = () => {
+  console.log("🚨 EMERGENCY DATA RECOVERY");
+  
+  // Dapatkan data dari Firebase
+  get(dbRef).then((snapshot) => {
+    const data = snapshot.val() || {};
+    console.log("📋 Firebase data:", data);
+    
+    // Jika ada teams data, restore
+    if (data.teams && Object.keys(data.teams).length > 0) {
+      window.teamNames = data.teams;
+      console.log("✅ Teams data restored:", window.teamNames);
+      
+      // Rebuild bracket
+      jana(data.scores || {}, data.matchLabels || {}, data.roundSequence || {});
+      
+      // Restore admin inputs
+      if (document.getElementById("pesertaInputSection")) {
+        populatePesertaInputs();
+        updatePesertaInputDisplay();
+      }
+      
+      alert("✅ Data berjaya dipulihkan!");
+    } else {
+      alert("❌ Tiada data untuk dipulihkan dalam Firebase");
+    }
+  }).catch((err) => {
+    console.error("❌ Recovery failed:", err);
+    alert("❌ Gagal pulihkan data: " + err);
+  });
+};
 
 window.saveAll = () => {
   console.log("🔄 saveAll() called - collecting admin data...");
@@ -205,6 +249,12 @@ window.saveAll = () => {
     // Backup flow - gunakan window.teamNames yang sedia ada
     console.log("📋 Using backup data from window.teamNames");
     teams = window.teamNames || {};
+  }
+
+  // PASTIKAN TEAMS TIDAK KOSONG - JANGAN OVERWRITE DENGAN BYE
+  if (!teams || Object.keys(teams).length === 0) {
+    console.log("⚠️ Teams data is empty, skipping save to prevent data loss");
+    return;
   }
 
   // Pastikan semua 16 slots ada data
