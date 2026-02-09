@@ -834,19 +834,25 @@ function autoBye() {
 
 // Fungsi baru: Check dan proses pusingan selesai
 function checkDanProsesPusinganSelesai() {
+  console.log("🔄 checkDanProsesPusinganSelesai() called");
   // Dapatkan pusingan aktif dari round sequence
   get(ref(db, "tournament_data/roundSequence")).then((snapshot) => {
     const sequences = snapshot.val() || {};
+    console.log("📋 Round sequences:", sequences);
     
     // Susun pusingan ikut nombor
     const sortedRounds = Object.entries(sequences)
       .filter(([id, val]) => val !== "" && val !== null)
       .sort((a, b) => parseInt(a[1]) - parseInt(b[1]));
 
+    console.log("📊 Sorted rounds:", sortedRounds);
+
     for (let [roundId, seqNo] of sortedRounds) {
       const matchesInRound = document.querySelectorAll(
         `[id^="${roundId}_"].kotak-perlawanan`,
       );
+      
+      console.log(`🔍 Checking round ${roundId} with ${matchesInRound.length} matches`);
       
       let pusinganSelesai = true;
       let matchIdsToProcess = [];
@@ -854,6 +860,8 @@ function checkDanProsesPusinganSelesai() {
       matchesInRound.forEach((box) => {
         const sc1 = document.getElementById(box.id + "_sc1")?.value || "";
         const sc2 = document.getElementById(box.id + "_sc2")?.value || "";
+        
+        console.log(`📝 Match ${box.id}: ${sc1}-${sc2}`);
         
         // Check jika match ada skor (termasuk auto-win)
         if (sc1 !== "" && sc2 !== "") {
@@ -864,9 +872,14 @@ function checkDanProsesPusinganSelesai() {
         }
       });
 
+      console.log(`🏆 Round ${roundId} completed: ${pusinganSelesai}`);
+      console.log(`🎯 Matches to process:`, matchIdsToProcess);
+
       // Jika pusingan ini selesai, proses semua match
       if (pusinganSelesai && matchIdsToProcess.length > 0) {
+        console.log(`⚡ Processing ${matchIdsToProcess.length} matches in round ${roundId}`);
         matchIdsToProcess.forEach(matchId => {
+          console.log(`🎮 Processing match: ${matchId}`);
           window.kira(matchId);
         });
         break; // Proses satu pusingan pada satu masa
