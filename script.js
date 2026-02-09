@@ -369,6 +369,7 @@ bw.appendChild(divGF);
         });
     });
     autoBye();
+    updateMatchLabelsForBye(); // Update match labels untuk BYE
     penyelarasanLebar();
 
   // --- Letakkan ini di bahagian paling bawah dalam fungsi jana() ---
@@ -524,6 +525,7 @@ window.kira = (id) => {
     }
 
     autoBye(); 
+    updateMatchLabelsForBye(); // Update match labels untuk BYE
 };
 
 
@@ -573,7 +575,44 @@ window.kira = (id) => {
 
 
 
-// --- 2. PENYELARASAN LEBAR BRACKET ---
+// --- 4. AUTO UPDATE MATCH LABEL UNTUK BYE MATCHES ---
+function updateMatchLabelsForBye() {
+    document.querySelectorAll('.kotak-perlawanan').forEach(box => {
+        const id = box.id;
+        const labelInput = document.getElementById(id + '_label');
+        if (!labelInput) return;
+        
+        const p1 = document.getElementById(id + '_p1').value;
+        const p2 = document.getElementById(id + '_p2').value;
+        
+        // Check jika mana-mana pemain adalah BYE
+        if (p1 === "BYE" || p2 === "BYE") {
+            labelInput.value = "BYE";
+            labelInput.style.color = "#FFD700"; // Warna kuning
+            labelInput.style.fontWeight = "900";
+            labelInput.style.textShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
+        } else {
+            // Kembali ke nilai asal jika tiada BYE
+            const matchNum = id.includes('GF') ? 30 : 
+                           id.includes('L') ? parseInt(id.split('_')[2]) + 16 : 
+                           parseInt(id.split('_')[2]) + 1;
+            
+            if (id.includes('GF')) {
+                labelInput.value = "P30 GRAND FINAL";
+            } else if (id.includes('L_5')) {
+                labelInput.value = "P29 FINAL LOSER";
+            } else {
+                labelInput.value = `P${matchNum}`;
+            }
+            
+            labelInput.style.color = "rgb(217, 0, 255)"; // Warna ungu asal
+            labelInput.style.fontWeight = "900";
+            labelInput.style.textShadow = "none";
+        }
+    });
+}
+
+// --- 5. PENYELARASAN LEBAR BRACKET ---
 function penyelarasanLebar() {
     setTimeout(() => {
         const bw = document.getElementById('barisW');
