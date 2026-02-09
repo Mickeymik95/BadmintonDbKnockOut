@@ -229,7 +229,7 @@ function createBox(j, r, m, matchNum) {
 
     // TAMBAH 'disabled' pada input match-top-input
     box.innerHTML = `
-        <input type="text" class="match-top-input" id="${id}_label" value="${matchValue}" disabled />
+        <input type="text" class="match-top-input" id="${id}_label" value="${matchValue}" />
         <div class="slot-pasukan" id="${id}_s1">
             <span class="seed-no" id="${id}_sd1" style="display:none"></span>
             <div class="avatar" id="${id}_av1"></div>
@@ -382,8 +382,13 @@ document.querySelectorAll('.nama-display').forEach(el => {
 
 // 2. Kunci label Match (P1, P2, dll)
 document.querySelectorAll('.match-top-input').forEach(el => {
-    el.readOnly = true;
-    el.style.pointerEvents = "none";
+    if (window.isAdminMode) {
+        el.readOnly = false;
+        el.style.pointerEvents = "auto";
+    } else {
+        el.readOnly = true;
+        el.style.pointerEvents = "none";
+    }
 });
 
 // 3. Kawalan Input Skor

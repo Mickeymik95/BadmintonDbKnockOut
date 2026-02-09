@@ -448,12 +448,12 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  background: rgba(51, 53, 53, 0.05);
+  background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+  border-bottom: none;
   color: rgb(217, 0, 255);
   font-weight: 900;
-  font-size: 16px;
+  font-size: 20px;
   text-align: center;
   outline: none;
   padding: 5px 0;
