@@ -285,11 +285,20 @@ window.saveAll = () => {
           toast.style.opacity = "0";
         }, 2000);
       }
-      // Selepas simpan, terus update highlight
+      
+      // Update scores & matchLabels global
+      window.scores = scores;
+      window.matchLabels = matchLabels;
+      window.roundSequence = roundSequence;
+      window.teamNames = teams;
+      
+      // Update highlights tanpa reload
       window.updateMatchHighlights();
+      
       // Trigger autoBye untuk process BYE matches
       autoBye();
-      console.log("✅ Save successful!");
+      
+      console.log("✅ Save successful - real-time updated!");
     })
     .catch((err) => {
       console.error("❌ Save failed:", err);
@@ -1037,11 +1046,29 @@ document.addEventListener("change", function (e) {
     e.target.classList.contains("admin-input") ||
     e.target.classList.contains("match-top-input")
   ) {
-    // Tangguh save untuk tunggu proses kira selesai
+    console.log("🔄 Admin input changed, auto-saving...");
+    
+    // Auto-save immediately tanpa reload
     setTimeout(() => {
-      console.log("Auto-saving data...");
       window.saveAll();
-    }, 500); // Tangguh 500ms
+    }, 200); // Cepat save - 200ms
+    
+    // Real-time update tanpa reload
+    setTimeout(() => {
+      console.log("🔄 Real-time update triggered");
+      // Trigger update untuk bracket
+      if (e.target.classList.contains("admin-input")) {
+        // Update bracket dengan data baru
+        const snapshot = { val: () => window.teamNames || {} };
+        const data = snapshot.val();
+        
+        // Update window.teamNames
+        window.teamNames = data.teams || {};
+        
+        // Rebuild bracket tanpa reload
+        jana(window.scores || {}, window.matchLabels || {}, window.roundSequence || {});
+      }
+    }, 300);
   }
 });
 
