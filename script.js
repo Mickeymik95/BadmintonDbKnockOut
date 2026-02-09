@@ -135,6 +135,12 @@ onValue(dbRef, (snapshot) => {
   // JANGAN OVERWRITE JIKA DATA KOSONG - PASTIKAN DATA ASAL KEKAL
   if (!data || !data.teams || Object.keys(data.teams).length === 0) {
     console.log("⚠️ Firebase data is empty, keeping current data");
+    
+    // JIKA RESET TOURNAMENT - LUKIS BRACKET KOSONG
+    if (!window.teamNames || Object.keys(window.teamNames).length === 0) {
+      console.log("🔄 Drawing empty bracket after reset");
+      jana({}, {}, {});
+    }
     return; // JANGAN lukis semula jika data kosong
   }
 
@@ -360,13 +366,32 @@ window.resetTournament = () => {
       "Reset semua data? Ini akan memadam SEMUA Nama, Skor dan Nombor Match.",
     )
   ) {
+    // Backup current data sebelum reset
+    const currentTeams = window.teamNames || {};
+    
     set(dbRef, {
       n: 16,
-      teams: {},
+      teams: {},        // Reset teams
       scores: {},
       matchLabels: {},
       roundSequence: {},
-    }).then(() => location.reload());
+    }).then(() => {
+      // Clear local data
+      window.teamNames = {};
+      
+      // Rebuild bracket dengan data kosong
+      jana({}, {}, {});
+      
+      // Reset admin inputs
+      if (document.getElementById("pesertaInputSection")) {
+        document.getElementById("pesertaInputSection").innerHTML = "";
+        populatePesertaInputs();
+        updatePesertaInputDisplay();
+      }
+      
+      alert("Semua data berjaya di-reset.");
+      location.reload();
+    });
   }
 };
 
