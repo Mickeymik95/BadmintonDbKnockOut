@@ -45,9 +45,9 @@ function populatePesertaInputs() {
 
         groupDiv.innerHTML = `
             <label>INPUT SLOT ${i + 1}</label>
-            <input type="number" id="admin_seed${i}" value="${i+1}" min="1" max="16" placeholder="No Seed">
-            <input type="text" id="admin_p${i}" value="${initialNama === 'BYE' ? '' : initialNama}" placeholder="Nama Pasukan">
-            <input type="text" id="admin_av${i}" value="${initialAv}" placeholder="Link Avatar URL">
+            <input type="number" id="admin_seed${i}" value="${i+1}" min="1" max="16" placeholder="NO SEED">
+            <input type="text" id="admin_p${i}" value="${initialNama === 'BYE' ? '' : initialNama}" placeholder="NAMA PASUKAN">
+            <input type="text" id="admin_av${i}" value="${initialAv}" placeholder="LINK AVATAR URL">
         `;
         section.appendChild(groupDiv);
     }
@@ -122,7 +122,7 @@ window.saveAll = () => {
     let usedSeeds = new Set();
     let hasConflict = false;
 
-    // 1. Kumpul data dan semak pertindihan nombor
+    // 1. KUMPUL DATA DAN SEMAK PERTINDIHAN NOMBOR
     for(let i = 0; i < 16; i++) {
         const seedInput = document.getElementById(`admin_seed${i}`);
         const pInput = document.getElementById(`admin_p${i}`);
@@ -134,17 +134,17 @@ window.saveAll = () => {
 
             const seedNum = parseInt(seedValue);
 
-            // Amaran jika nombor seed luar julat 1-16
+            // AMARAN JIKA NOMBOR SEED LUAR JULAT 1-16
             if (seedNum < 1 || seedNum > 16) {
-                alert(`Slot ${i+1}: Sila guna nombor seed antara 1-16.`);
+                alert(`SLOT ${i+1}: SILA GUNA NOMBOR SEED ANTARA 1-16.`);
                 seedInput.value = "";
                 continue;
             }
 
-            // Semak jika nombor seed sudah digunakan oleh input lain
+            // SEMAK JIKA NOMBOR SEED SUDAH DIGUNAKAN OLEH INPUT LAIN
             if (usedSeeds.has(seedNum)) {
-                alert(`Ralat: Nombor Seed ${seedNum} sudah digunakan! Sila guna nombor lain.`);
-                seedInput.value = ""; // Padam nombor yang bertindih
+                alert(`RALAT: NOMBOR SEED ${seedNum} SUDAH DIGUNAKAN! SILA GUNA NOMBOR LAIN.`);
+                seedInput.value = ""; // PADAM NOMBOR YANG BERTINDIH
                 hasConflict = true;
                 continue;
             }
@@ -152,17 +152,17 @@ window.saveAll = () => {
             usedSeeds.add(seedNum);
             const namaValue = pInput.value.trim();
 
-            // Simpan ke dalam objek mengikut nombor seed (index 0-15)
+            // SIMPAN KE DALAM OBJEK MENGIKUT NOMBOR SEED (INDEX 0-15)
             teams[seedNum - 1] = {
-                nama: namaValue === "" ? "BYE" : namaValue,
+                nama: namaValue === "" ? "BYE" : namaValue.toUpperCase(),
                 avatar: pAvatarInput.value.trim()
             };
         }
     }
 
-    if (hasConflict) return; // Berhenti jika ada ralat
+    if (hasConflict) return; // BERHENTI JIKA ADA RALAT
 
-    // 2. Isi slot yang tidak dipilih dengan "BYE"
+    // 2. ISI SLOT YANG TIDAK DIPILIH DENGAN "BYE"
     for(let j = 0; j < 16; j++) {
         if(!teams[j]) {
             teams[j] = { nama: "BYE", avatar: "" };
@@ -176,21 +176,21 @@ window.saveAll = () => {
 
     let matchLabels = {};
     document.querySelectorAll('.match-top-input').forEach(mi => { 
-        if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim(); 
+        if(mi.value && mi.value.trim() !== '') matchLabels[mi.id] = mi.value.trim().toUpperCase(); 
     });
 
-    // 3. Simpan ke Firebase
+    // 3. SIMPAN KE FIREBASE
     set(dbRef, { n: 16, teams, scores, matchLabels }).then(() => {
         const toast = document.getElementById('syncToast');
         if(toast) {
             toast.style.opacity = "1";
             setTimeout(() => { toast.style.opacity = "0"; }, 2000);
         }
-    }).catch(err => alert("Gagal simpan: " + err));
+    }).catch(err => alert("GAGAL SIMPAN: " + err));
 };
 
 window.resetSkor = async () => {
-    if(confirm("Reset semua skor sahaja? Nama & Nombor Match akan dikekalkan.")) {
+    if(confirm("RESET SEMUA SKOR SAHAJA? NAMA & NOMBOR MATCH AKAN DIKEKALKAN.")) {
         const snapshot = await get(dbRef);
         const data = snapshot.val() || {};
         
@@ -238,13 +238,13 @@ function createBox(j, r, m, matchNum) {
         <div class="slot-pasukan" id="${id}_s1">
             <span class="seed-no" id="${id}_sd1" style="display:none"></span>
             <div class="avatar" id="${id}_av1"></div>
-            <input type="text" class="nama-display" id="${id}_p1" placeholder="..." readonly>
+            <input type="text" class="nama-display" id="${id}_p1" placeholder="NAMA PASUKAN" readonly>
             <input type="number" class="skor" id="${id}_sc1" oninput="window.kira('${id}')">
         </div>
         <div class="slot-pasukan" id="${id}_s2">
             <span class="seed-no" id="${id}_sd2" style="display:none"></span>
             <div class="avatar" id="${id}_av2"></div>
-            <input type="text" class="nama-display" id="${id}_p2" placeholder="..." readonly>
+            <input type="text" class="nama-display" id="${id}_p2" placeholder="NAMA PASUKAN" readonly>
             <input type="number" class="skor" id="${id}_sc2" oninput="window.kira('${id}')">
         </div>`;
 

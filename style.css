@@ -105,15 +105,15 @@ body {
   margin-top: 35px;
 }
 .btn-action {
-  height: 50px;
-  padding: 0 30px;
+  height: 60px;
+  padding: 0 40px;
   border-radius: 50px;
   border: 1px solid var(--garis);
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
   cursor: pointer;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 1rem;
   text-transform: uppercase;
   transition: 0.3s;
   display: flex;
@@ -362,9 +362,9 @@ body {
   color: #00fbff;
   font-weight: 900;
   font-size: 16px;
-  min-width: 35px;         /* Dari 45px ke 35px - lebih compact */
-  width: 35px;            /* Tetapkan lebar sama dengan min-width */
-  height: 35px;           /* Sama dengan lebar - jadikan persegi */
+  min-width: 35px; /* Dari 45px ke 35px - lebih compact */
+  width: 35px; /* Tetapkan lebar sama dengan min-width */
+  height: 35px; /* Sama dengan lebar - jadikan persegi */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,7 +375,7 @@ body {
   flex-shrink: 0;
   order: -1;
   text-transform: uppercase;
-  padding: 0 4px;        /* Kurangkan padding dari 8px ke 4px */
+  padding: 0 4px; /* Kurangkan padding dari 8px ke 4px */
 }
 
 .bracket-no-display {
@@ -462,18 +462,21 @@ body {
 }
 
 .skor {
-  width: 35px !important;
-  height: 35px !important;
+  width: 50px !important;
+  height: 50px !important;
   text-align: center;
   background: #000 !important;
   border: 1px solid #444 !important;
   color: #fff;
   border-radius: 6px;
   font-weight: 900;
-  font-size: 1rem !important;
+  font-size: 1.2rem !important;
   transition: 0.3s;
   outline: none;
   margin-left: auto;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
 .slot-pasukan.pemenang .skor {
@@ -531,7 +534,7 @@ body {
   position: fixed;
   top: 30px;
   right: 30px;
-  width: 720px;
+  width: 850px;
   max-height: 85vh;
   background: #111;
   border: 1px solid #444;
