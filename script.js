@@ -351,7 +351,7 @@ bw.appendChild(divGF);
             let matchNum = losMatchOffsets[r] + m;
             let box = createBox('L', r, m, matchNum);
             if(r === 5) box.classList.add('loser-final-highlight');
-            if(r === 2) box.classList.add('semifinal-lower-highlight'); // Tambah untuk semifinal lower
+            if(r === 4) box.classList.add('semifinal-lower-highlight'); // Tambah untuk semifinal lower
             div.appendChild(box);
         }
         bl.appendChild(div);
