@@ -592,14 +592,11 @@ function updateMatchLabelsForBye() {
         
         // Check jika mana-mana pemain adalah BYE
         if (p1 === "BYE" || p2 === "BYE") {
-            // Hanya tukar kepada BYE jika masih default value
-            const currentValue = labelInput.value.trim();
-            if (currentValue === "" || currentValue.startsWith("P") || currentValue.includes("FINAL")) {
-                labelInput.value = "BYE";
-                labelInput.style.color = "#FFD700"; // Warna kuning
-                labelInput.style.fontWeight = "900";
-                labelInput.style.textShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-            }
+            // Sentiasa tukar kepada BYE dan warna kuning
+            labelInput.value = "BYE";
+            labelInput.style.color = "#FFD700"; // Warna kuning
+            labelInput.style.fontWeight = "900";
+            labelInput.style.textShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
         } else {
             // JANGAN override custom text - hanya tukar warna
             const currentValue = labelInput.value.trim();
