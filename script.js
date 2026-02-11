@@ -105,6 +105,12 @@ onValue(dbRef, (snapshot) => {
     // Jana bracket (visual)
     jana(data.scores || {}, data.matchLabels || {});
     
+    // Pastikan label match sentiasa boleh diedit
+    document.querySelectorAll('.match-top-input').forEach(el => {
+        el.readOnly = false;
+        el.style.pointerEvents = "auto";
+    });
+    
     // Hanya update display input jika admin mode DAN user tidak sedang menaip
     if(window.isAdminMode) {
         const sedangMenaip = document.activeElement.tagName === 'INPUT';
