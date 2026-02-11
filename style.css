@@ -180,10 +180,10 @@ body {
   display: block;
   background: linear-gradient(180deg, #1a1a1f 0%, #0b0b0d 100%);
   border: 4px solid #ffd700;
-  padding: 40px 60px;
-  border-radius: 40px;
+  padding: 60px 60px;
+  border-radius: 45px;
   z-index: 200;
-  width: 950px;
+  width: 770px;
   text-align: center;
   margin-bottom: 150px;
 
@@ -353,7 +353,7 @@ body {
 }
 
 .slot-pasukan .seed-no {
-  margin-right: 8px;
+  margin-right: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,8 +363,8 @@ body {
   color: #00fbff;
   font-weight: 900;
   font-size: 16px;
-  min-width: 35px; /* Dari 45px ke 35px - lebih compact */
-  width: 35px; /* Tetapkan lebar sama dengan min-width */
+  min-width: 15px; /* Dari 45px ke 35px - lebih compact */
+  width: 20px; /* Tetapkan lebar sama dengan min-width */
   height: 35px; /* Sama dengan lebar - jadikan persegi */
   display: flex;
   align-items: center;
@@ -391,7 +391,7 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 6px 12px;
   border-bottom: 1px solid #25252b;
   transition: all 0.2s ease;
   height: auto;
@@ -403,8 +403,8 @@ body {
 }
 
 .avatar {
-  width: 53px;
-  height: 53px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
