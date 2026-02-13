@@ -328,7 +328,9 @@ function jana(savedScores, savedMatchLabels) {
         let div = document.createElement('div'); 
         div.className = 'pusingan';
         for(let m=0; m<Math.pow(2, 3-r); m++) {
-            div.appendChild(createBox('W', r, m, winMatchOffsets[r] + m));
+            let box = createBox('W', r, m, winMatchOffsets[r] + m);
+            if(r === 3) box.classList.add('winner-final-highlight'); // Tambah untuk final winner bracket
+            div.appendChild(box);
         }
         bw.appendChild(div);
     }

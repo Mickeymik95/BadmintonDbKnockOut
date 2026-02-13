@@ -545,14 +545,14 @@ body {
 }
 
 .grand-final {
-  width: 400px !important;
+  width: 450px !important;
   height: 180px;
   border: 5px solid #00d2ff !important;
   transform: scale(1.35);
   box-shadow: 0 0 40px rgba(0, 210, 255, 0.6);
   z-index: 5;
-  margin-top: 40px;
-  margin-left: 350px;
+  margin-top: 20px;
+  margin-left: 450px;
 }
 
 .loser-final-highlight .kotak-perlawanan {
@@ -570,6 +570,15 @@ body {
   transform: scale(1.05);
   box-shadow: 0 0 40px rgb(153, 11, 4);
   z-index: 5;
+}
+
+.winner-final-highlight .kotak-perlawanan {
+  width: 320px !important;
+  border: 5px solid #e6e4e4 !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(192, 192, 192, 0.8);
+  z-index: 5;
+  margin-left: 100px;
 }
 
 #panelAdmin {
